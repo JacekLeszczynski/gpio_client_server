@@ -1,0 +1,12 @@
+[Unit]
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/client.gpio AUTO-ON
+ExecStop=/usr/local/bin/client.gpio AUTO-OFF
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target
