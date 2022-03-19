@@ -50,30 +50,49 @@ int length(char* s)
     return strlen(s);
 }
 
-char *UpCase(char *str)
+char *upcase(char *s)
 {
-   int i = 0;
-   char pom[length(str)+1];
-   while(str[i])
-   {
-      pom[i] = toupper(str[i]);
-      i++;
-   }
-   pom[i]='\0';
-   return strdup(pom);
+    char *wsk;
+    wsk = s;
+    while (wsk[0]) {
+        *wsk = toupper(*wsk);
+        wsk++;
+    }
+    return s;
 }
 
-char* trim(char *s)
+char *downcase(char *s)
 {
-    char *cp1;
-    char *cp2;
-    // usuwam spacje z przodu
-    for (cp1=s; isspace(*cp1); cp1++ );
-    for (cp2=s; *cp1; cp1++, cp2++) *cp2 = *cp1;
-    *cp2-- = 0;
-    // usuwam spacje z końca
-    while ( cp2 > s && isspace(*cp2) ) *cp2-- = 0;
+    char *wsk;
+    wsk = s;
+    while (wsk[0]) {
+        *wsk = tolower(*wsk);
+        wsk++;
+    }
     return s;
+}
+
+char *trim(char *str)
+{
+    char *end;
+    while(isspace((unsigned char)*str)) str++;
+    if(*str == 0) return str;
+    end = str + strlen(str) - 1;
+    while(end > str && isspace((unsigned char)*end)) end--;
+    end[1] = '\0';
+    return str;
+}
+
+int strtobool(char *str) {
+    int o = 0;
+    char *s = downcase(trim(str));
+    if (strcmp(s,"on")==0) o = 1; else
+    if (strcmp(s,"yes")==0) o = 1; else
+    if (strcmp(s,"1")==0) o = 1; else
+    if (strcmp(s,"off")==0) o = 0; else
+    if (strcmp(s,"no")==0) o = 0; else
+    if (strcmp(s,"0")==0) o = 0;
+    return o;
 }
 
 int UnixTime()
@@ -368,7 +387,7 @@ unsigned int crc32block(unsigned char *message, int size)
 
 char *crc32blockhex(unsigned char *message, int size)
 {
-    return UpCase(uIntToHex(crc32block(message,size)));
+    return upcase(uIntToHex(crc32block(message,size)));
 }
 
 unsigned int crc32(unsigned char *message)
@@ -392,7 +411,7 @@ unsigned int crc32(unsigned char *message)
 
 char *crc32hex(unsigned char *message)
 {
-    return UpCase(uIntToHex(crc32(message)));
+    return upcase(uIntToHex(crc32(message)));
 }
 
 char* itoa(int val, int base)
@@ -480,7 +499,7 @@ int pos(char *substring, char *string)
 int HexToDec(char *hex)
 {
     int i, m = 1, r = 0;
-    char *str = UpCase(hex);
+    char *str = upcase(hex);
 
     for (i=length(str)-1; i>=0; i--)
     {
@@ -554,6 +573,33 @@ char *GetLineToStr(char *aStr, int l, char separator, char *wynik)
   if (s[strlen(s)-1]==separator) s[strlen(s)-1]='\0';
   // jeśli puste zwracam wynik, w innym razie zwracam co wyszło
   if (*s=='\0') return wynik; else return s;
+}
+
+char *GetDefault(char *filename, char *zmienna, char *wartosc_domyslna)
+{
+    FILE *f;
+    char znak,*s,*s1,*s2;
+    int ok = 0;
+    f=fopen(filename,"r");
+    if (f==NULL) return wartosc_domyslna;
+    s = String("");
+
+    while (znak!=EOF) {
+        znak = fgetc(f);
+        if (znak=='\n') {
+            s1 = trim(GetLineToStr(s,1,'=',""));
+            s2 = trim(GetLineToStr(s,2,'=',""));
+            if (strcmp(s1,zmienna)==0) {
+                ok = 1;
+                break;
+            }
+            s = String("");
+        } else s = concat_str_char(s,znak);
+    }
+
+    fclose(f);
+    if (ok) return s2;
+    else return wartosc_domyslna;
 }
 
 int TimeToInteger()

@@ -1,0 +1,11 @@
+# Włączanie mechanizmu automatycznego włączania i wyłączania z poziomu systemd/init.d itd.
+# Dozwolone wartości:
+#   yes - aktywna (domyślnie)
+#   no  - nieaktywna
+AUTO_ON_OFF = yes
+
+# Jeśli powyższy mechanizm automatyczny jest załączony, to wartość poniższego parametru oznacza:
+#   0 - włączanie i wyłączanie będzie wykonywane podczas startu i zamykania systemu (domyślnie)
+#   1 - wykonuj akcje tylko przy starcie systemu
+#   2 - wykonuj akcje tylko przy wyłączaniu systemu
+START_OR_STOP = 0
