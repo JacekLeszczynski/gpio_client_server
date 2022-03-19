@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 
     if (argc != 2)
     {
-        fprintf(stderr,"usage: clieent ON|OFF|STATUS\n");
+        fprintf(stderr,"usage: client ON|OFF|STATUS\n");
         exit(1);
     }
 
