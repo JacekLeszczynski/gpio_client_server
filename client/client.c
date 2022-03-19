@@ -54,6 +54,9 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+    if (strcmp(komenda,"AUTO-ON")==0) komenda = String("ON");
+    if (strcmp(komenda,"AUTO-OFF")==0) komenda = String("OFF");
+
     if (LOGIC_REVERSE) {
         if (strcmp(komenda,"ON")==0) {
             komenda = String("OFF");
