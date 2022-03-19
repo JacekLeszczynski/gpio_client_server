@@ -1,1 +1,1 @@
-/home/tao/Projekty/C/gpio_client_server/server/lazc.h
+../server/lazc.h
