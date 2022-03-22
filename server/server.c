@@ -170,7 +170,7 @@ int main(int argc,char *argv[])
     socklen_t their_addr_size;
     int portno;
     pthread_t sendt,recvt,udpvt;
-    char msg[CONST_MAX_BUFOR];
+    char msg[CONST_MAX_BUFOR], *BUF;
     int len,i;
     struct client_info cl;
     char ip[INET_ADDRSTRLEN],IP[INET_ADDRSTRLEN];
@@ -182,10 +182,12 @@ int main(int argc,char *argv[])
 	exit(1);
     }
 
+    BUF = ConfToBufor("/etc/default/gpio.server");
+    portno = atoi(GetConfValue(BUF,"PORT","2122"));
+
     daemonize();
     Randomize();
 
-    portno = 2122;
     my_sock = socket(AF_INET,SOCK_STREAM,0);
     setsockopt(my_sock, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
     memset(my_addr.sin_zero,'\0',sizeof(my_addr.sin_zero));

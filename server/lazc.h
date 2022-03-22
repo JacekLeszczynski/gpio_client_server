@@ -575,11 +575,27 @@ char *GetLineToStr(char *aStr, int l, char separator, char *wynik)
   if (*s=='\0') return wynik; else return s;
 }
 
-char *GetDefault(char *filename, char *zmienna, char *wartosc_domyslna)
+char *GetConfValue(char *bufor, char *zmienna, char *wartosc_domyslna)
+{
+    int i = 0;
+    char *s,*s1,*s2;
+    while (1)
+    {
+        i++;
+        s = GetLineToStr(bufor,i,'\n',"");
+        if (strcmp(s,"")==0) break;
+        s1 = GetLineToStr(s,1,'=',"");
+        s2 = GetLineToStr(s,2,'=',"");
+        if (strcmp(s1,zmienna)==0) return s2;
+    }
+    return wartosc_domyslna;
+}
+
+/*char *GetConfValue(char *filename, char *zmienna, char *wartosc_domyslna)
 {
     FILE *f;
     char znak,*s,*s1,*s2;
-    int ok = 0;
+    int ok = 0,a;
     f=fopen(filename,"r");
     if (f==NULL) return wartosc_domyslna;
     s = String("");
@@ -587,6 +603,18 @@ char *GetDefault(char *filename, char *zmienna, char *wartosc_domyslna)
     while (znak!=EOF) {
         znak = fgetc(f);
         if (znak=='\n') {
+            a = pos("#",s);
+            if (a>0)
+            {
+                s[a-1] = '\0';
+                s = trim(s);
+            }
+            if (strcmp(s,"")==0)
+            {
+                s = String("");
+                continue;
+            }
+            //printf("S=\"%s\"\n",s);
             s1 = trim(GetLineToStr(s,1,'=',""));
             s2 = trim(GetLineToStr(s,2,'=',""));
             if (strcmp(s1,zmienna)==0) {
@@ -600,6 +628,44 @@ char *GetDefault(char *filename, char *zmienna, char *wartosc_domyslna)
     fclose(f);
     if (ok) return s2;
     else return wartosc_domyslna;
+}*/
+
+char *ConfToBufor(char *filename)
+{
+    FILE *f;
+    char znak,*s,*s1,*s2,*bufor;
+    int a;
+    bufor = String("");
+    //printf("Size = %ld\n",size);
+    f=fopen(filename,"r");
+    if (f==NULL) return bufor;
+    s = String("");
+    while (znak!=EOF) {
+        znak = fgetc(f);
+        if (znak=='\n') {
+            a = pos("#",s);
+            if (a>0)
+            {
+                s[a-1] = '\0';
+                s = trim(s);
+            }
+            if (strcmp(s,"")==0)
+            {
+                s = String("");
+                continue;
+            }
+            //printf("S=\"%s\"\n",s);
+            s1 = trim(GetLineToStr(s,1,'=',""));
+            s2 = trim(GetLineToStr(s,2,'=',""));
+            bufor = concat(bufor,s1);
+            bufor = concat_str_char(bufor,'=');
+            bufor = concat(bufor,s2);
+            bufor = concat_str_char(bufor,'\n');
+            s = String("");
+        } else s = concat_str_char(s,znak);
+    }
+    fclose(f);
+    return bufor;
 }
 
 int TimeToInteger()

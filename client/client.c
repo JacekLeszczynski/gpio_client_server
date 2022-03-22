@@ -20,11 +20,14 @@
 #define MAXDATASIZE 100      /* max number of bytes we can get at once */
 #define LOGIC_REVERSE 1      /* zamienia miejscami - 0 to 1, a 1 to 0  */
 
+char *BUF;
+
 int test()
 {
-    char wlaczone,start_or_stop;
-    wlaczone = strtobool(GetDefault("/etc/default/gpio.client","AUTO_ON_OFF","yes"));
-    start_or_stop = atoi(GetDefault("/etc/default/gpio.client","START_OR_STOP","0"));
+    int wlaczone,start_or_stop;
+    BUF = ConfToBufor("/etc/default/gpio.client");
+    wlaczone = strtobool(GetConfValue(BUF,"AUTO_ON_OFF","yes"));
+    start_or_stop = atoi(GetConfValue(BUF,"START_OR_STOP","0"));
     printf("%d\n",wlaczone);
     printf("%d\n",start_or_stop);
     return 1;
@@ -47,8 +50,9 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    wlaczone = strtobool(GetDefault("/etc/default/gpio.client","AUTO_ON_OFF","yes"));
-    start_or_stop = atoi(GetDefault("/etc/default/gpio.client","START_OR_STOP","0"));
+    BUF = ConfToBufor("/etc/default/gpio.client");
+    wlaczone = strtobool(GetConfValue(BUF,"AUTO_ON_OFF","yes"));
+    start_or_stop = atoi(GetConfValue(BUF,"START_OR_STOP","0"));
     if (wlaczone==0) return 0;
     if (start_or_stop==1 && strcmp(komenda,"AUTO-OFF")==0) return 0;
     if (start_or_stop==2 && strcmp(komenda,"AUTO-ON")==0) return 0;
