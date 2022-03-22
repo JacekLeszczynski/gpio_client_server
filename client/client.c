@@ -16,7 +16,6 @@
 #include <netdb.h>
 
 
-#define PORT 2122            /* the port client will be connecting to  */
 #define MAXDATASIZE 100      /* max number of bytes we can get at once */
 #define LOGIC_REVERSE 1      /* zamienia miejscami - 0 to 1, a 1 to 0  */
 
@@ -35,12 +34,15 @@ int test()
 
 int main(int argc, char *argv[])
 {
+    char *host;
+    int port;
     int sockfd, numbytes;
     char buf[MAXDATASIZE];
     struct hostent *he;
     struct sockaddr_in their_addr; /* connector's address information */
     char *komenda;
     char wlaczone,start_or_stop;
+    char *tmp;
 
     //if (test()==1) return 0;
 
@@ -49,16 +51,18 @@ int main(int argc, char *argv[])
         fprintf(stderr,"usage: client ON|OFF|STATUS\n");
         exit(1);
     }
+    komenda = argv[1];
 
     BUF = ConfToBufor("/etc/default/gpio.client");
+    host = GetConfValue(BUF,"HOST","127.0.0.1");
+    port = atoi(GetConfValue(BUF,"PORT","2021"));
     wlaczone = strtobool(GetConfValue(BUF,"AUTO_ON_OFF","yes"));
     start_or_stop = atoi(GetConfValue(BUF,"START_OR_STOP","0"));
     if (wlaczone==0) return 0;
     if (start_or_stop==1 && strcmp(komenda,"AUTO-OFF")==0) return 0;
     if (start_or_stop==2 && strcmp(komenda,"AUTO-ON")==0) return 0;
 
-    komenda = argv[1];
-    he = gethostbyname("192.168.10.2");
+    he = gethostbyname(host);
 
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
@@ -67,7 +71,7 @@ int main(int argc, char *argv[])
     }
 
     their_addr.sin_family = AF_INET;      /* host byte order */
-    their_addr.sin_port = htons(PORT);    /* short, network byte order */
+    their_addr.sin_port = htons(port);    /* short, network byte order */
     their_addr.sin_addr = *((struct in_addr *)he->h_addr);
     bzero(&(their_addr.sin_zero), 8);     /* zero the rest of the struct */
 

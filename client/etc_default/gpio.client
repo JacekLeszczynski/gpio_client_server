@@ -1,3 +1,12 @@
+# Adres hosta, na którym uruchomiony jest serwer nasłuchujący (domyślnie: 127.0.0.1)
+# Zaleca się używania adresów w notacji IP4: XXX.XXX.XXX.XXX
+#HOST = 127.0.0.1
+#HOST = localhost
+#HOST = 192.168.0.2
+
+# Wybór portu, na którym nasłuchuje program serwera (domyślnie: 2122)
+#PORT = 2122
+
 # Włączanie mechanizmu automatycznego włączania i wyłączania z poziomu systemd/init.d itd.
 # Dozwolone wartości:
 #   yes - aktywna (domyślnie)

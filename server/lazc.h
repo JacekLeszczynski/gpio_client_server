@@ -12,6 +12,23 @@
 #define TRUE  1;
 #define FALSE 0;
 
+int LittleBigEndian()
+{
+    int x = 1;
+    if (*(char*)&x) {
+        return 1;
+    } else {
+        return 2;
+    }
+}
+
+unsigned int atoui(char str[30]) {
+   char *ptr;
+   unsigned int ret;
+   ret = strtoul(str, &ptr, 10);
+   return ret;
+}
+
 long int filesize(char *filename)
 {
     struct stat st;
