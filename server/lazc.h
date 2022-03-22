@@ -657,9 +657,11 @@ char *ConfToBufor(char *filename)
     f=fopen(filename,"r");
     if (f==NULL) return bufor;
     s = String("");
-    while (znak!=EOF) {
-        znak = fgetc(f);
-        if (znak=='\n') {
+    while ((znak = fgetc(f)) != EOF)
+    {
+        if (feof(f)) break;
+        if (znak=='\n')
+        {
             a = pos("#",s);
             if (a>0)
             {
@@ -671,7 +673,6 @@ char *ConfToBufor(char *filename)
                 s = String("");
                 continue;
             }
-            //printf("S=\"%s\"\n",s);
             s1 = trim(GetLineToStr(s,1,'=',""));
             s2 = trim(GetLineToStr(s,2,'=',""));
             bufor = concat(bufor,s1);

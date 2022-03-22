@@ -1,3 +1,6 @@
 # Numer portu na którym program serwera będzie nasłuchiwał.
 # Domyślną wartością jest port 2122, w poniższej opcji można go zmienić na inny.
 # PORT = 2122
+
+# Numer linii GPIO
+GPIO_NUMBER = 492

@@ -16,7 +16,7 @@
 //#define RUNNING_DIR	"/disk/dbases"
 #define LOCK_FILE	"/var/run/server.gpio.pid"
 //#define LOG_FILE	"/disk/log/studiopi.gpio.log"
-#define GPIO_NR         "492"
+//#define GPIO_NR "492"
 
 #define CONST_MAX_CLIENTS 100
 #define CONST_MAX_BUFOR 20000
@@ -31,6 +31,7 @@ int my_sock, is_port;
 int clients[CONST_MAX_CLIENTS];
 char ips[CONST_MAX_CLIENTS][INET_ADDRSTRLEN];
 int ports[CONST_MAX_CLIENTS];
+char *GPIO_NR;
 
 int n = 0, mn = 0, ischat = 0;
 int error = 0;
@@ -184,6 +185,7 @@ int main(int argc,char *argv[])
 
     BUF = ConfToBufor("/etc/default/gpio.server");
     portno = atoi(GetConfValue(BUF,"PORT","2122"));
+    GPIO_NR = GetConfValue(BUF,"GPIO_NUMBER","492");
 
     daemonize();
     Randomize();
