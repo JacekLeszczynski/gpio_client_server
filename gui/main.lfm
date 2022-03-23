@@ -1,0 +1,238 @@
+object Form1: TForm1
+  Left = 2355
+  Height = 308
+  Top = 273
+  Width = 421
+  Caption = 'GPio-GUI'
+  ClientHeight = 308
+  ClientWidth = 421
+  OnClose = FormClose
+  OnCreate = FormCreate
+  SessionProperties = 'cHost.Text;cPort.Value'
+  LCLVersion = '2.0.12.0'
+  object uETilePanel1: TuETilePanel
+    Left = 0
+    Height = 308
+    Top = 0
+    Width = 421
+    Align = alClient
+    ClientHeight = 308
+    ClientWidth = 421
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideLeft.Control = uETilePanel1
+      AnchorSideTop.Control = uETilePanel1
+      Left = 9
+      Height = 19
+      Top = 15
+      Width = 35
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 14
+      Caption = 'Host:'
+      ParentColor = False
+    end
+    object cHost: TEdit
+      AnchorSideLeft.Control = Label1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = uETilePanel1
+      AnchorSideRight.Side = asrBottom
+      Left = 48
+      Height = 31
+      Top = 9
+      Width = 364
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 8
+      OnChange = _CHANGE
+      TabOrder = 0
+      Text = '127.0.0.1'
+    end
+    object Label2: TLabel
+      AnchorSideTop.Control = cPort
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = cPort
+      Left = 12
+      Height = 19
+      Top = 48
+      Width = 32
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 4
+      Caption = 'Port:'
+      ParentColor = False
+    end
+    object cPort: TSpinEdit
+      AnchorSideLeft.Control = cHost
+      AnchorSideTop.Control = cHost
+      AnchorSideTop.Side = asrBottom
+      Left = 48
+      Height = 31
+      Top = 42
+      Width = 90
+      BorderSpacing.Top = 2
+      MaxValue = 65535
+      OnChange = _CHANGE
+      TabOrder = 1
+      Value = 2122
+    end
+    object SpeedButton1: TSpeedButton
+      AnchorSideLeft.Control = cPort
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = cPort
+      AnchorSideTop.Side = asrCenter
+      Left = 138
+      Height = 22
+      Top = 46
+      Width = 23
+      Flat = True
+      Images = ImageList1
+      ImageIndex = 0
+      OnClick = SpeedButton1Click
+    end
+    object cConnecting: TuELED
+      AnchorSideLeft.Control = SpeedButton1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SpeedButton1
+      Left = 161
+      Height = 24
+      Top = 46
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Color = clGreen
+      ParentColor = False
+    end
+    object Label3: TLabel
+      AnchorSideTop.Control = cHost
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = cHost
+      AnchorSideRight.Side = asrBottom
+      Left = 260
+      Height = 28
+      Top = 40
+      Width = 152
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      Caption = 'IP serwera - można używać'#10'także nazwy domenowej'
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Sans'
+      Font.Style = [fsItalic]
+      ParentColor = False
+      ParentFont = False
+    end
+    object BitBtn1: TBitBtn
+      AnchorSideLeft.Control = uETilePanel1
+      AnchorSideTop.Control = cPort
+      AnchorSideTop.Side = asrBottom
+      Left = 17
+      Height = 30
+      Top = 85
+      Width = 75
+      BorderSpacing.Left = 16
+      BorderSpacing.Top = 12
+      Caption = 'Włącz'
+      OnClick = BitBtn1Click
+      TabOrder = 2
+    end
+    object BitBtn2: TBitBtn
+      AnchorSideLeft.Control = BitBtn1
+      AnchorSideTop.Control = BitBtn1
+      AnchorSideTop.Side = asrBottom
+      Left = 17
+      Height = 30
+      Top = 119
+      Width = 75
+      BorderSpacing.Top = 4
+      Caption = 'Wyłącz'
+      OnClick = BitBtn2Click
+      TabOrder = 3
+    end
+  end
+  object net: TNetSocket
+    Mode = smClient
+    Security = ssNone
+    Host = '127.0.0.1'
+    Port = 2122
+    ReuseAddress = True
+    Timeout = 4
+    MaxBuffer = 10
+    SSLMethod = msSSLv2or3
+    OnProcessMessage = netProcessMessage
+    OnStatus = netStatus
+    Left = 328
+    Top = 152
+  end
+  object ImageList1: TImageList
+    Left = 248
+    Top = 88
+    Bitmap = {
+      4C69010000001000000010000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000A0A2740000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000A0A284027279FFF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000A0A28402727A0FF27279FFF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000909
+      28402727A0FF2626A0FF25259EFF12124E8011114E8011114D8011114C801111
+      4C8012124B8000000000000000000000000000000000000000000A0A27402727
+      A0FF26269FFF25259EFF24249DFF22229CFF21219AFF212199FF212198FF2222
+      97FF222296FF000000000000000000000000000000000909274027279EFF2626
+      9EFF25259EFF23239CFF22229CFF20209AFF1F1F98FF1E1E97FF1E1E96FF1E1E
+      95FF202095FF000000000000000000000000000000000909274026269DFF2525
+      9CFF23239BFF22229AFF202099FF1E1E97FF1D1D96FF1C1C95FF1C1C94FF1C1C
+      94FF1D1D94FF0000000000000000000000000000000000000000090926402525
+      9AFF222299FF202098FF1E1E97FF1C1C95FF1B1B94FF1A1A93FF191993FF1A1A
+      93FF1B1B93FF0000000000000000000000000000000000000000000000000909
+      2640212198FF1F1F96FF1D1D95FF0D0D4A800D0D49800C0C49800C0C49800C0C
+      49800D0D49800000000000000000000000000000000000000000000000000000
+      0000080825401F1F95FF1D1D94FF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000080825401D1D94FF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000007072540000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000
+    }
+  end
+  object autoconnect: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = autoconnectTimer
+    Left = 248
+    Top = 208
+  end
+  object autorun: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = autorunTimer
+    Left = 248
+    Top = 152
+  end
+  object propstorage: TXMLPropStorage
+    StoredValues = <>
+    Active = False
+    Left = 352
+    Top = 88
+  end
+  object mess: TExtMessage
+    Caption = '<Auto>'
+    HelpContext = 0
+    PosTop = 0
+    PosLeft = 0
+    StringToCR = '^'
+    Left = 376
+    Top = 152
+  end
+end

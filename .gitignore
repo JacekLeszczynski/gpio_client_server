@@ -1,4 +1,9 @@
 ide_c
 client.gpio
 server.gpio
+gui/gpio_gui
+gui/lib
+gui/backup
 *.xml
+*.res
+*.lps
