@@ -32,6 +32,7 @@ int clients[CONST_MAX_CLIENTS];
 char ips[CONST_MAX_CLIENTS][INET_ADDRSTRLEN];
 int ports[CONST_MAX_CLIENTS];
 char *GPIO_NR;
+bool REVERSE;
 
 int n = 0, mn = 0, ischat = 0;
 int error = 0;
@@ -69,14 +70,14 @@ void *recvmg(void *sock)
         if (strcmp(s,"ON")==0) {
             export_GPIO();
             direction_GPIO();
-            set_GPIO(1);
+            if (REVERSE) set_GPIO(0); else set_GPIO(1);
             //direction_GPIO_OR();
             unexport_GPIO();
         } else
         if (strcmp(s,"OFF")==0) {
             export_GPIO();
             direction_GPIO();
-            set_GPIO(0);
+            if (REVERSE) set_GPIO(1); else set_GPIO(0);
             //direction_GPIO_OR();
             unexport_GPIO();
         } else
@@ -85,9 +86,9 @@ void *recvmg(void *sock)
             a = get_GPIO();
             unexport_GPIO();
             if (a==1) {
-                sendmessage("1",cl.sockno,1);
+                if (REVERSE) sendmessage("0",cl.sockno,1); else sendmessage("1",cl.sockno,1);
             } else {
-                sendmessage("0",cl.sockno,1);
+                if (REVERSE) sendmessage("1",cl.sockno,1); else sendmessage("0",cl.sockno,1);
             }
         }
 
@@ -186,6 +187,7 @@ int main(int argc,char *argv[])
     BUF = ConfToBufor("/etc/default/gpio.server");
     portno = atoi(GetConfValue(BUF,"PORT","2122"));
     GPIO_NR = GetConfValue(BUF,"GPIO_NUMBER","492");
+    REVERSE = atoi(GetConfValue(BUF,"REVERSE","0"));
 
     daemonize();
     Randomize();

@@ -4,3 +4,7 @@
 
 # Numer linii GPIO
 GPIO_NUMBER = 492
+
+# Jeśli masz potrzebę odwrócenia pracy stanów, bo twój sterownik włącza się przy
+# aktywnym zero, a wyłącza przy aktywnym 1 (domyślną wartością jest 0)
+# REVERSE = 0

@@ -17,7 +17,6 @@
 
 
 #define MAXDATASIZE 100      /* max number of bytes we can get at once */
-#define LOGIC_REVERSE 1      /* zamienia miejscami - 0 to 1, a 1 to 0  */
 
 char *BUF;
 
@@ -84,14 +83,6 @@ int main(int argc, char *argv[])
     if (strcmp(komenda,"AUTO-ON")==0) komenda = String("ON");
     if (strcmp(komenda,"AUTO-OFF")==0) komenda = String("OFF");
 
-    if (LOGIC_REVERSE) {
-        if (strcmp(komenda,"ON")==0) {
-            komenda = String("OFF");
-        } else {
-            if (strcmp(komenda,"OFF")==0) komenda = String("ON");
-        }
-    }
-
     if (send(sockfd,komenda,strlen(komenda),0) == -1)
     {
         perror("send");
@@ -107,15 +98,7 @@ int main(int argc, char *argv[])
             exit(1);
         }
         buf[numbytes] = '\0';
-        if (LOGIC_REVERSE) {
-            if (strcmp(buf,"1")==0) {
-                printf("0\n");
-            } else {
-                printf("1\n");
-            }
-        } else {
-            printf("%s\n",buf);
-        }
+        printf("%s\n",buf);
     }
 
     close(sockfd);
