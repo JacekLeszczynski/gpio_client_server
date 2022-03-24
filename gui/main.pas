@@ -42,6 +42,7 @@ type
   private
     con_wyjscie: boolean;
     function test(aHost: string): boolean;
+    procedure wczytaj_default;
   public
 
   end;
@@ -99,6 +100,33 @@ begin
   if (s1<>'') and (s2<>'') and (s3<>'') and (s4<>'') then result:=true else result:=false;
 end;
 
+procedure TForm1.wczytaj_default;
+var
+  c: TStringList;
+  i,a: integer;
+  s,s1,s2: string;
+begin
+  c:=TStringList.Create;
+  try
+    c.LoadFromFile('/etc/default/gpio.client');
+    for i:=0 to c.Count-1 do
+    begin
+      s:=trim(c[i]);
+      if s='' then continue;
+      a:=pos('#',s);
+      if a>0 then delete(s,a,maxint);
+      s:=trim(s);
+      if s='' then continue;
+      s1:=trim(GetLineToStr(s,1,'='));
+      s2:=trim(GetLineToStr(s,2,'='));
+      if s1='HOST' then cHost.Text:=s2 else
+      if s1='PORT' then cPort.Value:=StrToInt(s2);
+    end;
+  finally
+    c.Free;
+  end;
+end;
+
 procedure TForm1.autorunTimer(Sender: TObject);
 begin
   autorun.Enabled:=false;
@@ -107,12 +135,12 @@ end;
 
 procedure TForm1.BitBtn1Click(Sender: TObject);
 begin
-  writeln(net.SendStringEx('OFF'+#0)); (* reverse *)
+  net.SendStringEx('ON'+#0);
 end;
 
 procedure TForm1.BitBtn2Click(Sender: TObject);
 begin
-  writeln(net.SendStringEx('ON'+#0)); (* reverse *)
+  net.SendStringEx('OFF'+#0);
 end;
 
 procedure TForm1.autoconnectTimer(Sender: TObject);
@@ -133,9 +161,10 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   con_wyjscie:=false;
+  wczytaj_default;
   SetConfDir('PiStudio');
-  propstorage.FileName:=MyConfDir('GPioGUI.xml');
-  propstorage.Active:=true;
+  //propstorage.FileName:=MyConfDir('GPioGUI.xml');
+  //propstorage.Active:=true;
   autorun.Enabled:=true;
 end;
 
