@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=GPio GUI
+Name[pl]=GPio GUI
+GenericName=GPio GUI
+GenericName[pl]=GPio GUI
+Comment=Remote switch control program
+Comment[pl]=Program do sterowania zdalnym przełącznikiem
+Icon=gpio_gui
+Exec=gpio_gui
+Terminal=false
+Categories=Qt;KDE;AudioVideo;
