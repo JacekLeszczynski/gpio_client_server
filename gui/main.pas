@@ -10,9 +10,9 @@ uses
 
 type
 
-  { TForm1 }
+  { TgPioGui }
 
-  TForm1 = class(TForm)
+  TgPioGui = class(TForm)
     cConnecting: TuELED;
     cStan: TuELED;
     Label1: TLabel;
@@ -49,7 +49,7 @@ type
   end;
 
 var
-  Form1: TForm1;
+  gPioGui: TgPioGui;
 
 implementation
 
@@ -58,14 +58,14 @@ uses
 
 {$R *.lfm}
 
-{ TForm1 }
+{ TgPioGui }
 
-procedure TForm1._CHANGE(Sender: TObject);
+procedure TgPioGui._CHANGE(Sender: TObject);
 begin
   net.Disconnect;
 end;
 
-function TForm1.test(aHost: string): boolean;
+function TgPioGui.test(aHost: string): boolean;
 var
   s,s1,s2,s3,s4: string;
   i: integer;
@@ -96,7 +96,7 @@ begin
   if (s1<>'') and (s2<>'') and (s3<>'') and (s4<>'') then result:=true else result:=false;
 end;
 
-procedure TForm1.wczytaj_default;
+procedure TgPioGui.wczytaj_default;
 var
   c: TStringList;
   i,a: integer;
@@ -123,13 +123,13 @@ begin
   end;
 end;
 
-procedure TForm1.autorunTimer(Sender: TObject);
+procedure TgPioGui.autorunTimer(Sender: TObject);
 begin
   autorun.Enabled:=false;
   autoconnect.Enabled:=true;
 end;
 
-procedure TForm1.autoconnectTimer(Sender: TObject);
+procedure TgPioGui.autoconnectTimer(Sender: TObject);
 begin
   if not test(host) then exit;
   net.Host:=host;
@@ -137,51 +137,51 @@ begin
   net.Connect;
 end;
 
-procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+procedure TgPioGui.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   con_wyjscie:=true;
   autoconnect.Enabled:=false;
   if net.Active then net.Disconnect;
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TgPioGui.FormCreate(Sender: TObject);
 begin
   con_wyjscie:=false;
   wczytaj_default;
   SetConfDir('PiStudio');
-  //propstorage.FileName:=MyConfDir('GPioGUI.xml');
-  //propstorage.Active:=true;
+  propstorage.FileName:=MyConfDir('GPioGUI.xml');
+  propstorage.Active:=true;
   autorun.Enabled:=true;
 end;
 
-procedure TForm1.netConnect(aSocket: TLSocket);
+procedure TgPioGui.netConnect(aSocket: TLSocket);
 begin
   net.SendStringEx('STATUS'+#0);
 end;
 
-procedure TForm1.netProcessMessage;
+procedure TgPioGui.netProcessMessage;
 begin
   application.ProcessMessages;
 end;
 
-procedure TForm1.netReceiveString(aMsg: string; aSocket: TLSocket;
+procedure TgPioGui.netReceiveString(aMsg: string; aSocket: TLSocket;
   aBinSize: integer; var aReadBin: boolean);
 begin
   cStan.Active:=aMsg='1';
 end;
 
-procedure TForm1.netStatus(aActive, aCrypt: boolean);
+procedure TgPioGui.netStatus(aActive, aCrypt: boolean);
 begin
   autoconnect.Enabled:=(not aActive) and (not con_wyjscie);
   cConnecting.Active:=aActive;
 end;
 
-procedure TForm1.SpeedButton1Click(Sender: TObject);
+procedure TgPioGui.SpeedButton1Click(Sender: TObject);
 begin
   net.SendStringEx('ON'+#0);
 end;
 
-procedure TForm1.SpeedButton2Click(Sender: TObject);
+procedure TgPioGui.SpeedButton2Click(Sender: TObject);
 begin
   net.SendStringEx('OFF'+#0);
 end;

@@ -4,6 +4,7 @@ server.gpio
 gui/gpio_gui
 gui/lib
 gui/backup
+gui/linux/usr
 *.xml
 *.res
 *.lps
