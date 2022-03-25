@@ -71,15 +71,15 @@ void *recvmg(void *sock)
             export_GPIO();
             direction_GPIO();
             if (REVERSE) set_GPIO(0); else set_GPIO(1);
-            //direction_GPIO_OR();
             unexport_GPIO();
+            if (REVERSE) sendmessage("1",cl.sockno,1); else sendmessage("0",cl.sockno,1);
         } else
         if (strcmp(s,"OFF")==0) {
             export_GPIO();
             direction_GPIO();
             if (REVERSE) set_GPIO(1); else set_GPIO(0);
-            //direction_GPIO_OR();
             unexport_GPIO();
+            if (REVERSE) sendmessage("0",cl.sockno,1); else sendmessage("1",cl.sockno,1);
         } else
         if (strcmp(s,"STATUS")==0) {
             export_GPIO();

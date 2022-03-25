@@ -6,40 +6,41 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Spin,
-  Buttons, ExtCtrls, XMLPropStorage, ueled, uETilePanel, NetSocket, ExtMessage;
+  Buttons, ExtCtrls, XMLPropStorage, ueled, uETilePanel, NetSocket, ExtMessage, lNet;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
-    BitBtn1: TBitBtn;
-    BitBtn2: TBitBtn;
     cConnecting: TuELED;
-    cHost: TEdit;
-    cPort: TSpinEdit;
-    mess: TExtMessage;
-    ImageList1: TImageList;
+    cStan: TuELED;
     Label1: TLabel;
     Label2: TLabel;
-    Label3: TLabel;
+    mess: TExtMessage;
+    ImageList1: TImageList;
     net: TNetSocket;
-    SpeedButton1: TSpeedButton;
     autoconnect: TTimer;
     autorun: TTimer;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
     uETilePanel1: TuETilePanel;
     propstorage: TXMLPropStorage;
     procedure autoconnectTimer(Sender: TObject);
     procedure autorunTimer(Sender: TObject);
-    procedure BitBtn1Click(Sender: TObject);
-    procedure BitBtn2Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure netConnect(aSocket: TLSocket);
     procedure netProcessMessage;
+    procedure netReceiveString(aMsg: string; aSocket: TLSocket;
+      aBinSize: integer; var aReadBin: boolean);
     procedure netStatus(aActive, aCrypt: boolean);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
     procedure _CHANGE(Sender: TObject);
   private
+    host: string;
+    port: word;
     con_wyjscie: boolean;
     function test(aHost: string): boolean;
     procedure wczytaj_default;
@@ -58,11 +59,6 @@ uses
 {$R *.lfm}
 
 { TForm1 }
-
-procedure TForm1.SpeedButton1Click(Sender: TObject);
-begin
-  cPort.Value:=2122;
-end;
 
 procedure TForm1._CHANGE(Sender: TObject);
 begin
@@ -119,8 +115,8 @@ begin
       if s='' then continue;
       s1:=trim(GetLineToStr(s,1,'='));
       s2:=trim(GetLineToStr(s,2,'='));
-      if s1='HOST' then cHost.Text:=s2 else
-      if s1='PORT' then cPort.Value:=StrToInt(s2);
+      if s1='HOST' then host:=s2 else
+      if s1='PORT' then port:=StrToInt(s2);
     end;
   finally
     c.Free;
@@ -133,21 +129,11 @@ begin
   autoconnect.Enabled:=true;
 end;
 
-procedure TForm1.BitBtn1Click(Sender: TObject);
-begin
-  net.SendStringEx('ON'+#0);
-end;
-
-procedure TForm1.BitBtn2Click(Sender: TObject);
-begin
-  net.SendStringEx('OFF'+#0);
-end;
-
 procedure TForm1.autoconnectTimer(Sender: TObject);
 begin
-  if not test(cHost.Text) then exit;
-  net.Host:=cHost.Text;
-  net.Port:=cPort.Value;
+  if not test(host) then exit;
+  net.Host:=host;
+  net.Port:=port;
   net.Connect;
 end;
 
@@ -168,15 +154,36 @@ begin
   autorun.Enabled:=true;
 end;
 
+procedure TForm1.netConnect(aSocket: TLSocket);
+begin
+  net.SendStringEx('STATUS'+#0);
+end;
+
 procedure TForm1.netProcessMessage;
 begin
   application.ProcessMessages;
+end;
+
+procedure TForm1.netReceiveString(aMsg: string; aSocket: TLSocket;
+  aBinSize: integer; var aReadBin: boolean);
+begin
+  cStan.Active:=aMsg='1';
 end;
 
 procedure TForm1.netStatus(aActive, aCrypt: boolean);
 begin
   autoconnect.Enabled:=(not aActive) and (not con_wyjscie);
   cConnecting.Active:=aActive;
+end;
+
+procedure TForm1.SpeedButton1Click(Sender: TObject);
+begin
+  net.SendStringEx('ON'+#0);
+end;
+
+procedure TForm1.SpeedButton2Click(Sender: TObject);
+begin
+  net.SendStringEx('OFF'+#0);
 end;
 
 end.
