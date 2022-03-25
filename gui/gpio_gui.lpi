@@ -13,6 +13,10 @@
         <DpiAware Value="True"/>
       </XPManifest>
       <Icon Value="0"/>
+      <Resources Count="2">
+        <Resource_0 FileName="grafika/led_off.ico" Type="ICON" ResourceName="LED_OFF"/>
+        <Resource_1 FileName="grafika/led_on.ico" Type="ICON" ResourceName="LED_ON"/>
+      </Resources>
     </General>
     <BuildModes Count="4">
       <Item1 Name="Default" Default="True"/>

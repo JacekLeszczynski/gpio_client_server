@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Spin,
-  Buttons, ExtCtrls, XMLPropStorage, ueled, uETilePanel, NetSocket, ExtMessage, lNet;
+  Buttons, ExtCtrls, XMLPropStorage, Menus, ueled, uETilePanel, NetSocket,
+  ExtMessage, lNet;
 
 type
 
@@ -17,19 +18,23 @@ type
     cStan: TuELED;
     Label1: TLabel;
     Label2: TLabel;
+    MenuItem1: TMenuItem;
     mess: TExtMessage;
     ImageList1: TImageList;
     net: TNetSocket;
     autoconnect: TTimer;
     autorun: TTimer;
+    PopupMenu1: TPopupMenu;
     SpeedButton1: TSpeedButton;
     SpeedButton2: TSpeedButton;
+    TrayIcon1: TTrayIcon;
     uETilePanel1: TuETilePanel;
     propstorage: TXMLPropStorage;
     procedure autoconnectTimer(Sender: TObject);
     procedure autorunTimer(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure MenuItem1Click(Sender: TObject);
     procedure netConnect(aSocket: TLSocket);
     procedure netProcessMessage;
     procedure netReceiveString(aMsg: string; aSocket: TLSocket;
@@ -37,6 +42,7 @@ type
     procedure netStatus(aActive, aCrypt: boolean);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
+    procedure TrayIcon1Click(Sender: TObject);
     procedure _CHANGE(Sender: TObject);
   private
     host: string;
@@ -45,7 +51,7 @@ type
     function test(aHost: string): boolean;
     procedure wczytaj_default;
   public
-
+    procedure SetStatus(aValue: integer);
   end;
 
 var
@@ -123,6 +129,14 @@ begin
   end;
 end;
 
+procedure TgPioGui.SetStatus(aValue: integer);
+begin
+  case aValue of
+    1: TrayIcon1.Icon.LoadFromResourceName(Hinstance,'LED_ON');
+    else TrayIcon1.Icon.LoadFromResourceName(Hinstance,'LED_OFF');
+  end;
+end;
+
 procedure TgPioGui.autorunTimer(Sender: TObject);
 begin
   autorun.Enabled:=false;
@@ -139,19 +153,34 @@ end;
 
 procedure TgPioGui.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  con_wyjscie:=true;
-  autoconnect.Enabled:=false;
-  if net.Active then net.Disconnect;
+  if con_wyjscie then
+  begin
+    autoconnect.Enabled:=false;
+    if net.Active then net.Disconnect;
+  end else begin
+    CloseAction:=caNone;
+    WindowState:=wsMinimized;
+    hide;
+  end;
 end;
 
 procedure TgPioGui.FormCreate(Sender: TObject);
 begin
+  Application.ShowMainForm:=false;
+  WindowState:=wsMinimized;
+  hide;
   con_wyjscie:=false;
   wczytaj_default;
   SetConfDir('PiStudio');
   propstorage.FileName:=MyConfDir('GPioGUI.xml');
   propstorage.Active:=true;
   autorun.Enabled:=true;
+end;
+
+procedure TgPioGui.MenuItem1Click(Sender: TObject);
+begin
+  con_wyjscie:=true;
+  close;
 end;
 
 procedure TgPioGui.netConnect(aSocket: TLSocket);
@@ -168,6 +197,7 @@ procedure TgPioGui.netReceiveString(aMsg: string; aSocket: TLSocket;
   aBinSize: integer; var aReadBin: boolean);
 begin
   cStan.Active:=aMsg='1';
+  SetStatus(StrToInt(aMsg));
 end;
 
 procedure TgPioGui.netStatus(aActive, aCrypt: boolean);
@@ -184,6 +214,18 @@ end;
 procedure TgPioGui.SpeedButton2Click(Sender: TObject);
 begin
   net.SendStringEx('OFF'+#0);
+end;
+
+procedure TgPioGui.TrayIcon1Click(Sender: TObject);
+begin
+  if WindowState=wsNormal then
+  begin
+    WindowState:=wsMinimized;
+    hide;
+  end else begin
+    WindowState:=wsNormal;
+    show;
+  end;
 end;
 
 end.
