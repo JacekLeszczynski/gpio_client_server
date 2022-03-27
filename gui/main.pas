@@ -27,6 +27,7 @@ type
     PopupMenu1: TPopupMenu;
     SpeedButton1: TSpeedButton;
     SpeedButton2: TSpeedButton;
+    SpeedButton3: TSpeedButton;
     TrayIcon1: TTrayIcon;
     uETilePanel1: TuETilePanel;
     propstorage: TXMLPropStorage;
@@ -42,12 +43,14 @@ type
     procedure netStatus(aActive, aCrypt: boolean);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton3Click(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
     procedure _CHANGE(Sender: TObject);
   private
     host: string;
     port: word;
-    con_wyjscie: boolean;
+    con_wyjscie,cmenu: boolean;
+    procedure init;
     function test(aHost: string): boolean;
     procedure wczytaj_default;
   public
@@ -60,7 +63,7 @@ var
 implementation
 
 uses
-  ecode;
+  ecode, fileutil;
 
 {$R *.lfm}
 
@@ -69,6 +72,12 @@ uses
 procedure TgPioGui._CHANGE(Sender: TObject);
 begin
   net.Disconnect;
+end;
+
+procedure TgPioGui.init;
+begin
+  SpeedButton3.Visible:=cmenu;
+  if cmenu then Height:=154 else Height:=116;
 end;
 
 function TgPioGui.test(aHost: string): boolean;
@@ -108,6 +117,7 @@ var
   i,a: integer;
   s,s1,s2: string;
 begin
+  cmenu:=false;
   c:=TStringList.Create;
   try
     c.LoadFromFile('/etc/default/gpio.client');
@@ -123,6 +133,7 @@ begin
       s2:=trim(GetLineToStr(s,2,'='));
       if s1='HOST' then host:=s2 else
       if s1='PORT' then port:=StrToInt(s2);
+      if s1='CUSTOM_MENU' then cmenu:=true;
     end;
   finally
     c.Free;
@@ -171,6 +182,7 @@ begin
   hide;
   con_wyjscie:=false;
   wczytaj_default;
+  init;
   SetConfDir('PiStudio');
   propstorage.FileName:=MyConfDir('GPioGUI.xml');
   propstorage.Active:=true;
@@ -214,6 +226,15 @@ end;
 procedure TgPioGui.SpeedButton2Click(Sender: TObject);
 begin
   net.SendStringEx('OFF'+#0);
+end;
+
+procedure TgPioGui.SpeedButton3Click(Sender: TObject);
+var
+  s1,s2: string;
+begin
+  s1:='/home/tao/.config/budgie-app-launcher/Locale State.wzor';
+  s2:='/home/tao/.config/budgie-app-launcher/Locale State';
+  CopyFile(s1,s2);
 end;
 
 procedure TgPioGui.TrayIcon1Click(Sender: TObject);
