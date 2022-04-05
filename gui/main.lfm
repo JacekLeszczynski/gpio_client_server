@@ -1,24 +1,26 @@
 object gPioGui: TgPioGui
-  Left = 2275
-  Height = 154
-  Top = 445
-  Width = 142
+  Left = 2486
+  Height = 116
+  Top = 377
+  Width = 139
   BorderStyle = bsSingle
   Caption = 'GPio-GUI'
-  ClientHeight = 154
-  ClientWidth = 142
+  ClientHeight = 116
+  ClientWidth = 139
+  Constraints.MinHeight = 116
+  Constraints.MinWidth = 139
   OnClose = FormClose
   OnCreate = FormCreate
   SessionProperties = 'Top;Left'
   LCLVersion = '2.0.12.0'
   object uETilePanel1: TuETilePanel
     Left = 0
-    Height = 154
+    Height = 116
     Top = 0
-    Width = 142
+    Width = 139
     Align = alClient
-    ClientHeight = 154
-    ClientWidth = 142
+    ClientHeight = 116
+    ClientWidth = 139
     TabOrder = 0
     Image.Data = {
       52E20700424D52E20700000000003600000028000000FC010000530100000100
@@ -16208,9 +16210,10 @@ object gPioGui: TgPioGui
       Height = 40
       Top = 56
       Width = 40
+      Enabled = False
       Flat = True
       Images = ImageList1
-      ImageIndex = 1
+      ImageIndex = 0
       OnClick = SpeedButton1Click
     end
     object SpeedButton2: TSpeedButton
@@ -16221,9 +16224,10 @@ object gPioGui: TgPioGui
       Height = 40
       Top = 56
       Width = 40
+      Enabled = False
       Flat = True
       Images = ImageList1
-      ImageIndex = 0
+      ImageIndex = 1
       OnClick = SpeedButton2Click
     end
     object cStan: TuELED
@@ -16276,6 +16280,7 @@ object gPioGui: TgPioGui
       Font.Height = -8
       Font.Name = 'Sans'
       Font.Style = [fsBold]
+      Visible = False
       OnClick = SpeedButton3Click
       ParentFont = False
     end
@@ -16293,13 +16298,13 @@ object gPioGui: TgPioGui
     OnConnect = netConnect
     OnReceiveString = netReceiveString
     OnStatus = netStatus
-    Left = 8
-    Top = 8
+    Left = 512
+    Top = 160
   end
   object ImageList1: TImageList
     Height = 32
     Width = 32
-    Left = 280
+    Left = 352
     Top = 32
     Bitmap = {
       4C69020000002000000020000000000000000000000000000000000000000000
@@ -16565,20 +16570,20 @@ object gPioGui: TgPioGui
     Enabled = False
     Interval = 500
     OnTimer = autoconnectTimer
-    Left = 280
+    Left = 352
     Top = 160
   end
   object autorun: TTimer
     Enabled = False
     Interval = 1
     OnTimer = autorunTimer
-    Left = 360
+    Left = 432
     Top = 96
   end
   object propstorage: TXMLPropStorage
     StoredValues = <>
     Active = False
-    Left = 280
+    Left = 352
     Top = 96
   end
   object mess: TExtMessage
@@ -16587,7 +16592,7 @@ object gPioGui: TgPioGui
     PosTop = 0
     PosLeft = 0
     StringToCR = '^'
-    Left = 360
+    Left = 432
     Top = 160
   end
   object TrayIcon1: TTrayIcon
@@ -19859,15 +19864,20 @@ object gPioGui: TgPioGui
     }
     Visible = True
     OnClick = TrayIcon1Click
-    Left = 360
+    Left = 432
     Top = 32
   end
   object PopupMenu1: TPopupMenu
-    Left = 136
-    Top = 8
+    Left = 512
+    Top = 32
     object MenuItem1: TMenuItem
       Caption = 'Wyjście'
       OnClick = MenuItem1Click
     end
+  end
+  object shutdown: TExtShutdown
+    Mode = smShutdownP2
+    Left = 512
+    Top = 96
   end
 end

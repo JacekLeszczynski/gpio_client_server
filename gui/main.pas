@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Spin,
   Buttons, ExtCtrls, XMLPropStorage, Menus, ueled, uETilePanel, NetSocket,
-  ExtMessage, lNet;
+  ExtMessage, ExtShutdown, lNet;
 
 type
 
@@ -16,6 +16,7 @@ type
   TgPioGui = class(TForm)
     cConnecting: TuELED;
     cStan: TuELED;
+    shutdown: TExtShutdown;
     Label1: TLabel;
     Label2: TLabel;
     MenuItem1: TMenuItem;
@@ -77,7 +78,7 @@ end;
 procedure TgPioGui.init;
 begin
   SpeedButton3.Visible:=cmenu;
-  if cmenu then Height:=154 else Height:=116;
+  if cmenu then Height:=148 else Height:=116;
 end;
 
 function TgPioGui.test(aHost: string): boolean;
@@ -216,16 +217,18 @@ procedure TgPioGui.netStatus(aActive, aCrypt: boolean);
 begin
   autoconnect.Enabled:=(not aActive) and (not con_wyjscie);
   cConnecting.Active:=aActive;
+  SpeedButton1.Enabled:=aActive;
+  SpeedButton2.Enabled:=aActive;
 end;
 
 procedure TgPioGui.SpeedButton1Click(Sender: TObject);
 begin
-  net.SendStringEx('ON'+#0);
+  net.SendStringEx('OFF'+#0);
 end;
 
 procedure TgPioGui.SpeedButton2Click(Sender: TObject);
 begin
-  net.SendStringEx('OFF'+#0);
+  net.SendStringEx('ON'+#0);
 end;
 
 procedure TgPioGui.SpeedButton3Click(Sender: TObject);
