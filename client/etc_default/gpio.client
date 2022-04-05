@@ -18,3 +18,7 @@ AUTO_ON_OFF = yes
 #   1 - wykonuj akcje tylko przy starcie systemu
 #   2 - wykonuj akcje tylko przy wyłączaniu systemu
 START_OR_STOP = 0
+
+# Opcja programisty dla programisty, przywraca plik konfiguracyjny szybkiego menu na desktopie
+# Budgie-Desktop pod linuksem, po włączeniu dodaje się nowy przycisk (domyślnie: 0)
+#CUSTOM_MENU = 0
