@@ -217,6 +217,11 @@ procedure TgPioGui.netStatus(aActive, aCrypt: boolean);
 begin
   autoconnect.Enabled:=(not aActive) and (not con_wyjscie);
   cConnecting.Active:=aActive;
+  if not aActive then
+  begin
+    cStan.Active:=(not aActive);
+    SetStatus(0);
+  end;
   SpeedButton1.Enabled:=aActive;
   SpeedButton2.Enabled:=aActive;
 end;
