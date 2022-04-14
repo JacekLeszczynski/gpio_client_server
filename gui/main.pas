@@ -29,6 +29,7 @@ type
     SpeedButton1: TSpeedButton;
     SpeedButton2: TSpeedButton;
     SpeedButton3: TSpeedButton;
+    poprawka: TTimer;
     TrayIcon1: TTrayIcon;
     uETilePanel1: TuETilePanel;
     propstorage: TXMLPropStorage;
@@ -42,6 +43,7 @@ type
     procedure netReceiveString(aMsg: string; aSocket: TLSocket;
       aBinSize: integer; var aReadBin: boolean);
     procedure netStatus(aActive, aCrypt: boolean);
+    procedure poprawkaTimer(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton3Click(Sender: TObject);
@@ -51,6 +53,7 @@ type
     host: string;
     port: word;
     con_wyjscie,cmenu: boolean;
+    cmem: integer;
     procedure init;
     function test(aHost: string): boolean;
     procedure wczytaj_default;
@@ -181,6 +184,7 @@ begin
   Application.ShowMainForm:=false;
   WindowState:=wsMinimized;
   hide;
+  cmem:=-1;
   con_wyjscie:=false;
   wczytaj_default;
   init;
@@ -211,6 +215,12 @@ procedure TgPioGui.netReceiveString(aMsg: string; aSocket: TLSocket;
 begin
   cStan.Active:=aMsg='1';
   SetStatus(StrToInt(aMsg));
+  if cmem=-1 then
+  begin
+    if aMsg='1' then cmem:=1 else cmem:=0;
+  end else begin
+    if cmem<>StrToInt(aMsg) then poprawka.Enabled:=true;
+  end;
 end;
 
 procedure TgPioGui.netStatus(aActive, aCrypt: boolean);
@@ -226,13 +236,21 @@ begin
   SpeedButton2.Enabled:=aActive;
 end;
 
+procedure TgPioGui.poprawkaTimer(Sender: TObject);
+begin
+  poprawka.Enabled:=false;
+  if cmem=1 then net.SendStringEx('ON'+#0) else net.SendStringEx('OFF'+#0);
+end;
+
 procedure TgPioGui.SpeedButton1Click(Sender: TObject);
 begin
+  cmem:=0;
   net.SendStringEx('OFF'+#0);
 end;
 
 procedure TgPioGui.SpeedButton2Click(Sender: TObject);
 begin
+  cmem:=1;
   net.SendStringEx('ON'+#0);
 end;
 

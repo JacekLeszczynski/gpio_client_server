@@ -1,7 +1,7 @@
 object gPioGui: TgPioGui
-  Left = 2486
+  Left = 2294
   Height = 116
-  Top = 377
+  Top = 177
   Width = 139
   BorderStyle = bsSingle
   Caption = 'GPio-GUI'
@@ -19879,5 +19879,12 @@ object gPioGui: TgPioGui
     Mode = smShutdownP2
     Left = 512
     Top = 96
+  end
+  object poprawka: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = poprawkaTimer
+    Left = 352
+    Top = 224
   end
 end
