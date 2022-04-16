@@ -16,6 +16,9 @@ type
   TgPioGui = class(TForm)
     cConnecting: TuELED;
     cStan: TuELED;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    pmenu: TPopupMenu;
     shutdown: TExtShutdown;
     Label1: TLabel;
     Label2: TLabel;
@@ -38,6 +41,8 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
+    procedure MenuItem2Click(Sender: TObject);
+    procedure MenuItem3Click(Sender: TObject);
     procedure netConnect(aSocket: TLSocket);
     procedure netProcessMessage;
     procedure netReceiveString(aMsg: string; aSocket: TLSocket;
@@ -200,6 +205,16 @@ begin
   close;
 end;
 
+procedure TgPioGui.MenuItem2Click(Sender: TObject);
+begin
+  net.SendStringEx('TV_ON'+#0);
+end;
+
+procedure TgPioGui.MenuItem3Click(Sender: TObject);
+begin
+  net.SendStringEx('TV_OFF'+#0);
+end;
+
 procedure TgPioGui.netConnect(aSocket: TLSocket);
 begin
   net.SendStringEx('STATUS'+#0);
@@ -213,13 +228,16 @@ end;
 procedure TgPioGui.netReceiveString(aMsg: string; aSocket: TLSocket;
   aBinSize: integer; var aReadBin: boolean);
 begin
-  cStan.Active:=aMsg='1';
-  SetStatus(StrToInt(aMsg));
-  if cmem=-1 then
+  if (aMsg='1') or (aMsg='0') then
   begin
-    if aMsg='1' then cmem:=1 else cmem:=0;
-  end else begin
-    if cmem<>StrToInt(aMsg) then poprawka.Enabled:=true;
+    cStan.Active:=aMsg='1';
+    SetStatus(StrToInt(aMsg));
+    if cmem=-1 then
+    begin
+      if aMsg='1' then cmem:=1 else cmem:=0;
+    end else begin
+      if cmem<>StrToInt(aMsg) then poprawka.Enabled:=true;
+    end;
   end;
 end;
 

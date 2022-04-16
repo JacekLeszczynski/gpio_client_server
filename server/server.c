@@ -90,6 +90,14 @@ void *recvmg(void *sock)
             } else {
                 if (REVERSE) sendmessage("1",cl.sockno,1); else sendmessage("0",cl.sockno,1);
             }
+        } else
+        if (strcmp(s,"TV_ON")==0) {
+            system("systemctl start tvheadend");
+            sendmessage("STATUS_TV_ON",cl.sockno,1);
+        } else
+        if (strcmp(s,"TV_OFF")==0) {
+            system("systemctl stop tvheadend");
+            sendmessage("STATUS_TV_OFF",cl.sockno,1);
         }
 
         //sendmessage(s,cl.sockno,1);
