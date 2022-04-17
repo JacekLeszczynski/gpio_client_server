@@ -1,3 +1,4 @@
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,6 +8,7 @@
 #include <sys/time.h>
 #include <mcrypt.h>
 #include <sys/stat.h>
+#include <unistd.h>
 //#include "aes.h"
 
 #define TRUE  1;
@@ -27,6 +29,21 @@ unsigned int atoui(char str[30]) {
    unsigned int ret;
    ret = strtoul(str, &ptr, 10);
    return ret;
+}
+
+int ctoi(char znak) {
+    int i;
+    if ( znak=='0') return 0; else
+    if ( znak=='1') return 1; else
+    if ( znak=='2') return 2; else
+    if ( znak=='3') return 3; else
+    if ( znak=='4') return 4; else
+    if ( znak=='5') return 5; else
+    if ( znak=='6') return 6; else
+    if ( znak=='7') return 7; else
+    if ( znak=='8') return 8; else
+    if ( znak=='9') return 9;
+    return i;
 }
 
 long int filesize(char *filename)
@@ -340,7 +357,7 @@ char *IntToSys(int aLiczba, int aBaza)
         wynik = concat_char_str(znaki[pom],wynik);
         n = div(n,aBaza).quot;
      } while (n!=0);
-     return wynik;
+     return strdup(wynik);
 }
 
 char *LongIntToSys(long int aLiczba, int aBaza)

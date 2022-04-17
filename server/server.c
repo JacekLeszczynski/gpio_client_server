@@ -13,6 +13,9 @@
 #include <fcntl.h>
 #include <signal.h>
 
+//#include <iostream>
+#include <curses.h>
+
 //#define RUNNING_DIR	"/disk/dbases"
 #define LOCK_FILE	"/var/run/server.gpio.pid"
 //#define LOG_FILE	"/disk/log/studiopi.gpio.log"
@@ -53,6 +56,20 @@ int idsock(int soket)
 }
 
 #include "komunikacja.c"
+
+/* WĄTEK CZYTAJĄCY NACIŚNIĘCIE KLAWISZY PILOTA */
+void *recvkb(void *arg)
+{
+    unsigned char znak;
+    char *msg;
+    //while (kbhit())
+    while (1)
+    {
+        znak = getch();
+        msg = concat_str_char("KEY=",znak);
+        sendtoall(msg,-1,1,1);
+    }
+}
 
 /* WĄTEK POŁĄCZENIA */
 void *recvmg(void *sock)
@@ -179,7 +196,7 @@ int main(int argc,char *argv[])
     int option = 1;
     socklen_t their_addr_size;
     int portno;
-    pthread_t sendt,recvt,udpvt;
+    pthread_t sendt,recvt,recvt2,udpvt;
     char msg[CONST_MAX_BUFOR], *BUF;
     int len,i;
     struct client_info cl;
@@ -196,6 +213,7 @@ int main(int argc,char *argv[])
     portno = atoi(GetConfValue(BUF,"PORT","2122"));
     GPIO_NR = GetConfValue(BUF,"GPIO_NUMBER","492");
     REVERSE = atoi(GetConfValue(BUF,"REVERSE","0"));
+    bool SCAN_KEYBOARD = atoi(GetConfValue(BUF,"SCAN_KEYBOARD","0"));
 
     daemonize();
     Randomize();
@@ -225,6 +243,7 @@ int main(int argc,char *argv[])
 	exit(1);
     }
 
+    if (SCAN_KEYBOARD) pthread_create(&recvt2,NULL,recvkb,NULL);
     while(1)
     {
         if((their_sock = accept(my_sock,(struct sockaddr *)&their_addr,&their_addr_size)) < 0)

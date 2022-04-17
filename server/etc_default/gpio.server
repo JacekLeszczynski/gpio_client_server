@@ -8,3 +8,8 @@ GPIO_NUMBER = 492
 # Jeśli masz potrzebę odwrócenia pracy stanów, bo twój sterownik włącza się przy
 # aktywnym zero, a wyłącza przy aktywnym 1 (domyślną wartością jest 0)
 # REVERSE = 0
+
+# Uaktywnia skanowanie naciśniętych klawiszy w demonie, gdy aktywne wszystkie kody
+# naciśniętych klawiszy są wysyłane do wszystkich aktywnych gniazdek.
+# Opcja domyślnie wyłączona (SCAN_KEYBOARD = 0)
+#SCAN_KEYBOARD = 0

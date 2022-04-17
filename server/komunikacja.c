@@ -1,4 +1,5 @@
 /* PROCEDURY WYSYŁAJĄCE */
+/* wysłanie wiadomości do wybranego użytkownika bez sprawdzania czy istnieje */
 void sendmessage(char *msg, int sock_adresat, bool aMutex) //adresat to soket!
 {
     int i,a,lx,lx2,l1,ll;
@@ -7,6 +8,38 @@ void sendmessage(char *msg, int sock_adresat, bool aMutex) //adresat to soket!
 
     if (aMutex) pthread_mutex_lock(&mutex);
     send(sock_adresat,msg,strlen(msg),MSG_NOSIGNAL);
+    if (aMutex) pthread_mutex_unlock(&mutex);
+}
+
+/* wysłanie wiadomości do innego użytkownika ale tylko wtedy gdy istnieje */
+void sendtouser(char *msg, int sock_nadawca, int sock_adresat, bool aMutex) //nadawca i adresat to sokety!
+{
+    int i,a;
+
+    a = -1;
+    if (aMutex) pthread_mutex_lock(&mutex);
+    for(i = 0; i < n; i++)
+    {
+        if(clients[i] == sock_adresat)
+        {
+            a = i;
+            break;
+	}
+    }
+    if (a>-1) send(sock_adresat,msg,strlen(msg),MSG_NOSIGNAL);
+    if (aMutex) pthread_mutex_unlock(&mutex);
+}
+
+/* wysłanie wiadomości do wszystkich użytkowników, jeśli force_all to także do siebie samego */
+void sendtoall(char *msg, int sock_nadawca, bool force_all, bool aMutex) //nadawca to soket
+{
+    int i;
+
+    if (aMutex) pthread_mutex_lock(&mutex);
+    for(i = 0; i < n; i++)
+    {
+        if (force_all || (clients[i] != sock_nadawca)) send(clients[i],msg,strlen(msg),MSG_NOSIGNAL);
+    }
     if (aMutex) pthread_mutex_unlock(&mutex);
 }
 
