@@ -12,9 +12,9 @@
 #include <locale.h>
 #include <fcntl.h>
 #include <signal.h>
-
+#include <linux/input.h>
 //#include <iostream>
-#include <curses.h>
+//#include <ncurses.h>
 
 //#define RUNNING_DIR	"/disk/dbases"
 #define LOCK_FILE	"/var/run/server.gpio.pid"
@@ -34,7 +34,7 @@ int my_sock, is_port;
 int clients[CONST_MAX_CLIENTS];
 char ips[CONST_MAX_CLIENTS][INET_ADDRSTRLEN];
 int ports[CONST_MAX_CLIENTS];
-char *GPIO_NR;
+char *GPIO_NR,*PATH_KBD;
 bool REVERSE;
 
 int n = 0, mn = 0, ischat = 0;
@@ -60,14 +60,24 @@ int idsock(int soket)
 /* WĄTEK CZYTAJĄCY NACIŚNIĘCIE KLAWISZY PILOTA */
 void *recvkb(void *arg)
 {
-    unsigned char znak;
+    const char *dev = PATH_KBD;
+    int fd;
     char *msg;
-    //while (kbhit())
-    while (1)
-    {
-        znak = getch();
-        msg = concat_str_char("KEY=",znak);
-        sendtoall(msg,-1,1,1);
+    fd = open(dev, O_RDONLY); // Open the buffer
+    if (fd != -1) {
+        struct input_event ev;
+        ssize_t n;
+
+        while (1) {
+            n = read(fd, &ev, sizeof ev); // Read from the buffer
+            if (ev.type == EV_KEY && ev.value == 1)
+            {
+                msg = concat("KEY=",itoa(ev.code,10));
+                sendtoall(msg,-1,1,1);
+            }
+        }
+        close(fd);
+        fflush(stdout);
     }
 }
 
@@ -214,7 +224,10 @@ int main(int argc,char *argv[])
     GPIO_NR = GetConfValue(BUF,"GPIO_NUMBER","492");
     REVERSE = atoi(GetConfValue(BUF,"REVERSE","0"));
     bool SCAN_KEYBOARD = atoi(GetConfValue(BUF,"SCAN_KEYBOARD","0"));
-
+    if (SCAN_KEYBOARD){
+        PATH_KBD = GetConfValue(BUF,"PATH_DEV_KEYBOARD","");
+        if (strcmp(PATH_KBD,"")==0) SCAN_KEYBOARD = 0;
+    }
     daemonize();
     Randomize();
 

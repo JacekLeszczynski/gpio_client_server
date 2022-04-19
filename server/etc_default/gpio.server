@@ -13,3 +13,7 @@ GPIO_NUMBER = 492
 # naciśniętych klawiszy są wysyłane do wszystkich aktywnych gniazdek.
 # Opcja domyślnie wyłączona (SCAN_KEYBOARD = 0)
 #SCAN_KEYBOARD = 0
+
+# Urządzenie z którego będą czytane dane bufora klawiszy, domyślnie wartość pusta.
+# Jeśli SCAN_KEYBOARD zostanie ustawione, wymagane jest wypełnienia tej zmiennej!
+#PATH_DEV_KEYBOARD = /dev/input/by-id/usb-JZYTECH_Wireless_Present-event-kbd

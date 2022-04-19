@@ -228,6 +228,7 @@ end;
 procedure TgPioGui.netReceiveString(aMsg: string; aSocket: TLSocket;
   aBinSize: integer; var aReadBin: boolean);
 begin
+  //writeln(aMsg);
   if (aMsg='1') or (aMsg='0') then
   begin
     cStan.Active:=aMsg='1';
