@@ -36,13 +36,16 @@ char ips[CONST_MAX_CLIENTS][INET_ADDRSTRLEN];
 int ports[CONST_MAX_CLIENTS];
 char keys[CONST_MAX_CLIENTS][30]; //identyfikacja klientów
 bool tabs[CONST_MAX_CLIENTS];  //tryb [0]=tryb (1-gpio, 2-pilot)
+char *pbufor;
 
 char *GPIO_NR,*PATH_KBD;
 bool REVERSE;
 
 int n = 0, mn = 0, ischat = 0;
 int error = 0;
+int pilot_adresat = -1;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
 
 int idsock(int soket)
 {
@@ -60,12 +63,45 @@ int idsock(int soket)
 
 #include "komunikacja.c"
 
+bool watek_dziala = 0;
+
+/* WĄTEK WYSYŁAJĄCY ZAWARTOŚĆ BUFORA PILOTA */
+void *recvkb2(void *arg)
+{
+    char *s;
+    msleep(50);
+    pthread_mutex_lock(&mutex2);
+    s = String(pbufor);
+    pbufor = String("");
+/*
+42,63,
+29,a
+56,125,25,
+63,
+29,42,31,
+*/
+    s = StringReplace(s,"4263","d");
+    s = StringReplace(s,"29a","");
+    s = StringReplace(s,"5612525","");
+    s = StringReplace(s,"63","");
+    s = StringReplace(s,"294231","");
+    if (pilot_adresat == -1)
+    {
+        sendtoall(upcase(s),-1,1,1);
+    } else {
+        sendtouser(s,-1,pilot_adresat,1);
+    }
+    watek_dziala = 0;
+    pthread_mutex_unlock(&mutex2);
+}
+
 /* WĄTEK CZYTAJĄCY NACIŚNIĘCIE KLAWISZY PILOTA */
 void *recvkb(void *arg)
 {
+    pthread_t watek;
     const char *dev = PATH_KBD;
     int fd;
-    char *msg;
+    char *msg,znak;
     fd = open(dev, O_RDONLY); // Open the buffer
     if (fd != -1) {
         struct input_event ev;
@@ -75,8 +111,38 @@ void *recvkb(void *arg)
             n = read(fd, &ev, sizeof ev); // Read from the buffer
             if (ev.type == EV_KEY && ev.value == 1)
             {
-                msg = concat("KEY=",itoa(ev.code,10));
-                sendtoall(msg,-1,1,1);
+                msg = concat("pilot=",itoa(ev.code,10));
+                pthread_mutex_lock(&mutex2);
+                if (ev.code==48)
+                {
+                    znak = 'a';
+                    pbufor = concat_str_char(pbufor,znak);
+                } else
+                if (ev.code==104)
+                {
+                    znak = 'b';
+                    pbufor = concat_str_char(pbufor,znak);
+                } else
+                if (ev.code==109)
+                {
+                    znak = 'c';
+                    pbufor = concat_str_char(pbufor,znak);
+                } else
+                if (ev.code==1)
+                {
+                    znak = 'd';
+                    pbufor = concat_str_char(pbufor,znak);
+                } else
+                {
+                    znak = (char) ev.code;
+                    pbufor = concat(pbufor,itoa(ev.code,10));
+                }
+                if (watek_dziala == 0)
+                {
+                    watek_dziala = 1;
+                    pthread_create(&watek,NULL,recvkb2,NULL);
+                }
+                pthread_mutex_unlock(&mutex2);
             }
         }
         close(fd);
@@ -151,6 +217,7 @@ void *recvmg(void *sock)
             if (strcmp(s2,"pilot")==0) {
                 pthread_mutex_lock(&mutex);
                 tabs[id] = 2;
+                pilot_adresat = cl.sockno;
                 pthread_mutex_unlock(&mutex);
             }
         }
@@ -161,6 +228,7 @@ void *recvmg(void *sock)
     }  /* pętla główna recv i pętla wykonywania gotowych zapytań */
 
     pthread_mutex_lock(&mutex);
+    if (pilot_adresat = cl.sockno) pilot_adresat = -1;
     for(i = 0; i < n; i++) {
 	if(clients[i] == cl.sockno)
         {
@@ -285,6 +353,8 @@ int main(int argc,char *argv[])
         //log_message(LOG_FILE,"Problem z listiningiem.");
 	exit(1);
     }
+
+    pbufor = String("");
 
     if (SCAN_KEYBOARD) pthread_create(&recvt2,NULL,recvkb,NULL);
     while(1)
