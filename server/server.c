@@ -87,9 +87,21 @@ void *recvkb2(void *arg)
     s = StringReplace(s,"294231","");
     if (pilot_adresat == -1)
     {
-        sendtoall(upcase(s),-1,1,1);
+        if (strcmp(s,"a")==0)
+        {
+            //pid_t pid;
+            //pid = fork();
+            //if (pid==0) execl("/usr/local/bin/speaktime","/usr/local/bin/speaktime",NULL);
+            char *ss = "speaktime";
+            system(ss);
+        }
+        //sendtoall(upcase(s),-1,1,1);
     } else {
-        sendtouser(s,-1,pilot_adresat,1);
+        if (strcmp(trim(s),"")!=0)
+        {
+            s = concat("pilot=",s);
+            sendtouser(s,-1,pilot_adresat,1);
+        }
     }
     watek_dziala = 0;
     pthread_mutex_unlock(&mutex2);
@@ -101,7 +113,7 @@ void *recvkb(void *arg)
     pthread_t watek;
     const char *dev = PATH_KBD;
     int fd;
-    char *msg,znak;
+    char znak;
     fd = open(dev, O_RDONLY); // Open the buffer
     if (fd != -1) {
         struct input_event ev;
@@ -111,7 +123,6 @@ void *recvkb(void *arg)
             n = read(fd, &ev, sizeof ev); // Read from the buffer
             if (ev.type == EV_KEY && ev.value == 1)
             {
-                msg = concat("pilot=",itoa(ev.code,10));
                 pthread_mutex_lock(&mutex2);
                 if (ev.code==48)
                 {
@@ -219,6 +230,11 @@ void *recvmg(void *sock)
                 tabs[id] = 2;
                 pilot_adresat = cl.sockno;
                 pthread_mutex_unlock(&mutex);
+            }
+        } else
+        if (strcmp(s1,"pilot")==0) {
+            if (strcmp(s2,"active")==0) {
+                pilot_adresat = cl.sockno;
             }
         }
 
