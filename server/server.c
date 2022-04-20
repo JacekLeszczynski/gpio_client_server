@@ -34,6 +34,9 @@ int my_sock, is_port;
 int clients[CONST_MAX_CLIENTS];
 char ips[CONST_MAX_CLIENTS][INET_ADDRSTRLEN];
 int ports[CONST_MAX_CLIENTS];
+char keys[CONST_MAX_CLIENTS][30]; //identyfikacja klientów
+bool tabs[CONST_MAX_CLIENTS];  //tryb [0]=tryb (1-gpio, 2-pilot)
+
 char *GPIO_NR,*PATH_KBD;
 bool REVERSE;
 
@@ -86,13 +89,22 @@ void *recvmg(void *sock)
 {
     struct client_info cl = *((struct client_info *)sock);
     bool TerminateNow = 0, czysc = 0;
-    int len,i,j,a;
-    char msg[CONST_MAX_BUFOR],*s;
+    int len,i,j,a,id;
+    char msg[CONST_MAX_BUFOR],*s,*s1,*s2,*s3;
+
+    id = idsock(cl.sockno);
 
     while((len = recv(cl.sockno,&msg,CONST_MAX_BUFOR,0)) > 0)
     {
         if (len<=0) continue;
         s = strdup(msg);
+        s1 = GetLineToStr(s,1,'=',"");
+        s2 = GetLineToStr(s,2,'=',"");
+
+        //s3 = concat("Zmienna s1=",s1);
+        //sendmessage(s3,cl.sockno,1);
+        //s3 = concat("Zmienna s2=",s2);
+        //sendmessage(s3,cl.sockno,1);
 
         if (strcmp(s,"ON")==0) {
             export_GPIO();
@@ -125,6 +137,57 @@ void *recvmg(void *sock)
         if (strcmp(s,"TV_OFF")==0) {
             system("systemctl stop tvheadend");
             sendmessage("STATUS_TV_OFF",cl.sockno,1);
+        } else
+        if (strcmp(s,"???")==0) {
+        } else
+
+        if (strcmp(s1,"gpio")==0 && tabs[id]==1) {
+            if (strcmp(s2,"on")==0) {
+                export_GPIO();
+                direction_GPIO();
+                if (REVERSE) set_GPIO(0); else set_GPIO(1);
+                unexport_GPIO();
+                if (REVERSE) sendmessage("gpio=1",cl.sockno,1); else sendmessage("gpio=0",cl.sockno,1);
+            } else
+            if (strcmp(s2,"off")==0) {
+                export_GPIO();
+                direction_GPIO();
+                if (REVERSE) set_GPIO(1); else set_GPIO(0);
+                unexport_GPIO();
+                if (REVERSE) sendmessage("gpio=0",cl.sockno,1); else sendmessage("gpio=1",cl.sockno,1);
+            } else
+            if (strcmp(s2,"status")==0) {
+                export_GPIO();
+                a = get_GPIO();
+                unexport_GPIO();
+                if (a==1) {
+                    if (REVERSE) sendmessage("gpio=0",cl.sockno,1); else sendmessage("gpio=1",cl.sockno,1);
+                } else {
+                    if (REVERSE) sendmessage("gpio=1",cl.sockno,1); else sendmessage("gpio=0",cl.sockno,1);
+                }
+            }
+        } else
+        if (strcmp(s1,"tv")==0 && tabs[id]==1) {
+            if (strcmp(s2,"on")==0) {
+                system("systemctl start tvheadend");
+                sendmessage("STATUS_TV_ON",cl.sockno,1);
+            } else
+            if (strcmp(s2,"off")==0) {
+                system("systemctl stop tvheadend");
+                sendmessage("tv=off",cl.sockno,1);
+            }
+        } else
+        if (strcmp(s1,"tryb")==0) {
+            if (strcmp(s2,"gpio")==0) {
+                pthread_mutex_lock(&mutex);
+                tabs[id] = 1;
+                pthread_mutex_unlock(&mutex);
+            } else
+            if (strcmp(s2,"pilot")==0) {
+                pthread_mutex_lock(&mutex);
+                tabs[id] = 2;
+                pthread_mutex_unlock(&mutex);
+            }
         }
 
         //sendmessage(s,cl.sockno,1);
@@ -142,6 +205,8 @@ void *recvmg(void *sock)
 		clients[j] = clients[j+1];
                 strcpy(ips[j],ips[j+1]);
                 ports[j] = ports[j+1];
+                strcpy(keys[j],keys[j+1]);
+                tabs[j] = tabs[j+1];
 		j++;
 	    }
 	}
@@ -275,6 +340,8 @@ int main(int argc,char *argv[])
 	clients[n] = their_sock;
         strcpy(ips[n],IP);
         ports[n] = PORT;
+        strcpy(keys[n],"");
+        tabs[n] = 0;
 	n++;
 	pthread_create(&recvt,NULL,recvmg,&cl);
 	pthread_mutex_unlock(&mutex);

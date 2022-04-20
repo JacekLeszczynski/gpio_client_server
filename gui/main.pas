@@ -207,17 +207,18 @@ end;
 
 procedure TgPioGui.MenuItem2Click(Sender: TObject);
 begin
-  net.SendStringEx('TV_ON'+#0);
+  net.SendString('tv=on');
 end;
 
 procedure TgPioGui.MenuItem3Click(Sender: TObject);
 begin
-  net.SendStringEx('TV_OFF'+#0);
+  net.SendString('tv=off');
 end;
 
 procedure TgPioGui.netConnect(aSocket: TLSocket);
 begin
-  net.SendStringEx('STATUS'+#0);
+  net.SendString('tryb=gpio');
+  net.SendString('gpio=status');
 end;
 
 procedure TgPioGui.netProcessMessage;
@@ -227,17 +228,20 @@ end;
 
 procedure TgPioGui.netReceiveString(aMsg: string; aSocket: TLSocket;
   aBinSize: integer; var aReadBin: boolean);
+var
+  s1,s2: string;
 begin
-  //writeln(aMsg);
-  if (aMsg='1') or (aMsg='0') then
+  s1:=GetLineToStr(aMsg,1,'=');
+  s2:=GetLineToStr(aMsg,2,'=');
+  if s1='gpio' then
   begin
-    cStan.Active:=aMsg='1';
-    SetStatus(StrToInt(aMsg));
+    cStan.Active:=s2='1';
+    SetStatus(StrToInt(s2));
     if cmem=-1 then
     begin
-      if aMsg='1' then cmem:=1 else cmem:=0;
+      if s2='1' then cmem:=1 else cmem:=0;
     end else begin
-      if cmem<>StrToInt(aMsg) then poprawka.Enabled:=true;
+      if cmem<>StrToInt(s2) then poprawka.Enabled:=true;
     end;
   end;
 end;
@@ -258,19 +262,19 @@ end;
 procedure TgPioGui.poprawkaTimer(Sender: TObject);
 begin
   poprawka.Enabled:=false;
-  if cmem=1 then net.SendStringEx('ON'+#0) else net.SendStringEx('OFF'+#0);
+  if cmem=1 then net.SendString('gpio=on') else net.SendString('gpio=off');
 end;
 
 procedure TgPioGui.SpeedButton1Click(Sender: TObject);
 begin
   cmem:=0;
-  net.SendStringEx('OFF'+#0);
+  net.SendString('gpio=off');
 end;
 
 procedure TgPioGui.SpeedButton2Click(Sender: TObject);
 begin
   cmem:=1;
-  net.SendStringEx('ON'+#0);
+  net.SendString('gpio=on');
 end;
 
 procedure TgPioGui.SpeedButton3Click(Sender: TObject);
