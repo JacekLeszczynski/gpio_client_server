@@ -228,13 +228,27 @@ void *recvmg(void *sock)
             if (strcmp(s2,"pilot")==0) {
                 pthread_mutex_lock(&mutex);
                 tabs[id] = 2;
-                pilot_adresat = cl.sockno;
+                if (pilot_adresat==-1)
+                {
+                    pilot_adresat = cl.sockno;
+                    s = String("pilot=active");
+                    sendtouser(s,-1,pilot_adresat,0);
+                }
                 pthread_mutex_unlock(&mutex);
             }
         } else
         if (strcmp(s1,"pilot")==0) {
             if (strcmp(s2,"active")==0) {
+                pthread_mutex_lock(&mutex);
+                if (pilot_adresat>-1)
+                {
+                    s = String("pilot=noactive");
+                    sendtouser(s,-1,pilot_adresat,0);
+                }
                 pilot_adresat = cl.sockno;
+                s = String("pilot=active");
+                sendtouser(s,-1,pilot_adresat,0);
+                pthread_mutex_unlock(&mutex);
             }
         }
 
@@ -258,9 +272,18 @@ void *recvmg(void *sock)
                 tabs[j] = tabs[j+1];
 		j++;
 	    }
-	}
+        }
     }
     n--;
+    for(i = 0; i < n; i++) {
+        if (pilot_adresat==-1 && tabs[j]==2)
+        {
+            pilot_adresat = clients[j];
+            s = String("pilot=active");
+            sendtouser(s,-1,pilot_adresat,0);
+            break;
+        }
+    }
     pthread_mutex_unlock(&mutex);
     shutdown(cl.sockno,SHUT_RDWR);
 }
