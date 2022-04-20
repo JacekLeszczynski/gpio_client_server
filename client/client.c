@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     char buf[MAXDATASIZE];
     struct hostent *he;
     struct sockaddr_in their_addr; /* connector's address information */
-    char *komenda;
+    char *str_init,*komenda;
     char wlaczone,start_or_stop;
     char *tmp;
 
@@ -80,17 +80,29 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    if (strcmp(komenda,"AUTO-ON")==0) komenda = String("ON");
-    if (strcmp(komenda,"AUTO-OFF")==0) komenda = String("OFF");
+    //str_init = String("tryb=gpio");
+    //if (send(sockfd,str_init,strlen(str_init)+1,0) == -1)
+    //{
+    //    perror("send");
+    //    exit (1);
+    //}
+    //usleep(500);
+
+    if (strcmp(komenda,"AUTO-ON")==0) komenda = String("gpio=on");
+    else if (strcmp(komenda,"AUTO-OFF")==0) komenda = String("gpio=off");
+    else if (strcmp(komenda,"STATUS")==0) komenda = String("gpio=status");
+    else if (strcmp(komenda,"ON")==0) komenda = String("gpio=on");
+    else if (strcmp(komenda,"OFF")==0) komenda = String("gpio=off");
+
+    //printf("Komenda do wysłania: %s\n",komenda);
 
     if (send(sockfd,komenda,strlen(komenda),0) == -1)
     {
         perror("send");
         exit (1);
     }
-    //printf("After the send function \n");
 
-    if (strcmp(komenda,"STATUS")==0)
+    if (strcmp(komenda,"gpio=status")==0)
     {
         if ((numbytes=recv(sockfd, buf, MAXDATASIZE, 0)) == -1)
         {
