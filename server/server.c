@@ -30,7 +30,7 @@ struct client_info {
     int port;
 };
 
-int my_sock, is_port;
+int my_sock, is_port, dodatkowe_watki = 0;
 int clients[CONST_MAX_CLIENTS];
 char ips[CONST_MAX_CLIENTS][INET_ADDRSTRLEN];
 int ports[CONST_MAX_CLIENTS];
@@ -66,7 +66,7 @@ int idsock(int soket)
 bool watek_dziala = 0;
 
 /* WĄTEK WYSYŁAJĄCY ZAWARTOŚĆ BUFORA PILOTA */
-void *recvkb2(void *arg)
+void *sending_keys_pilot(void *arg)
 {
     char *s;
     msleep(50);
@@ -80,19 +80,37 @@ void *recvkb2(void *arg)
 63,
 29,42,31,
 */
-    s = StringReplace(s,"4263","d");
-    s = StringReplace(s,"29a","");
+    s = StringReplace(s,"4263","key_down");
+    s = StringReplace(s,"29key_up","");
     s = StringReplace(s,"5612525","");
     s = StringReplace(s,"63","");
     s = StringReplace(s,"294231","");
     if (pilot_adresat == -1)
     {
-        if (strcmp(s,"a")==0)
+        if (strcmp(s,"key_up")==0)
         {
             //pid_t pid;
             //pid = fork();
             //if (pid==0) execl("/usr/local/bin/speaktime","/usr/local/bin/speaktime",NULL);
             char *ss = "speaktime";
+            system(ss);
+        } else
+        if (strcmp(s,"key_left")==0)
+        {
+            //pid_t pid;
+            //pid = fork();
+            //if (pid==0) execl("/usr/local/bin/speaktime","/usr/local/bin/speaktime",NULL);
+            //char *ss = "amixer sset PCM 10%-";
+            char *ss = "mpc volume -5";
+            system(ss);
+        } else
+        if (strcmp(s,"key_right")==0)
+        {
+            //pid_t pid;
+            //pid = fork();
+            //if (pid==0) execl("/usr/local/bin/speaktime","/usr/local/bin/speaktime",NULL);
+            //char *ss = "amixer sset PCM 10%+";
+            char *ss = "mpc volume +5";
             system(ss);
         }
         //sendtoall(upcase(s),-1,1,1);
@@ -108,17 +126,20 @@ void *recvkb2(void *arg)
 }
 
 /* WĄTEK CZYTAJĄCY NACIŚNIĘCIE KLAWISZY PILOTA */
-void *recvkb(void *arg)
+void *procedure_w1(void *arg)
 {
     pthread_t watek;
     const char *dev = PATH_KBD;
     int fd;
-    char znak;
+    char *klucz;
     fd = open(dev, O_RDONLY); // Open the buffer
     if (fd != -1) {
         struct input_event ev;
         ssize_t n;
 
+        pthread_mutex_lock(&mutex);
+        dodatkowe_watki++;
+        pthread_mutex_unlock(&mutex);
         while (1) {
             n = read(fd, &ev, sizeof ev); // Read from the buffer
             if (ev.type == EV_KEY && ev.value == 1)
@@ -126,36 +147,39 @@ void *recvkb(void *arg)
                 pthread_mutex_lock(&mutex2);
                 if (ev.code==48)
                 {
-                    znak = 'a';
-                    pbufor = concat_str_char(pbufor,znak);
+                    klucz = String("key_up");
+                    pbufor = concat(pbufor,klucz);
                 } else
                 if (ev.code==104)
                 {
-                    znak = 'b';
-                    pbufor = concat_str_char(pbufor,znak);
+                    klucz = String("key_left");
+                    pbufor = concat(pbufor,klucz);
                 } else
                 if (ev.code==109)
                 {
-                    znak = 'c';
-                    pbufor = concat_str_char(pbufor,znak);
+                    klucz = String("key_right");
+                    pbufor = concat(pbufor,klucz);
                 } else
                 if (ev.code==1)
                 {
-                    znak = 'd';
-                    pbufor = concat_str_char(pbufor,znak);
+                    klucz = String("key_down");
+                    pbufor = concat(pbufor,klucz);
                 } else
                 {
-                    znak = (char) ev.code;
-                    pbufor = concat(pbufor,itoa(ev.code,10));
+                    klucz = itoa(ev.code,10);
+                    pbufor = concat(pbufor,klucz);
                 }
                 if (watek_dziala == 0)
                 {
                     watek_dziala = 1;
-                    pthread_create(&watek,NULL,recvkb2,NULL);
+                    pthread_create(&watek,NULL,sending_keys_pilot,NULL);
                 }
                 pthread_mutex_unlock(&mutex2);
             }
         }
+        pthread_mutex_lock(&mutex);
+        dodatkowe_watki--;
+        pthread_mutex_unlock(&mutex);
         close(fd);
         fflush(stdout);
     }
@@ -233,6 +257,9 @@ void *recvmg(void *sock)
                     pilot_adresat = cl.sockno;
                     s = String("pilot=active");
                     sendtouser(s,-1,pilot_adresat,0);
+                } else {
+                    s = String("tryb=pilot");
+                    sendtouser(s,-1,cl.sockno,0);
                 }
                 pthread_mutex_unlock(&mutex);
             }
@@ -258,7 +285,20 @@ void *recvmg(void *sock)
     }  /* pętla główna recv i pętla wykonywania gotowych zapytań */
 
     pthread_mutex_lock(&mutex);
-    if (pilot_adresat = cl.sockno) pilot_adresat = -1;
+    if (pilot_adresat == cl.sockno)
+    {
+        pilot_adresat = -1;
+        for(i = 0; i < n; i++) {
+            if (tabs[i]==2 && clients[i]!=cl.sockno)
+            {
+                pilot_adresat = clients[i];
+                s = String("pilot=active");
+                //sendmessage(s,pilot_adresat,0);
+                sendtouser(s,-1,pilot_adresat,0);
+                break;
+            }
+        }
+    }
     for(i = 0; i < n; i++) {
 	if(clients[i] == cl.sockno)
         {
@@ -272,20 +312,12 @@ void *recvmg(void *sock)
                 tabs[j] = tabs[j+1];
 		j++;
 	    }
-        }
-    }
-    n--;
-    for(i = 0; i < n; i++) {
-        if (pilot_adresat==-1 && tabs[j]==2)
-        {
-            pilot_adresat = clients[j];
-            s = String("pilot=active");
-            sendtouser(s,-1,pilot_adresat,0);
             break;
         }
     }
-    pthread_mutex_unlock(&mutex);
+    n--;
     shutdown(cl.sockno,SHUT_RDWR);
+    pthread_mutex_unlock(&mutex);
 }
 
 void signal_handler(int sig)
@@ -343,7 +375,7 @@ int main(int argc,char *argv[])
     int option = 1;
     socklen_t their_addr_size;
     int portno;
-    pthread_t sendt,recvt,recvt2,udpvt;
+    pthread_t sendt,recvt,watek1,watek2;
     char msg[CONST_MAX_BUFOR], *BUF;
     int len,i;
     struct client_info cl;
@@ -395,7 +427,9 @@ int main(int argc,char *argv[])
 
     pbufor = String("");
 
-    if (SCAN_KEYBOARD) pthread_create(&recvt2,NULL,recvkb,NULL);
+    if (SCAN_KEYBOARD) {
+        pthread_create(&watek1,NULL,procedure_w1,NULL);
+    }
     while(1)
     {
         if((their_sock = accept(my_sock,(struct sockaddr *)&their_addr,&their_addr_size)) < 0)

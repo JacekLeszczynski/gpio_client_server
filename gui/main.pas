@@ -16,9 +16,9 @@ type
   TgPioGui = class(TForm)
     cConnecting: TuELED;
     cStan: TuELED;
-    MenuItem2: TMenuItem;
-    MenuItem3: TMenuItem;
-    pmenu: TPopupMenu;
+    MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
     shutdown: TExtShutdown;
     Label1: TLabel;
     Label2: TLabel;
@@ -33,6 +33,7 @@ type
     SpeedButton2: TSpeedButton;
     SpeedButton3: TSpeedButton;
     poprawka: TTimer;
+    auto_hide: TTimer;
     TrayIcon1: TTrayIcon;
     uETilePanel1: TuETilePanel;
     propstorage: TXMLPropStorage;
@@ -41,8 +42,8 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
-    procedure MenuItem2Click(Sender: TObject);
-    procedure MenuItem3Click(Sender: TObject);
+    procedure MenuItem4Click(Sender: TObject);
+    procedure MenuItem6Click(Sender: TObject);
     procedure netConnect(aSocket: TLSocket);
     procedure netProcessMessage;
     procedure netReceiveString(aMsg: string; aSocket: TLSocket;
@@ -52,6 +53,7 @@ type
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton3Click(Sender: TObject);
+    procedure auto_hideTimer(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
     procedure _CHANGE(Sender: TObject);
   private
@@ -62,6 +64,7 @@ type
     procedure init;
     function test(aHost: string): boolean;
     procedure wczytaj_default;
+    procedure auto_hide_go;
   public
     procedure SetStatus(aValue: integer);
   end;
@@ -149,6 +152,12 @@ begin
   end;
 end;
 
+procedure TgPioGui.auto_hide_go;
+begin
+  auto_hide.Enabled:=false;
+  auto_hide.Enabled:=true;
+end;
+
 procedure TgPioGui.SetStatus(aValue: integer);
 begin
   case aValue of
@@ -205,12 +214,12 @@ begin
   close;
 end;
 
-procedure TgPioGui.MenuItem2Click(Sender: TObject);
+procedure TgPioGui.MenuItem4Click(Sender: TObject);
 begin
   net.SendString('tv=on');
 end;
 
-procedure TgPioGui.MenuItem3Click(Sender: TObject);
+procedure TgPioGui.MenuItem6Click(Sender: TObject);
 begin
   net.SendString('tv=off');
 end;
@@ -231,6 +240,7 @@ procedure TgPioGui.netReceiveString(aMsg: string; aSocket: TLSocket;
 var
   s1,s2: string;
 begin
+  //writeln(aMsg);
   s1:=GetLineToStr(aMsg,1,'=');
   s2:=GetLineToStr(aMsg,2,'=');
   if s1='gpio' then
@@ -269,12 +279,14 @@ procedure TgPioGui.SpeedButton1Click(Sender: TObject);
 begin
   cmem:=0;
   net.SendString('gpio=off');
+  auto_hide_go;
 end;
 
 procedure TgPioGui.SpeedButton2Click(Sender: TObject);
 begin
   cmem:=1;
   net.SendString('gpio=on');
+  auto_hide_go;
 end;
 
 procedure TgPioGui.SpeedButton3Click(Sender: TObject);
@@ -284,6 +296,17 @@ begin
   s1:='/home/tao/.config/budgie-app-launcher/Locale State.wzor';
   s2:='/home/tao/.config/budgie-app-launcher/Locale State';
   CopyFile(s1,s2);
+  auto_hide_go;
+end;
+
+procedure TgPioGui.auto_hideTimer(Sender: TObject);
+begin
+  auto_hide.Enabled:=false;
+  if WindowState=wsNormal then
+  begin
+    WindowState:=wsMinimized;
+    hide;
+  end;
 end;
 
 procedure TgPioGui.TrayIcon1Click(Sender: TObject);

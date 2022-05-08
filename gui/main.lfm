@@ -21,7 +21,6 @@ object gPioGui: TgPioGui
     Align = alClient
     ClientHeight = 116
     ClientWidth = 139
-    PopupMenu = pmenu
     TabOrder = 0
     Image.Data = {
       52E20700424D52E20700000000003600000028000000FC010000530100000100
@@ -19871,6 +19870,17 @@ object gPioGui: TgPioGui
   object PopupMenu1: TPopupMenu
     Left = 512
     Top = 32
+    object MenuItem4: TMenuItem
+      Caption = 'Uruchom serwis TV'
+      OnClick = MenuItem4Click
+    end
+    object MenuItem6: TMenuItem
+      Caption = 'Zakończ serwis TV'
+      OnClick = MenuItem6Click
+    end
+    object MenuItem5: TMenuItem
+      Caption = '-'
+    end
     object MenuItem1: TMenuItem
       Caption = 'Wyjście'
       OnClick = MenuItem1Click
@@ -19888,16 +19898,11 @@ object gPioGui: TgPioGui
     Left = 352
     Top = 224
   end
-  object pmenu: TPopupMenu
+  object auto_hide: TTimer
+    Enabled = False
+    Interval = 2500
+    OnTimer = auto_hideTimer
     Left = 432
     Top = 224
-    object MenuItem2: TMenuItem
-      Caption = 'TV ON'
-      OnClick = MenuItem2Click
-    end
-    object MenuItem3: TMenuItem
-      Caption = 'TV OFF'
-      OnClick = MenuItem3Click
-    end
   end
 end
