@@ -64,7 +64,7 @@ type
     procedure init;
     function test(aHost: string): boolean;
     procedure wczytaj_default;
-    procedure auto_hide_go;
+    procedure auto_hide_go(aMiliSeconds: integer = 5000);
   public
     procedure SetStatus(aValue: integer);
   end;
@@ -152,9 +152,10 @@ begin
   end;
 end;
 
-procedure TgPioGui.auto_hide_go;
+procedure TgPioGui.auto_hide_go(aMiliSeconds: integer);
 begin
   auto_hide.Enabled:=false;
+  auto_hide.Interval:=aMiliSeconds;
   auto_hide.Enabled:=true;
 end;
 
@@ -296,7 +297,7 @@ begin
   s1:='/home/tao/.config/budgie-app-launcher/Locale State.wzor';
   s2:='/home/tao/.config/budgie-app-launcher/Locale State';
   CopyFile(s1,s2);
-  auto_hide_go;
+  auto_hide_go(500);
 end;
 
 procedure TgPioGui.auto_hideTimer(Sender: TObject);
