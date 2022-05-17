@@ -44,6 +44,7 @@ bool REVERSE;
 int n = 0, mn = 0, ischat = 0;
 int error = 0;
 int pilot_adresat = -1;
+int gpio_adresat = -1;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
 
@@ -314,10 +315,13 @@ void *recvmg(void *sock)
 {
     struct client_info cl = *((struct client_info *)sock);
     bool TerminateNow = 0, czysc = 0;
-    int len,i,j,a,id;
+    int len,i,j,a,id,tryb=0;
     char msg[CONST_MAX_BUFOR],*s,*s1,*s2,*s3;
 
+    pthread_mutex_lock(&mutex);
     id = idsock(cl.sockno);
+    tryb = tabs[id];
+    pthread_mutex_unlock(&mutex);
 
     while((len = recv(cl.sockno,&msg,CONST_MAX_BUFOR,0)) > 0)
     {
@@ -331,7 +335,7 @@ void *recvmg(void *sock)
         //s3 = concat("Zmienna s2=",s2);
         //sendmessage(s3,cl.sockno,1);
 
-        if (strcmp(s1,"gpio")==0 && tabs[id]==1) {
+        if (strcmp(s1,"gpio")==0 && (tryb==0 || tryb==1)) {
             if (strcmp(s2,"on")==0) {
                 export_GPIO();
                 direction_GPIO();
@@ -357,7 +361,7 @@ void *recvmg(void *sock)
                 }
             }
         } else
-        if (strcmp(s1,"tv")==0 && tabs[id]==1) {
+        if (strcmp(s1,"tv")==0 && tryb==1) {
             if (strcmp(s2,"on")==0) {
                 system("systemctl start tvheadend");
                 sendmessage("STATUS_TV_ON",cl.sockno,1);
@@ -370,12 +374,17 @@ void *recvmg(void *sock)
         if (strcmp(s1,"tryb")==0) {
             if (strcmp(s2,"gpio")==0) {
                 pthread_mutex_lock(&mutex);
-                tabs[id] = 1;
+                id = idsock(cl.sockno);
+                tryb = 1;
+                tabs[id] = tryb;
+                if (gpio_adresat==-1) gpio_adresat = cl.sockno;
                 pthread_mutex_unlock(&mutex);
             } else
             if (strcmp(s2,"pilot")==0) {
                 pthread_mutex_lock(&mutex);
-                tabs[id] = 2;
+                id = idsock(cl.sockno);
+                tryb = 2;
+                tabs[id] = tryb;
                 if (pilot_adresat==-1)
                 {
                     pilot_adresat = cl.sockno;
@@ -409,6 +418,7 @@ void *recvmg(void *sock)
     }  /* pętla główna recv i pętla wykonywania gotowych zapytań */
 
     pthread_mutex_lock(&mutex);
+    if (gpio_adresat==cl.sockno) gpio_adresat = -1;
     if (pilot_adresat == cl.sockno)
     {
         pilot_adresat = -1;
@@ -580,7 +590,7 @@ int main(int argc,char *argv[])
         strcpy(ips[n],IP);
         ports[n] = PORT;
         strcpy(keys[n],"");
-        tabs[n] = 1; //domyslnie GPIO!
+        tabs[n] = 0; //domyslnie GPIO!
 	n++;
 	pthread_create(&recvt,NULL,recvmg,&cl);
 	pthread_mutex_unlock(&mutex);

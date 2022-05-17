@@ -227,7 +227,7 @@ end;
 
 procedure TgPioGui.netConnect(aSocket: TLSocket);
 begin
-  //net.SendString('tryb=gpio');
+  net.SendString('tryb=gpio');
   net.SendString('gpio=status');
 end;
 
