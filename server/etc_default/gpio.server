@@ -15,5 +15,7 @@ GPIO_NUMBER = 492
 #SCAN_KEYBOARD = 0
 
 # Urządzenie z którego będą czytane dane bufora klawiszy, domyślnie wartość pusta.
-# Jeśli SCAN_KEYBOARD zostanie ustawione, wymagane jest wypełnienia tej zmiennej!
-#PATH_DEV_KEYBOARD = /dev/input/by-id/usb-JZYTECH_Wireless_Present-event-kbd
+# Jeśli SCAN_KEYBOARD zostanie ustawione, wymagane jest wypełnienie minimum jednej
+# z poniższych zmiennych!
+#PATH_DEV_KEYBOARD_0 = /dev/input/by-id/usb-device0-event-kbd
+#PATH_DEV_KEYBOARD_1 = /dev/input/by-id/usb-device1-event-kbd

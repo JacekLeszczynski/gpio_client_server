@@ -38,7 +38,7 @@ char keys[CONST_MAX_CLIENTS][30]; //identyfikacja klientów
 bool tabs[CONST_MAX_CLIENTS];  //tryb [0]=tryb (1-gpio, 2-pilot)
 char *pbufor;
 
-char *GPIO_NR,*PATH_KBD;
+char *GPIO_NR,*PATH_KBD_0,*PATH_KBD_1;
 bool REVERSE;
 
 int n = 0, mn = 0, ischat = 0;
@@ -126,10 +126,10 @@ void *sending_keys_pilot(void *arg)
 }
 
 /* WĄTEK CZYTAJĄCY NACIŚNIĘCIE KLAWISZY PILOTA */
-void *procedure_w1(void *arg)
+void *procedure_w0(void *arg)
 {
     pthread_t watek;
-    const char *dev = PATH_KBD;
+    const char *dev = PATH_KBD_0;
     int fd;
     char *klucz;
     fd = open(dev, O_RDONLY); // Open the buffer
@@ -163,6 +163,130 @@ void *procedure_w1(void *arg)
                 if (ev.code==1)
                 {
                     klucz = String("key_down");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                {
+                    klucz = itoa(ev.code,10);
+                    pbufor = concat(pbufor,klucz);
+                }
+                if (watek_dziala == 0)
+                {
+                    watek_dziala = 1;
+                    pthread_create(&watek,NULL,sending_keys_pilot,NULL);
+                }
+                pthread_mutex_unlock(&mutex2);
+            }
+        }
+        pthread_mutex_lock(&mutex);
+        dodatkowe_watki--;
+        pthread_mutex_unlock(&mutex);
+        close(fd);
+        fflush(stdout);
+    }
+}
+
+void *procedure_w1(void *arg)
+{
+    pthread_t watek;
+    const char *dev = PATH_KBD_1;
+    int fd;
+    char *klucz;
+    fd = open(dev, O_RDONLY); // Open the buffer
+    if (fd != -1) {
+        struct input_event ev;
+        ssize_t n;
+
+        pthread_mutex_lock(&mutex);
+        dodatkowe_watki++;
+        pthread_mutex_unlock(&mutex);
+        while (1) {
+            n = read(fd, &ev, sizeof ev); // Read from the buffer
+            if (ev.type == EV_KEY && ev.value == 1)
+            {
+                pthread_mutex_lock(&mutex2);
+                if (ev.code==11)
+                {
+                    klucz = String("key_power");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==2)
+                {
+                    klucz = String("key_play_pause");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==3)
+                {
+                    klucz = String("key_up");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==4)
+                {
+                    klucz = String("key_left");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==5)
+                {
+                    klucz = String("key_right");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==6)
+                {
+                    klucz = String("key_down");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==7)
+                {
+                    klucz = String("key_push");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==8)
+                {
+                    klucz = String("key_back");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==9)
+                {
+                    klucz = String("key_enter");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==10)
+                {
+                    klucz = String("key_menu");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==30)
+                {
+                    klucz = String("key_page_up");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==48)
+                {
+                    klucz = String("key_page_down");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==46)
+                {
+                    klucz = String("key_mic");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==32)
+                {
+                    klucz = String("key_volume_up");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==18)
+                {
+                    klucz = String("key_volume_down");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==33)
+                {
+                    klucz = String("key_delete");
+                    pbufor = concat(pbufor,klucz);
+                } else
+                if (ev.code==34)
+                {
+                    klucz = String("key_mute");
                     pbufor = concat(pbufor,klucz);
                 } else
                 {
@@ -375,7 +499,7 @@ int main(int argc,char *argv[])
     int option = 1;
     socklen_t their_addr_size;
     int portno;
-    pthread_t sendt,recvt,watek1,watek2;
+    pthread_t sendt,recvt,watek0,watek1;
     char msg[CONST_MAX_BUFOR], *BUF;
     int len,i;
     struct client_info cl;
@@ -393,9 +517,13 @@ int main(int argc,char *argv[])
     GPIO_NR = GetConfValue(BUF,"GPIO_NUMBER","492");
     REVERSE = atoi(GetConfValue(BUF,"REVERSE","0"));
     bool SCAN_KEYBOARD = atoi(GetConfValue(BUF,"SCAN_KEYBOARD","0"));
+    bool SCAN_KEYBOARD_0 = SCAN_KEYBOARD;
+    bool SCAN_KEYBOARD_1 = SCAN_KEYBOARD;
     if (SCAN_KEYBOARD){
-        PATH_KBD = GetConfValue(BUF,"PATH_DEV_KEYBOARD","");
-        if (strcmp(PATH_KBD,"")==0) SCAN_KEYBOARD = 0;
+        PATH_KBD_0 = GetConfValue(BUF,"PATH_DEV_KEYBOARD_0","");
+        PATH_KBD_1 = GetConfValue(BUF,"PATH_DEV_KEYBOARD_1","");
+        if (strcmp(PATH_KBD_0,"")==0) SCAN_KEYBOARD_0 = 0;
+        if (strcmp(PATH_KBD_1,"")==0) SCAN_KEYBOARD_1 = 0;
     }
     daemonize();
     Randomize();
@@ -427,7 +555,10 @@ int main(int argc,char *argv[])
 
     pbufor = String("");
 
-    if (SCAN_KEYBOARD) {
+    if (SCAN_KEYBOARD_0) {
+        pthread_create(&watek0,NULL,procedure_w0,NULL);
+    }
+    if (SCAN_KEYBOARD_1) {
         pthread_create(&watek1,NULL,procedure_w1,NULL);
     }
     while(1)

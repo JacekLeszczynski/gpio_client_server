@@ -241,7 +241,7 @@ procedure TgPioGui.netReceiveString(aMsg: string; aSocket: TLSocket;
 var
   s1,s2: string;
 begin
-  //writeln(aMsg);
+  //writeln('MSG: ',aMsg);
   s1:=GetLineToStr(aMsg,1,'=');
   s2:=GetLineToStr(aMsg,2,'=');
   if s1='gpio' then
