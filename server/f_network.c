@@ -106,7 +106,7 @@ void *recvmg(void *sock)
     }  /* pętla główna recv i pętla wykonywania gotowych zapytań */
 
     pthread_mutex_lock(&mutex);
-    if (gpio_adresat==cl.sockno) gpio_adresat = -1;
+    if (gpio_adresat == cl.sockno) gpio_adresat = -1;
     if (pilot_adresat == cl.sockno)
     {
         pilot_adresat = -1;

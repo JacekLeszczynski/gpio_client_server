@@ -160,7 +160,7 @@ int get_GPIO()
 /* WĄTEK WYSYŁAJĄCY ZAWARTOŚĆ BUFORA PILOTA */
 void *sending_keys_pilot(void *arg)
 {
-    char *s;
+    char *s,*msg;
     msleep(50);
     pthread_mutex_lock(&mutex2);
     s = String(pbufor);
@@ -178,7 +178,15 @@ void *sending_keys_pilot(void *arg)
     s = StringReplace(s,"63","");
     s = StringReplace(s,"294231","");
     if (pilot_adresat == -1)
-    {
+    {        //gpio_adresat
+        if (strcmp(s,"key_power")==0 && gpio_adresat>-1)
+        {
+            //pid_t pid;
+            //pid = fork();
+            //if (pid==0) execl("/usr/local/bin/speaktime","/usr/local/bin/speaktime",NULL);
+            msg = String("pilot=key_power");
+            sendtouser(msg,-1,gpio_adresat,1);
+        } else
         if (strcmp(s,"key_up")==0)
         {
             //pid_t pid;
