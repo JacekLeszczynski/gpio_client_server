@@ -157,3 +157,63 @@ int get_GPIO()
     return temp;
 }
 
+/* WĄTEK WYSYŁAJĄCY ZAWARTOŚĆ BUFORA PILOTA */
+void *sending_keys_pilot(void *arg)
+{
+    char *s;
+    msleep(50);
+    pthread_mutex_lock(&mutex2);
+    s = String(pbufor);
+    pbufor = String("");
+/*
+42,63,
+29,a
+56,125,25,
+63,
+29,42,31,
+*/
+    s = StringReplace(s,"4263","key_down");
+    s = StringReplace(s,"29key_up","");
+    s = StringReplace(s,"5612525","");
+    s = StringReplace(s,"63","");
+    s = StringReplace(s,"294231","");
+    if (pilot_adresat == -1)
+    {
+        if (strcmp(s,"key_up")==0)
+        {
+            //pid_t pid;
+            //pid = fork();
+            //if (pid==0) execl("/usr/local/bin/speaktime","/usr/local/bin/speaktime",NULL);
+            char *ss = "speaktime";
+            system(ss);
+        } else
+        if (strcmp(s,"key_left")==0)
+        {
+            //pid_t pid;
+            //pid = fork();
+            //if (pid==0) execl("/usr/local/bin/speaktime","/usr/local/bin/speaktime",NULL);
+            //char *ss = "amixer sset PCM 10%-";
+            char *ss = "mpc volume -5";
+            system(ss);
+        } else
+        if (strcmp(s,"key_right")==0)
+        {
+            //pid_t pid;
+            //pid = fork();
+            //if (pid==0) execl("/usr/local/bin/speaktime","/usr/local/bin/speaktime",NULL);
+            //char *ss = "amixer sset PCM 10%+";
+            char *ss = "mpc volume +5";
+            system(ss);
+        }
+        //sendtoall(upcase(s),-1,1,1);
+    } else {
+        if (strcmp(trim(s),"")!=0)
+        {
+            s = concat("pilot=",s);
+            sendtouser(s,-1,pilot_adresat,1);
+        }
+    }
+    watek_dziala = 0;
+    pthread_mutex_unlock(&mutex2);
+}
+
