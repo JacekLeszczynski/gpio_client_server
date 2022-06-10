@@ -9,6 +9,12 @@ GPIO_NUMBER = 492
 # aktywnym zero, a wyłącza przy aktywnym 1 (domyślną wartością jest 0)
 # REVERSE = 0
 
+# Jeśli chcesz by GPIO był załączany automatycznie przy łączeniu się zdalnego klienta
+# GPIO oraz automatycznie wyłączany przy rozłączaniu się zdalnego klienta GPIO
+# ustaw tą opcję na włączoną (1) w innym wypadku pozostaw jako wyłączoną (0)
+# Domyślnie opcja ta jest wyłączona (0)
+#AUTO_ON_OFF = 0
+
 # Uaktywnia skanowanie naciśniętych klawiszy w demonie, gdy aktywne wszystkie kody
 # naciśniętych klawiszy są wysyłane do wszystkich aktywnych gniazdek.
 # Opcja domyślnie wyłączona (SCAN_KEYBOARD = 0)

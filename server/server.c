@@ -32,6 +32,7 @@ int main(int argc,char *argv[])
     portno = atoi(GetConfValue(BUF,"PORT","2122"));
     GPIO_NR = GetConfValue(BUF,"GPIO_NUMBER","492");
     REVERSE = atoi(GetConfValue(BUF,"REVERSE","0"));
+    AUTO_ON_OFF_BY_LOGIN = atoi(GetConfValue(BUF,"AUTO_ON_OFF","0"));
     bool SCAN_KEYBOARD = atoi(GetConfValue(BUF,"SCAN_KEYBOARD","0"));
     bool SCAN_KEYBOARD_0 = SCAN_KEYBOARD;
     bool SCAN_KEYBOARD_1 = SCAN_KEYBOARD;
@@ -96,7 +97,7 @@ int main(int argc,char *argv[])
         strcpy(ips[n],IP);
         ports[n] = PORT;
         strcpy(keys[n],"");
-        tabs[n] = 0; //domyslnie GPIO!
+        tabs[n] = 0;
 	n++;
 	pthread_create(&recvt,NULL,recvmg,&cl);
 	pthread_mutex_unlock(&mutex);

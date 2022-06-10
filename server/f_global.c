@@ -13,7 +13,7 @@ bool tabs[CONST_MAX_CLIENTS];  //tryb [0]=tryb (1-gpio, 2-pilot)
 char *pbufor;
 
 char *GPIO_NR,*PATH_KBD_0,*PATH_KBD_1;
-bool REVERSE;
+bool REVERSE,AUTO_ON_OFF_BY_LOGIN;
 
 int n = 0, mn = 0, ischat = 0;
 int error = 0;
