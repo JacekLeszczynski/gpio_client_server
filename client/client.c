@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     port = atoi(GetConfValue(BUF,"PORT","2021"));
     wlaczone = strtobool(GetConfValue(BUF,"AUTO_ON_OFF","yes"));
     start_or_stop = atoi(GetConfValue(BUF,"START_OR_STOP","0"));
-    if (wlaczone==0) return 0;
+    if (wlaczone==0 && (strcmp(komenda,"AUTO-ON")==0 || strcmp(komenda,"AUTO-OFF")==0)) return 0;
     if (start_or_stop==1 && strcmp(komenda,"AUTO-OFF")==0) return 0;
     if (start_or_stop==2 && strcmp(komenda,"AUTO-ON")==0) return 0;
 
