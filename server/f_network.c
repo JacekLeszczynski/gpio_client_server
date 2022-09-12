@@ -1,3 +1,31 @@
+void *procedure_test(void *arg)
+{
+    int *pieczec, wyjscie = 0;
+    pieczec = arg;
+    while(1)
+    {
+        pthread_mutex_lock(&mutex_t);
+        if (pieczec == NULL)
+        {
+            wyjscie = 1;
+        } else {
+            if (timer_count<60)
+            {
+                timer_count++;
+            } else {
+                export_GPIO();
+                direction_GPIO();
+                if (REVERSE) set_GPIO(0); else set_GPIO(1);
+                unexport_GPIO();
+                //if (REVERSE) sendmessage("gpio=1",cl.sockno,1); else sendmessage("gpio=0",cl.sockno,1);
+            }
+        }
+        pthread_mutex_unlock(&mutex_t);
+        if (wyjscie) break;
+        sleep(5);
+    }
+}
+
 /* WĄTEK POŁĄCZENIA */
 void *recvmg(void *sock)
 {
@@ -5,11 +33,13 @@ void *recvmg(void *sock)
     bool TerminateNow = 0, czysc = 0;
     int len,i,j,a,id,tryb=0;
     char msg[CONST_MAX_BUFOR],*s,*s1,*s2,*s3;
+    pthread_t tester_gniazda;
 
     pthread_mutex_lock(&mutex);
     id = idsock(cl.sockno);
     tryb = tabs[id];
     pthread_mutex_unlock(&mutex);
+    int *pieczec = NULL;
 
     while((len = recv(cl.sockno,&msg,CONST_MAX_BUFOR,0)) > 0)
     {
@@ -23,6 +53,11 @@ void *recvmg(void *sock)
         //s3 = concat("Zmienna s2=",s2);
         //sendmessage(s3,cl.sockno,1);
 
+        if (strcmp(s1,"gpio")==0 && tryb==1 && strcmp(s2,"refresh")==0) {
+            pthread_mutex_lock(&mutex_t);
+            timer_count = 0;
+            pthread_mutex_unlock(&mutex_t);
+        } else
         if (strcmp(s1,"gpio")==0 && (tryb==0 || tryb==1)) {
             if (strcmp(s2,"on")==0) {
                 export_GPIO();
@@ -78,6 +113,14 @@ void *recvmg(void *sock)
                     unexport_GPIO();
                     if (REVERSE) sendmessage("gpio=1",cl.sockno,1); else sendmessage("gpio=0",cl.sockno,1);
                 }
+                if (AUTO_TIMER) {
+                    pthread_mutex_lock(&mutex_t);
+                    pieczec = malloc(sizeof(int));
+                    *pieczec = cl.sockno;
+                    pthread_create(&tester_gniazda,NULL,procedure_test,&pieczec);
+                    pthread_mutex_unlock(&mutex_t);
+                }
+
             } else
             if (strcmp(s2,"pilot")==0) {
                 pthread_mutex_lock(&mutex);
@@ -116,6 +159,12 @@ void *recvmg(void *sock)
         if (TerminateNow) break;
     }  /* pętla główna recv i pętla wykonywania gotowych zapytań */
 
+    if (AUTO_TIMER) {
+        pthread_mutex_lock(&mutex_t);
+        free(pieczec);
+        pieczec = NULL;
+        pthread_mutex_unlock(&mutex_t);
+    }
     pthread_mutex_lock(&mutex);
     if (tryb==1 && AUTO_ON_OFF_BY_LOGIN) {
         /* automatycznie wyłącz GPIO w razie potrzeby */

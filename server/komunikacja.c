@@ -187,7 +187,7 @@ void *sending_keys_pilot(void *arg)
             msg = String("pilot=key_power");
             sendtouser(msg,-1,gpio_adresat,1);
         } else
-        if (strcmp(s,"key_up")==0)
+        if (strcmp(s,"key_push")==0)
         {
             //pid_t pid;
             //pid = fork();
@@ -195,7 +195,7 @@ void *sending_keys_pilot(void *arg)
             char *ss = "speaktime";
             system(ss);
         } else
-        if (strcmp(s,"key_left")==0)
+        if (strcmp(s,"key_volume_down")==0)
         {
             //pid_t pid;
             //pid = fork();
@@ -204,7 +204,7 @@ void *sending_keys_pilot(void *arg)
             char *ss = "mpc volume -5";
             system(ss);
         } else
-        if (strcmp(s,"key_right")==0)
+        if (strcmp(s,"key_volume_up")==0)
         {
             //pid_t pid;
             //pid = fork();

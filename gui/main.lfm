@@ -19905,4 +19905,11 @@ object gPioGui: TgPioGui
     Left = 432
     Top = 224
   end
+  object autotimer: TTimer
+    Enabled = False
+    Interval = 45000
+    OnTimer = autotimerTimer
+    Left = 512
+    Top = 224
+  end
 end

@@ -33,6 +33,7 @@ int main(int argc,char *argv[])
     GPIO_NR = GetConfValue(BUF,"GPIO_NUMBER","492");
     REVERSE = atoi(GetConfValue(BUF,"REVERSE","0"));
     AUTO_ON_OFF_BY_LOGIN = atoi(GetConfValue(BUF,"AUTO_ON_OFF","0"));
+    AUTO_TIMER = atoi(GetConfValue(BUF,"TIMER","0"));
     bool SCAN_KEYBOARD = atoi(GetConfValue(BUF,"SCAN_KEYBOARD","0"));
     bool SCAN_KEYBOARD_0 = SCAN_KEYBOARD;
     bool SCAN_KEYBOARD_1 = SCAN_KEYBOARD;

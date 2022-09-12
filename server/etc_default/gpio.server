@@ -15,6 +15,13 @@ GPIO_NUMBER = 492
 # Domyślnie opcja ta jest wyłączona (0)
 #AUTO_ON_OFF = 0
 
+# Jeśli używasz automatyki GPIO będziesz chciał włączyć również tą opcję, po włączeniu
+# uruchamia ona dodatkowy wątek na serwerze i gniazda sieciowe, które są zawieszone
+# będą usuwane po czasie bezczynności większym niż jedna minuta.
+# Zauważ, iż wymagane jest jednoczesne włączenie tego samego w opcjach klienta GPIO!
+# Domyślnie opcja ta jest wyłączona (0)
+#TIMER = 0
+
 # Uaktywnia skanowanie naciśniętych klawiszy w demonie, gdy aktywne wszystkie kody
 # naciśniętych klawiszy są wysyłane do wszystkich aktywnych gniazdek.
 # Opcja domyślnie wyłączona (SCAN_KEYBOARD = 0)

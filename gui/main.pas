@@ -34,11 +34,13 @@ type
     SpeedButton3: TSpeedButton;
     poprawka: TTimer;
     auto_hide: TTimer;
+    autotimer: TTimer;
     TrayIcon1: TTrayIcon;
     uETilePanel1: TuETilePanel;
     propstorage: TXMLPropStorage;
     procedure autoconnectTimer(Sender: TObject);
     procedure autorunTimer(Sender: TObject);
+    procedure autotimerTimer(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
@@ -61,6 +63,7 @@ type
     port: word;
     con_wyjscie,cmenu: boolean;
     cmem: integer;
+    AUTO_TIMER: boolean;
     procedure init;
     function test(aHost: string): boolean;
     procedure wczytaj_default;
@@ -146,6 +149,7 @@ begin
       if s1='HOST' then host:=s2 else
       if s1='PORT' then port:=StrToInt(s2);
       if s1='CUSTOM_MENU' then cmenu:=true;
+      if s1='TIMER' then AUTO_TIMER:=s2='1';
     end;
   finally
     c.Free;
@@ -173,6 +177,11 @@ begin
   autoconnect.Enabled:=true;
 end;
 
+procedure TgPioGui.autotimerTimer(Sender: TObject);
+begin
+  net.SendString('gpio=refresh');
+end;
+
 procedure TgPioGui.autoconnectTimer(Sender: TObject);
 begin
   if not test(host) then exit;
@@ -196,6 +205,7 @@ end;
 
 procedure TgPioGui.FormCreate(Sender: TObject);
 begin
+  AUTO_TIMER:=false;
   Application.ShowMainForm:=false;
   WindowState:=wsMinimized;
   hide;
@@ -261,6 +271,7 @@ procedure TgPioGui.netStatus(aActive, aCrypt: boolean);
 begin
   autoconnect.Enabled:=(not aActive) and (not con_wyjscie);
   cConnecting.Active:=aActive;
+  if AUTO_TIMER then autotimer.Enabled:=aActive else autotimer.Enabled:=false;
   if not aActive then
   begin
     cStan.Active:=(not aActive);
@@ -280,14 +291,14 @@ procedure TgPioGui.SpeedButton1Click(Sender: TObject);
 begin
   cmem:=0;
   net.SendString('gpio=off');
-  auto_hide_go;
+  auto_hide_go(200);
 end;
 
 procedure TgPioGui.SpeedButton2Click(Sender: TObject);
 begin
   cmem:=1;
   net.SendString('gpio=on');
-  auto_hide_go;
+  auto_hide_go(200);
 end;
 
 procedure TgPioGui.SpeedButton3Click(Sender: TObject);
@@ -297,7 +308,7 @@ begin
   s1:='/home/tao/.config/budgie-app-launcher/Locale State.wzor';
   s2:='/home/tao/.config/budgie-app-launcher/Locale State';
   CopyFile(s1,s2);
-  auto_hide_go(500);
+  auto_hide_go(200);
 end;
 
 procedure TgPioGui.auto_hideTimer(Sender: TObject);
