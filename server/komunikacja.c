@@ -181,17 +181,11 @@ void *sending_keys_pilot(void *arg)
     {        //gpio_adresat
         if (strcmp(s,"key_power")==0 && gpio_adresat>-1)
         {
-            //pid_t pid;
-            //pid = fork();
-            //if (pid==0) execl("/usr/local/bin/speaktime","/usr/local/bin/speaktime",NULL);
             msg = String("pilot=key_power");
             sendtouser(msg,-1,gpio_adresat,1);
         } else
         if (strcmp(s,"key_push")==0)
         {
-            //pid_t pid;
-            //pid = fork();
-            //if (pid==0) execl("/usr/local/bin/speaktime","/usr/local/bin/speaktime",NULL);
             char *ss = "speaktime";
             system(ss);
         } else
@@ -201,8 +195,14 @@ void *sending_keys_pilot(void *arg)
             //pid = fork();
             //if (pid==0) execl("/usr/local/bin/speaktime","/usr/local/bin/speaktime",NULL);
             //char *ss = "amixer sset PCM 10%-";
-            char *ss = "mpc volume -5";
-            system(ss);
+            if (gpio_adresat>-1)
+            {
+                msg = String("pilot=key_volume_down");
+                sendtouser(msg,-1,gpio_adresat,1);
+            } else {
+                char *ss = "mpc volume -5";
+                system(ss);
+            }
         } else
         if (strcmp(s,"key_volume_up")==0)
         {
@@ -210,10 +210,15 @@ void *sending_keys_pilot(void *arg)
             //pid = fork();
             //if (pid==0) execl("/usr/local/bin/speaktime","/usr/local/bin/speaktime",NULL);
             //char *ss = "amixer sset PCM 10%+";
-            char *ss = "mpc volume +5";
-            system(ss);
+            if (gpio_adresat>-1)
+            {
+                msg = String("pilot=key_volume_up");
+                sendtouser(msg,-1,gpio_adresat,1);
+            } else {
+                char *ss = "mpc volume +5";
+                system(ss);
+            }
         }
-        //sendtoall(upcase(s),-1,1,1);
     } else {
         if (strcmp(trim(s),"")!=0)
         {

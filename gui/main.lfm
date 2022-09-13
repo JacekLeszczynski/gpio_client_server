@@ -1,12 +1,12 @@
 object gPioGui: TgPioGui
   Left = 2294
-  Height = 116
+  Height = 575
   Top = 177
-  Width = 139
+  Width = 616
   BorderStyle = bsSingle
   Caption = 'GPio-GUI'
-  ClientHeight = 116
-  ClientWidth = 139
+  ClientHeight = 575
+  ClientWidth = 616
   Constraints.MinHeight = 116
   Constraints.MinWidth = 139
   OnClose = FormClose
@@ -15,12 +15,12 @@ object gPioGui: TgPioGui
   LCLVersion = '2.0.12.0'
   object uETilePanel1: TuETilePanel
     Left = 0
-    Height = 116
+    Height = 575
     Top = 0
-    Width = 139
+    Width = 616
     Align = alClient
-    ClientHeight = 116
-    ClientWidth = 139
+    ClientHeight = 575
+    ClientWidth = 616
     TabOrder = 0
     Image.Data = {
       52E20700424D52E20700000000003600000028000000FC010000530100000100
@@ -19887,7 +19887,7 @@ object gPioGui: TgPioGui
     end
   end
   object shutdown: TExtShutdown
-    Mode = smShutdownP2
+    Mode = smGnome
     Left = 512
     Top = 96
   end
@@ -19911,5 +19911,21 @@ object gPioGui: TgPioGui
     OnTimer = autotimerTimer
     Left = 512
     Top = 224
+  end
+  object AsyncProcess1: TAsyncProcess
+    Active = False
+    Options = [poWaitOnExit]
+    Priority = ppNormal
+    StartupOptions = []
+    ShowWindow = swoHIDE
+    WindowColumns = 0
+    WindowHeight = 0
+    WindowLeft = 0
+    WindowRows = 0
+    WindowTop = 0
+    WindowWidth = 0
+    FillAttribute = 0
+    Left = 352
+    Top = 288
   end
 end

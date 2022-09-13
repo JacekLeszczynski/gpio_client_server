@@ -8,3 +8,4 @@ gui/linux/usr
 *.xml
 *.res
 *.lps
+*.old

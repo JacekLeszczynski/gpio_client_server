@@ -5,15 +5,16 @@ unit main;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Spin,
-  Buttons, ExtCtrls, XMLPropStorage, Menus, ueled, uETilePanel, NetSocket,
-  ExtMessage, ExtShutdown, lNet;
+  Classes, SysUtils, process, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  Spin, Buttons, ExtCtrls, XMLPropStorage, Menus, AsyncProcess, ueled,
+  uETilePanel, NetSocket, ExtMessage, ExtShutdown, lNet;
 
 type
 
   { TgPioGui }
 
   TgPioGui = class(TForm)
+    AsyncProcess1: TAsyncProcess;
     cConnecting: TuELED;
     cStan: TuELED;
     MenuItem4: TMenuItem;
@@ -68,6 +69,7 @@ type
     function test(aHost: string): boolean;
     procedure wczytaj_default;
     procedure auto_hide_go(aMiliSeconds: integer = 5000);
+    procedure SetVolume(aSetVol: integer);
   public
     procedure SetStatus(aValue: integer);
   end;
@@ -161,6 +163,30 @@ begin
   auto_hide.Enabled:=false;
   auto_hide.Interval:=aMiliSeconds;
   auto_hide.Enabled:=true;
+end;
+
+procedure TgPioGui.SetVolume(aSetVol: integer);
+var
+  a: TAsyncProcess;
+  b: integer;
+  s: string;
+begin
+  if aSetVol<0 then s:='-' else s:='+';
+  b:=abs(aSetVol);
+  a:=TAsyncProcess.Create(self);
+  try
+    a.Executable:='amixer';
+    a.Parameters.Add('sset');
+    a.Parameters.Add('Master');
+    a.Parameters.Add('playback');
+    a.Parameters.Add(IntToStr(b)+'%'+s);
+    a.Options:=[poWaitOnExit];
+    a.ShowWindow:=swoHIDE;
+    a.Execute;
+  finally
+    a.Terminate(0);
+    a.Free;
+  end;
 end;
 
 procedure TgPioGui.SetStatus(aValue: integer);
@@ -263,6 +289,21 @@ begin
       if s2='1' then cmem:=1 else cmem:=0;
     end else begin
       if cmem<>StrToInt(s2) then poprawka.Enabled:=true;
+    end;
+  end else
+  if s1='pilot' then
+  begin
+    if s2='key_volume_down' then
+    begin
+      SetVolume(-5);
+    end else
+    if s2='key_volume_up' then
+    begin
+      SetVolume(5);
+    end else
+    if s2='key_power' then
+    begin
+      shutdown.execute;
     end;
   end;
 end;
