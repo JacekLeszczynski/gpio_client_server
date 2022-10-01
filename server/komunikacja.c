@@ -45,6 +45,7 @@ void sendtoall(char *msg, int sock_nadawca, bool force_all, bool aMutex) //nadaw
 
 int export_GPIO()
 {
+return 0;
     FILE *fd;
     fd = fopen("/sys/class/gpio/export", "w");
     if (!fd)
@@ -60,6 +61,7 @@ int export_GPIO()
 
 int unexport_GPIO()
 {
+return 0;
     FILE *fd;
     fd = fopen("/sys/class/gpio/unexport", "w");
     if (!fd)
@@ -75,6 +77,7 @@ int unexport_GPIO()
 
 int direction_GPIO()
 {
+return 0;
     FILE *fd;
     char path [50] ="";
     strcat(path, "/sys/class/gpio/gpio");
@@ -94,6 +97,7 @@ int direction_GPIO()
 
 int direction_GPIO_OR()
 {
+return 0;
     FILE *fd;
     char path [50] ="";
     strcat(path, "/sys/class/gpio/gpio");
@@ -111,8 +115,20 @@ int direction_GPIO_OR()
     return 0;
 }
 
+int set_GPIO2(int value)
+{
+    char *ss;
+    ss = String("gpioset gpiochip0 ");
+    ss = concat(ss,GPIO_NR);
+    ss = concat(ss,"=");
+    ss = concat(ss,itoa(value,10));
+    system(ss);
+    GPIO_VALUE = value;
+}
+
 int set_GPIO(int value)
 {
+return set_GPIO2(value);
     FILE *fd;
     char path [50] ="";
     strcat(path, "/sys/class/gpio/gpio");
@@ -130,8 +146,14 @@ int set_GPIO(int value)
     return 0;
 }
 
+int get_GPIO2()
+{
+    return GPIO_VALUE;
+}
+
 int get_GPIO()
 {
+return get_GPIO2();
     FILE *fd;
     char path [50] ="";
     char bufor [4];

@@ -1,12 +1,12 @@
 object gPioGui: TgPioGui
   Left = 2294
-  Height = 575
+  Height = 116
   Top = 177
-  Width = 616
+  Width = 139
   BorderStyle = bsSingle
   Caption = 'GPio-GUI'
-  ClientHeight = 575
-  ClientWidth = 616
+  ClientHeight = 116
+  ClientWidth = 139
   Constraints.MinHeight = 116
   Constraints.MinWidth = 139
   OnClose = FormClose
@@ -15,12 +15,12 @@ object gPioGui: TgPioGui
   LCLVersion = '2.0.12.0'
   object uETilePanel1: TuETilePanel
     Left = 0
-    Height = 575
+    Height = 116
     Top = 0
-    Width = 616
+    Width = 139
     Align = alClient
-    ClientHeight = 575
-    ClientWidth = 616
+    ClientHeight = 116
+    ClientWidth = 139
     TabOrder = 0
     Image.Data = {
       52E20700424D52E20700000000003600000028000000FC010000530100000100

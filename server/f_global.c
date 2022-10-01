@@ -26,3 +26,5 @@ pthread_mutex_t mutex_t = PTHREAD_MUTEX_INITIALIZER;
 
 bool watek_dziala = 0;
 
+
+int GPIO_VALUE = 0;
