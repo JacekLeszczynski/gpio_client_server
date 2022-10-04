@@ -13,11 +13,7 @@ void *procedure_test(void *arg)
             {
                 timer_count++;
             } else {
-                export_GPIO();
-                direction_GPIO();
                 if (REVERSE) set_GPIO(0); else set_GPIO(1);
-                unexport_GPIO();
-                //if (REVERSE) sendmessage("gpio=1",cl.sockno,1); else sendmessage("gpio=0",cl.sockno,1);
             }
         }
         pthread_mutex_unlock(&mutex_t);
@@ -60,23 +56,15 @@ void *recvmg(void *sock)
         } else
         if (strcmp(s1,"gpio")==0 && (tryb==0 || tryb==1)) {
             if (strcmp(s2,"on")==0) {
-                export_GPIO();
-                direction_GPIO();
                 if (REVERSE) set_GPIO(0); else set_GPIO(1);
-                unexport_GPIO();
                 if (REVERSE) sendmessage("gpio=1",cl.sockno,1); else sendmessage("gpio=0",cl.sockno,1);
             } else
             if (strcmp(s2,"off")==0) {
-                export_GPIO();
-                direction_GPIO();
                 if (REVERSE) set_GPIO(1); else set_GPIO(0);
-                unexport_GPIO();
                 if (REVERSE) sendmessage("gpio=0",cl.sockno,1); else sendmessage("gpio=1",cl.sockno,1);
             } else
             if (strcmp(s2,"status")==0) {
-                export_GPIO();
                 a = get_GPIO();
-                unexport_GPIO();
                 if (a==1) {
                     if (REVERSE) sendmessage("gpio=0",cl.sockno,1); else sendmessage("gpio=1",cl.sockno,1);
                 } else {
@@ -107,10 +95,7 @@ void *recvmg(void *sock)
                 pthread_mutex_unlock(&mutex);
                 if (AUTO_ON_OFF_BY_LOGIN) {
                     /* automatyczne odpalenie GPIO */
-                    export_GPIO();
-                    direction_GPIO();
                     if (REVERSE) set_GPIO(0); else set_GPIO(1);
-                    unexport_GPIO();
                     if (REVERSE) sendmessage("gpio=1",cl.sockno,1); else sendmessage("gpio=0",cl.sockno,1);
                 }
                 if (AUTO_TIMER) {
@@ -168,10 +153,7 @@ void *recvmg(void *sock)
     pthread_mutex_lock(&mutex);
     if (tryb==1 && AUTO_ON_OFF_BY_LOGIN) {
         /* automatycznie wyłącz GPIO w razie potrzeby */
-        export_GPIO();
-        direction_GPIO();
         if (REVERSE) set_GPIO(1); else set_GPIO(0);
-        unexport_GPIO();
         //if (REVERSE) sendmessage("gpio=0",cl.sockno,1); else sendmessage("gpio=1",cl.sockno,1);
     }
     if (gpio_adresat == cl.sockno) gpio_adresat = -1;

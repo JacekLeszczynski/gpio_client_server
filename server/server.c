@@ -32,6 +32,7 @@ int main(int argc,char *argv[])
     portno = atoi(GetConfValue(BUF,"PORT","2122"));
     GPIO_NR = GetConfValue(BUF,"GPIO_NUMBER","492");
     REVERSE = atoi(GetConfValue(BUF,"REVERSE","0"));
+    if (REVERSE) { GPIO_VALUE = 1; } else {GPIO_VALUE = 0; }
     AUTO_ON_OFF_BY_LOGIN = atoi(GetConfValue(BUF,"AUTO_ON_OFF","0"));
     AUTO_TIMER = atoi(GetConfValue(BUF,"TIMER","0"));
     bool SCAN_KEYBOARD = atoi(GetConfValue(BUF,"SCAN_KEYBOARD","0"));
