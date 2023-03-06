@@ -43,6 +43,30 @@ void sendtoall(char *msg, int sock_nadawca, bool force_all, bool aMutex) //nadaw
     if (aMutex) pthread_mutex_unlock(&mutex);
 }
 
+void set_VALUE(int liczba) {
+    char *filename = "/var/run/gpio.server.value";
+    FILE* plik = fopen(filename, "w");
+    if (plik == NULL) {
+        printf("Błąd otwarcia pliku.\n");
+        return;
+    }
+    fprintf(plik, "%d", liczba);
+    fclose(plik);
+}
+
+int get_VALUE() {
+    char *filename = "/var/run/gpio.server.value";
+    FILE* plik = fopen(filename, "r");
+    if (plik == NULL) {
+        printf("Błąd otwarcia pliku.\n");
+        return 0;
+    }
+    int liczba;
+    fscanf(plik, "%d", &liczba);
+    fclose(plik);
+    return liczba;
+}
+
 int set_GPIO(int value)
 {
     char *ss;
@@ -52,11 +76,12 @@ int set_GPIO(int value)
     ss = concat(ss,itoa(value,10));
     system(ss);
     GPIO_VALUE = value;
+    set_VALUE(value);
 }
 
 int get_GPIO()
 {
-    return GPIO_VALUE;
+    return get_VALUE();
 
     FILE *f;
     char *ss,w[100];

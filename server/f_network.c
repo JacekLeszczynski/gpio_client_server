@@ -65,10 +65,14 @@ void *recvmg(void *sock)
             } else
             if (strcmp(s2,"status")==0) {
                 a = get_GPIO();
-                if (a==1) {
-                    if (REVERSE) sendmessage("gpio=0",cl.sockno,1); else sendmessage("gpio=1",cl.sockno,1);
+                if (a>1) {
+                    sendmessage(concat("gpio=",itoa(a,10)),cl.sockno,1);
                 } else {
-                    if (REVERSE) sendmessage("gpio=1",cl.sockno,1); else sendmessage("gpio=0",cl.sockno,1);
+                    if (a==1) {
+                        if (REVERSE) sendmessage("gpio=0",cl.sockno,1); else sendmessage("gpio=1",cl.sockno,1);
+                    } else {
+                        if (REVERSE) sendmessage("gpio=1",cl.sockno,1); else sendmessage("gpio=0",cl.sockno,1);
+                    }
                 }
             }
         } else

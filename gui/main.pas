@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, process, Forms, Controls, Graphics, Dialogs, StdCtrls,
   Spin, Buttons, ExtCtrls, XMLPropStorage, Menus, AsyncProcess, ueled,
-  uETilePanel, NetSocket, ExtMessage, ExtShutdown, lNet;
+  uETilePanel, NetSocket, ExtMessage, ExtShutdown, lNet, Types;
 
 type
 
@@ -94,7 +94,7 @@ end;
 procedure TgPioGui.init;
 begin
   SpeedButton3.Visible:=cmenu;
-  if cmenu then Height:=148 else Height:=116;
+  if cmenu then Height:=148 else Height:=100;
 end;
 
 function TgPioGui.test(aHost: string): boolean;
@@ -264,6 +264,7 @@ end;
 procedure TgPioGui.netConnect(aSocket: TLSocket);
 begin
   net.SendString('tryb=gpio');
+  sleep(500);
   net.SendString('gpio=status');
 end;
 
@@ -282,6 +283,7 @@ begin
   s2:=GetLineToStr(aMsg,2,'=');
   if s1='gpio' then
   begin
+    //writeln('s1=',s1,' s2=',s2);
     cStan.Active:=s2='1';
     SetStatus(StrToInt(s2));
     if cmem=-1 then
