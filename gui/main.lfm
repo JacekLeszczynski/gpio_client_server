@@ -16293,7 +16293,7 @@ object gPioGui: TgPioGui
     ReuseAddress = True
     Timeout = 4
     MaxBuffer = 10
-    SSLMethod = msSSLv2or3
+    SSLMethod = msTLS
     OnProcessMessage = netProcessMessage
     OnConnect = netConnect
     OnReceiveString = netReceiveString
@@ -19879,6 +19879,15 @@ object gPioGui: TgPioGui
       OnClick = MenuItem6Click
     end
     object MenuItem5: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem2: TMenuItem
+      Caption = 'Laptop: Start'
+    end
+    object MenuItem3: TMenuItem
+      Caption = 'Laptop: Shutdown'
+    end
+    object MenuItem7: TMenuItem
       Caption = '-'
     end
     object MenuItem1: TMenuItem

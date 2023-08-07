@@ -1,0 +1,4 @@
+echo "Compiluję lokalnie wersję demona"
+gcc server.c -o server.gpio.test -pthread
+echo "Uruchamiam program"
+./server.gpio.test

@@ -1,0 +1,35 @@
+# Numer portu na którym program serwera będzie nasłuchiwał.
+# Domyślną wartością jest port 2122, w poniższej opcji można go zmienić na inny.
+# PORT = 2122
+
+# Numer linii GPIO
+#GPIO_NUMBER = 492
+GPIO_NUMBER = 65
+
+# Jeśli masz potrzebę odwrócenia pracy stanów, bo twój sterownik włącza się przy
+# aktywnym zero, a wyłącza przy aktywnym 1 (domyślną wartością jest 0)
+REVERSE = 1
+
+# Jeśli chcesz by GPIO był załączany automatycznie przy łączeniu się zdalnego klienta
+# GPIO oraz automatycznie wyłączany przy rozłączaniu się zdalnego klienta GPIO
+# ustaw tą opcję na włączoną (1) w innym wypadku pozostaw jako wyłączoną (0)
+# Domyślnie opcja ta jest wyłączona (0)
+AUTO_ON_OFF = 0
+
+# Jeśli używasz automatyki GPIO będziesz chciał włączyć również tą opcję, po włączeniu
+# uruchamia ona dodatkowy wątek na serwerze i gniazda sieciowe, które są zawieszone
+# będą usuwane po czasie bezczynności większym niż jedna minuta.
+# Zauważ, iż wymagane jest jednoczesne włączenie tego samego w opcjach klienta GPIO!
+# Domyślnie opcja ta jest wyłączona (0)
+TIMER = 0
+
+# Uaktywnia skanowanie naciśniętych klawiszy w demonie, gdy aktywne wszystkie kody
+# naciśniętych klawiszy są wysyłane do wszystkich aktywnych gniazdek.
+# Opcja domyślnie wyłączona (SCAN_KEYBOARD = 0)
+SCAN_KEYBOARD = 1
+
+# Urządzenie z którego będą czytane dane bufora klawiszy, domyślnie wartość pusta.
+# Jeśli SCAN_KEYBOARD zostanie ustawione, wymagane jest wypełnienie minimum jednej
+# z poniższych zmiennych!
+PATH_DEV_KEYBOARD_0 = /dev/input/by-id/usb-JZYTECH_Wireless_Present-event-kbd
+PATH_DEV_KEYBOARD_1 = /dev/input/by-id/usb-MC_LTD_Mic_Device-event-if02

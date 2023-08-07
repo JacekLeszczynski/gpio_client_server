@@ -1,0 +1,5 @@
+echo "Compiluję lokalnie wersję demona"
+gcc server.c -o server.gpio -pthread -lncurses
+echo "Restartuję serwis"
+systemctl stop server-gpio
+systemctl start server-gpio

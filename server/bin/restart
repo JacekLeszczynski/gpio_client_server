@@ -1,0 +1,3 @@
+echo "Restartuję serwis"
+systemctl stop server-gpio
+systemctl start server-gpio

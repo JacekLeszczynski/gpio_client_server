@@ -25,4 +25,6 @@ TIMER = 0
 
 # Opcja programisty dla programisty, przywraca plik konfiguracyjny szybkiego menu na desktopie
 # Budgie-Desktop pod linuksem, po włączeniu dodaje się nowy przycisk (domyślnie: 0)
-#CUSTOM_MENU = 0
+CUSTOM_MENU = 0
+SERWIS_TV = 0
+LAPTOP = 0

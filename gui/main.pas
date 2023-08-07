@@ -17,9 +17,12 @@ type
     AsyncProcess1: TAsyncProcess;
     cConnecting: TuELED;
     cStan: TuELED;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
     shutdown: TExtShutdown;
     Label1: TLabel;
     Label2: TLabel;
@@ -64,7 +67,7 @@ type
     port: word;
     con_wyjscie,cmenu: boolean;
     cmem: integer;
-    AUTO_TIMER: boolean;
+    AUTO_TIMER,SERWIS_TV,LAPTOP: boolean;
     procedure init;
     function test(aHost: string): boolean;
     procedure wczytaj_default;
@@ -152,10 +155,16 @@ begin
       if s1='PORT' then port:=StrToInt(s2);
       if s1='CUSTOM_MENU' then cmenu:=true;
       if s1='TIMER' then AUTO_TIMER:=s2='1';
+      if s1='SERWIS_TV' then SERWIS_TV:=s2='1';
+      if s1='LAPTOP' then LAPTOP:=s2='1';
     end;
   finally
     c.Free;
   end;
+  MenuItem4.Enabled:=SERWIS_TV;
+  MenuItem6.Enabled:=SERWIS_TV;
+  MenuItem2.Enabled:=LAPTOP;
+  MenuItem3.Enabled:=LAPTOP;
 end;
 
 procedure TgPioGui.auto_hide_go(aMiliSeconds: integer);
@@ -221,7 +230,11 @@ begin
   if con_wyjscie then
   begin
     autoconnect.Enabled:=false;
-    if net.Active then net.Disconnect;
+    if net.Active then
+    begin
+      net.SendString('exit');
+      net.Disconnect;
+    end;
   end else begin
     CloseAction:=caNone;
     WindowState:=wsMinimized;

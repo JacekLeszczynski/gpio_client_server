@@ -49,6 +49,9 @@ void *recvmg(void *sock)
         //s3 = concat("Zmienna s2=",s2);
         //sendmessage(s3,cl.sockno,1);
 
+        if (strcmp(s,"exit")==0) {
+            TerminateNow = 1;
+        } else
         if (strcmp(s1,"gpio")==0 && tryb==1 && strcmp(s2,"refresh")==0) {
             pthread_mutex_lock(&mutex_t);
             timer_count = 0;
@@ -75,6 +78,7 @@ void *recvmg(void *sock)
                     }
                 }
             }
+            if (tryb=0) TerminateNow = 1;
         } else
         if (tryb==1) {
             /* wywołania z gui gpio wykonujące różne dodatkowe funkcje */
@@ -86,6 +90,26 @@ void *recvmg(void *sock)
                 if (strcmp(s2,"off")==0) {
                     system("systemctl stop tvheadend");
                     sendmessage("tv=off",cl.sockno,1);
+                }
+            } else
+            if (strcmp(s1,"laptop")==0) {
+                if (strcmp(s2,"restart")==0) {
+                    for(i = 0; i < n; i++) {
+                        if(tabs[i] == 3)
+                        {
+                            sendmessage("restart",clients[i],1);
+                        }
+                    }
+                    sendmessage("laptop=restart",cl.sockno,1);
+                } else
+                if (strcmp(s2,"shutdown")==0) {
+                    for(i = 0; i < n; i++) {
+                        if(tabs[i] == 3)
+                        {
+                            sendmessage("shutdown",clients[i],1);
+                        }
+                    }
+                    sendmessage("laptop=shutdown",cl.sockno,1);
                 }
             }
         } else
@@ -125,6 +149,15 @@ void *recvmg(void *sock)
                     s = String("tryb=pilot");
                     sendtouser(s,-1,cl.sockno,0);
                 }
+                pthread_mutex_unlock(&mutex);
+            } else
+            if (strcmp(s2,"laptop")==0) {
+                pthread_mutex_lock(&mutex);
+                id = idsock(cl.sockno);
+                tryb = 3;
+                tabs[id] = tryb;
+                s = String("laptop=active");
+                sendtouser(s,-1,cl.sockno,0);
                 pthread_mutex_unlock(&mutex);
             }
         } else
