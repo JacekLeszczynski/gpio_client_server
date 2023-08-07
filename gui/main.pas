@@ -48,6 +48,8 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
+    procedure MenuItem2Click(Sender: TObject);
+    procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem6Click(Sender: TObject);
     procedure netConnect(aSocket: TLSocket);
@@ -262,6 +264,16 @@ procedure TgPioGui.MenuItem1Click(Sender: TObject);
 begin
   con_wyjscie:=true;
   close;
+end;
+
+procedure TgPioGui.MenuItem2Click(Sender: TObject);
+begin
+  net.SendString('laptop=start');
+end;
+
+procedure TgPioGui.MenuItem3Click(Sender: TObject);
+begin
+  net.SendString('laptop=shutdown');
 end;
 
 procedure TgPioGui.MenuItem4Click(Sender: TObject);
