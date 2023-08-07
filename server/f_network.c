@@ -93,6 +93,16 @@ void *recvmg(void *sock)
                 }
             } else
             if (strcmp(s1,"laptop")==0) {
+                if (strcmp(s2,"start")==0) {
+                    for(i = 0; i < n; i++) {
+                        if(tabs[i] == 3)
+                        {
+                            char *ss = concat("wakeonlan ",LAPTOP_MAC_ADDRESS);
+                            system(ss);
+                        }
+                    }
+                    sendmessage("laptop=start",cl.sockno,1);
+                } else
                 if (strcmp(s2,"restart")==0) {
                     for(i = 0; i < n; i++) {
                         if(tabs[i] == 3)

@@ -14,6 +14,7 @@ char *pbufor;
 
 char *GPIO_NR,*PATH_KBD_0,*PATH_KBD_1;
 bool REVERSE,AUTO_ON_OFF_BY_LOGIN,AUTO_TIMER = 0;
+char *LAPTOP_MAC_ADDRESS;
 
 int n = 0, mn = 0, ischat = 0;
 int error = 0;
