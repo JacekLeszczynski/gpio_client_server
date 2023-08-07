@@ -1,7 +1,7 @@
 object gPioGui: TgPioGui
-  Left = 2294
+  Left = 2293
   Height = 100
-  Top = 177
+  Top = 176
   Width = 139
   BorderStyle = bsSingle
   Caption = 'GPio-GUI'

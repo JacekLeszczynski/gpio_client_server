@@ -332,6 +332,14 @@ begin
     begin
       shutdown.execute;
     end;
+  end else
+  if s1='laptop' then
+  begin
+    mess.ShowInformation('Odebrano ramkę:^^s1 = "'+s1+'"^s2 = "'+s2+'"');
+  end else
+  if s1='echo' then
+  begin
+    mess.ShowInformation('Odebrano ramkę s2 = "'+s2+'"');
   end;
 end;
 

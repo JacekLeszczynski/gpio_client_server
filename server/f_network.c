@@ -28,7 +28,7 @@ void *recvmg(void *sock)
     struct client_info cl = *((struct client_info *)sock);
     bool TerminateNow = 0, czysc = 0;
     int len,i,j,a,id,tryb=0;
-    char msg[CONST_MAX_BUFOR],*s,*s1,*s2,*s3;
+    char msg[CONST_MAX_BUFOR],*s,*s1,*s2,*s3,*ss,*log;
     pthread_t tester_gniazda;
 
     pthread_mutex_lock(&mutex);
@@ -41,13 +41,22 @@ void *recvmg(void *sock)
     {
         if (len<=0) continue;
         s = strdup(msg);
+
+        /*log = concat(s,"(id=");
+        log = concat(log,IntToSys(id,10));
+        log = concat(log,", tryb=");
+        log = concat(log,IntToSys(tryb,10));
+        log = concat_str_char(log,')');
+        log_message("/tmp/server-gpio.log",log);*/
+
         s1 = GetLineToStr(s,1,'=',"");
         s2 = GetLineToStr(s,2,'=',"");
 
-        //s3 = concat("Zmienna s1=",s1);
+        //s3 = String("echo=");
+        //s3 = concat(s3,s1);
+        //s3 = Concat(s3,s2);
         //sendmessage(s3,cl.sockno,1);
-        //s3 = concat("Zmienna s2=",s2);
-        //sendmessage(s3,cl.sockno,1);
+        //sleep(1);
 
         if (strcmp(s,"exit")==0) {
             TerminateNow = 1;
@@ -78,7 +87,7 @@ void *recvmg(void *sock)
                     }
                 }
             }
-            if (tryb=0) TerminateNow = 1;
+            if (tryb==0) TerminateNow = 1;
         } else
         if (tryb==1) {
             /* wywołania z gui gpio wykonujące różne dodatkowe funkcje */
@@ -93,15 +102,13 @@ void *recvmg(void *sock)
                 }
             } else
             if (strcmp(s1,"laptop")==0) {
+                //sendmessage("laptop=Wykonanie komendy...",cl.sockno,1);
                 if (strcmp(s2,"start")==0) {
-                    for(i = 0; i < n; i++) {
-                        if(tabs[i] == 3)
-                        {
-                            char *ss = concat("wakeonlan ",LAPTOP_MAC_ADDRESS);
-                            system(ss);
-                        }
-                    }
-                    sendmessage("laptop=start",cl.sockno,1);
+                    //wake_on_lan(LAPTOP_MAC_ADDRESS);
+                    ss = String("wakeonlan ");
+                    ss = concat(ss,LAPTOP_MAC_ADDRESS);
+                    system(ss);
+                    sendmessage("laptop=started",cl.sockno,1);
                 } else
                 if (strcmp(s2,"restart")==0) {
                     for(i = 0; i < n; i++) {
@@ -110,7 +117,7 @@ void *recvmg(void *sock)
                             sendmessage("restart",clients[i],1);
                         }
                     }
-                    sendmessage("laptop=restart",cl.sockno,1);
+                    sendmessage("laptop=restarted",cl.sockno,1);
                 } else
                 if (strcmp(s2,"shutdown")==0) {
                     for(i = 0; i < n; i++) {
@@ -119,7 +126,7 @@ void *recvmg(void *sock)
                             sendmessage("shutdown",clients[i],1);
                         }
                     }
-                    sendmessage("laptop=shutdown",cl.sockno,1);
+                    sendmessage("laptop=shutdowned",cl.sockno,1);
                 }
             }
         } else
