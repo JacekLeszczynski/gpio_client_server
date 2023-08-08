@@ -43,6 +43,19 @@ void sendtoall(char *msg, int sock_nadawca, bool force_all, bool aMutex) //nadaw
     if (aMutex) pthread_mutex_unlock(&mutex);
 }
 
+/* wysłanie wiadomości do wszystkich użytkowników należących do trybu = 1 */
+void sendtoall1(char *msg, int sock_nadawca, bool aMutex) //nadawca to soket
+{
+    int i;
+
+    if (aMutex) pthread_mutex_lock(&mutex);
+    for(i = 0; i < n; i++)
+    {
+        if (clients[i] != sock_nadawca && tabs[i] == 1) send(clients[i],msg,strlen(msg),MSG_NOSIGNAL);
+    }
+    if (aMutex) pthread_mutex_unlock(&mutex);
+}
+
 void set_VALUE(int liczba) {
     char *filename = "/var/run/gpio.server.value";
     FILE* plik = fopen(filename, "w");

@@ -165,8 +165,8 @@ begin
   end;
   MenuItem4.Enabled:=SERWIS_TV;
   MenuItem6.Enabled:=SERWIS_TV;
-  MenuItem2.Enabled:=LAPTOP;
-  MenuItem3.Enabled:=LAPTOP;
+  //MenuItem2.Enabled:=LAPTOP;
+  //MenuItem3.Enabled:=LAPTOP;
 end;
 
 procedure TgPioGui.auto_hide_go(aMiliSeconds: integer);
@@ -317,6 +317,7 @@ begin
     end else begin
       if cmem<>StrToInt(s2) then poprawka.Enabled:=true;
     end;
+    net.SendString('laptop=status');
   end else
   if s1='pilot' then
   begin
@@ -335,10 +336,20 @@ begin
   end else
   if s1='laptop' then
   begin
-    if s2='shutdowning' then mess.ShowInformation('Zdalny host potwierdził rozpoczęcie procedury zamykania.') else
-    if s2='not_shutdown' then mess.ShowWarning('Zdalny host nie może się zamknąć!^Dalej działa!') else
-    if s2='shutdown_ok' then mess.ShowInformation('Zdalny host zamyka się poprawnie.') else
-    mess.ShowInformation('Odebrano ramkę:^^s1 = "'+s1+'"^s2 = "'+s2+'"');
+    if s2='login' then
+    begin
+      MenuItem2.Enabled:=false;
+      MenuItem3.Enabled:=LAPTOP and true;
+    end else
+    if s2='logout' then
+    begin
+      MenuItem2.Enabled:=LAPTOP and true;
+      MenuItem3.Enabled:=false;
+    end else
+    //if s2='starting' then mess.ShowInformation('Zdalny host otrzymał polecenie startu i procedura uruchomienia jest w trakcie.') else
+    //if s2='shutdowning' then mess.ShowInformation('Zdalny host potwierdził rozpoczęcie procedury zamykania.') else
+    //if s2='shutdown_ok' then mess.ShowInformation('Zdalny host zamyka się poprawnie.') else
+    if s2='not_shutdown' then mess.ShowWarning('Zdalny host nie może się zamknąć!^Dalej działa!');
   end else
   if s1='echo' then
   begin

@@ -26,7 +26,7 @@ void *procedure_test(void *arg)
 void *recvmg(void *sock)
 {
     struct client_info cl = *((struct client_info *)sock);
-    bool TerminateNow = 0, czysc = 0;
+    bool TerminateNow = 0, czysc = 0, b_test = 0;
     int len,i,j,a,id,tryb=0,adresat;
     char msg[CONST_MAX_BUFOR],*s,*s1,*s2,*s3,*ss,*log,*pom;
     pthread_t tester_gniazda;
@@ -40,33 +40,32 @@ void *recvmg(void *sock)
     while((len = recv(cl.sockno,&msg,CONST_MAX_BUFOR,0)) > 0)
     {
         if (len<=0) continue;
-        s = strdup(msg);
 
+        /* CZYTANIE DANYCH */
+        s = strdup(msg);
         /*log = concat(s,"(id=");
         log = concat(log,IntToSys(id,10));
         log = concat(log,", tryb=");
         log = concat(log,IntToSys(tryb,10));
         log = concat_str_char(log,')');
         log_message("/tmp/server-gpio.log",log);*/
-
         s1 = GetLineToStr(s,1,'=',"");
         s2 = GetLineToStr(s,2,'=',"");
         s3 = GetLineToStr(s,3,'=',"");
 
-        //pom = String("echo=");
-        //pom = concat(pom,s1);
-        //pom = Concat(pom,s2);
-        //sendmessage(pom,cl.sockno,1);
-        //sleep(1);
-
+        /* JEŚLI DOSTAJĘ EXIT - OPUSZCZAM PĘTLĘ I KOŃCZĘ WĄTEK */
         if (strcmp(s,"exit")==0) {
             TerminateNow = 1;
         } else
+
+        /* ... NIE WIEM CO TU BYŁO ROBIONE ... */
         if (strcmp(s1,"gpio")==0 && tryb==1 && strcmp(s2,"refresh")==0) {
             pthread_mutex_lock(&mutex_t);
             timer_count = 0;
             pthread_mutex_unlock(&mutex_t);
         } else
+
+        /* USTAWIANIE GPIO I CZYTANIE GPIO */
         if (strcmp(s1,"gpio")==0 && (tryb==0 || tryb==1)) {
             if (strcmp(s2,"on")==0) {
                 if (REVERSE) set_GPIO(0); else set_GPIO(1);
@@ -90,8 +89,9 @@ void *recvmg(void *sock)
             }
             if (tryb==0) TerminateNow = 1;
         } else
+
+        /* TRYB 1 - KLIENT GUI GPIO - DODATKOWE FUNKCJE */
         if (tryb==1) {
-            /* wywołania z gui gpio wykonujące różne dodatkowe funkcje */
             if (strcmp(s1,"tv")==0) {
                 if (strcmp(s2,"on")==0) {
                     system("systemctl start tvheadend");
@@ -103,6 +103,21 @@ void *recvmg(void *sock)
                 }
             } else
             if (strcmp(s1,"laptop")==0) {
+                if (strcmp(s2,"status")==0) {
+                    b_test = 0;
+                    for(i = 0; i < n; i++) {
+                        if (tabs[i]==3)
+                        {
+                            b_test = 1;
+                            break;
+                        }
+                    }
+                    if (b_test) {
+                        sendtoall1("laptop=login",-1,0);
+                    } else {
+                        sendtoall1("laptop=logout",-1,0);
+                    }
+                } else
                 if (strcmp(s2,"start")==0) {
                     ss = String("wakeonlan ");
                     ss = concat(ss,LAPTOP_MAC_ADDRESS);
@@ -126,12 +141,13 @@ void *recvmg(void *sock)
                             ss = String("laptop=shutdown=");
                             ss = concat(ss,IntToSys(cl.sockno,10));
                             sendmessage(ss,clients[i],1);
-                            shutdown_now[i] = cl.sockno;
                         }
                     }
                 }
             }
         } else
+
+        /* OBSŁUGA LOGOWANIA DO SIECI - NOWE POŁĄCZENIA */
         if (strcmp(s1,"tryb")==0) {
             if (strcmp(s2,"gpio")==0) {
                 pthread_mutex_lock(&mutex);
@@ -177,19 +193,28 @@ void *recvmg(void *sock)
                 tabs[id] = tryb;
                 s = String("laptop=active");
                 sendtouser(s,-1,cl.sockno,0);
+                sendtoall1("laptop=login",cl.sockno,0);
                 pthread_mutex_unlock(&mutex);
             }
         } else
+
+        /* ODPOWIEDZI OD LAPTOPA LUB DRUGIEGO KOMPUTERA */
         if (tryb==3) {
+            adresat = atoi(s3);
+            if (strcmp(s2,"shutdowning")==0) {
+                shutdown_now[i] = adresat;
+            } else
             if (strcmp(s2,"not_shutdown")==0) {
                 shutdown_now[id] = -1;
             }
-            adresat = atoi(s3);
             ss = String(s1);
             ss = concat_str_char(ss,'=');
             ss = concat(ss,s2);
             sendtouser(ss,-1,adresat,1);
+            sleep(1);
         } else
+
+        /* STEROWANIE PILOTEM */
         if (strcmp(s1,"pilot")==0) {
             if (strcmp(s2,"active")==0) {
                 pthread_mutex_lock(&mutex);
@@ -205,8 +230,7 @@ void *recvmg(void *sock)
             }
         }
 
-        //sendmessage(s,cl.sockno,1);
-
+        /* JEŚLI ZAŻĄDANO WYJŚCIA - WYCHODZĘ */
         if (TerminateNow) break;
     }  /* pętla główna recv i pętla wykonywania gotowych zapytań */
 
@@ -238,16 +262,18 @@ void *recvmg(void *sock)
         }
     }
     for(i = 0; i < n; i++) {
-        if(tabs[i] == 3 && shutdown_now[i] != -1)
-        {
+        if(tabs[i] == 3 && shutdown_now[i] != -1) {
             // wysyłam informację o zamknięciu
-            sendtouser("laptop=shutdown_ok",-1,shutdown_now[i],0);
+            sendtouser("laptop=shutdown_ok",cl.sockno,shutdown_now[i],0);
+            sleep(1);
         }
-	if(clients[i] == cl.sockno)
-        {
+        if(tabs[i] == 3 && clients[i] == cl.sockno) {
+            // wysyłam informację o zamknięciu
+            sendtoall1("laptop=logout",cl.sockno,0);
+        }
+	if(clients[i] == cl.sockno) {
 	    j = i;
-	    while(j < n-1)
-            {
+	    while(j < n-1) {
 		clients[j] = clients[j+1];
                 strcpy(ips[j],ips[j+1]);
                 ports[j] = ports[j+1];
