@@ -9,7 +9,8 @@ int clients[CONST_MAX_CLIENTS];
 char ips[CONST_MAX_CLIENTS][INET_ADDRSTRLEN];
 int ports[CONST_MAX_CLIENTS];
 char keys[CONST_MAX_CLIENTS][30]; //identyfikacja klientów
-bool tabs[CONST_MAX_CLIENTS];  //tryb [0]=tryb (1-gpio, 2-pilot, 3-laptop)
+int tabs[CONST_MAX_CLIENTS];  //tryb [0]=tryb (1-gpio, 2-pilot, 3-laptop)
+int shutdown_now[CONST_MAX_CLIENTS];  //do zamknięcia!
 char *pbufor;
 
 char *GPIO_NR,*PATH_KBD_0,*PATH_KBD_1;

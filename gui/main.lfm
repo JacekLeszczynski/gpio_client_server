@@ -16292,7 +16292,7 @@ object gPioGui: TgPioGui
     Port = 2122
     ReuseAddress = True
     Timeout = 4
-    MaxBuffer = 10
+    MaxBuffer = 100
     SSLMethod = msTLS
     OnProcessMessage = netProcessMessage
     OnConnect = netConnect

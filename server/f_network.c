@@ -27,8 +27,8 @@ void *recvmg(void *sock)
 {
     struct client_info cl = *((struct client_info *)sock);
     bool TerminateNow = 0, czysc = 0;
-    int len,i,j,a,id,tryb=0;
-    char msg[CONST_MAX_BUFOR],*s,*s1,*s2,*s3,*ss,*log;
+    int len,i,j,a,id,tryb=0,adresat;
+    char msg[CONST_MAX_BUFOR],*s,*s1,*s2,*s3,*ss,*log,*pom;
     pthread_t tester_gniazda;
 
     pthread_mutex_lock(&mutex);
@@ -51,11 +51,12 @@ void *recvmg(void *sock)
 
         s1 = GetLineToStr(s,1,'=',"");
         s2 = GetLineToStr(s,2,'=',"");
+        s3 = GetLineToStr(s,3,'=',"");
 
-        //s3 = String("echo=");
-        //s3 = concat(s3,s1);
-        //s3 = Concat(s3,s2);
-        //sendmessage(s3,cl.sockno,1);
+        //pom = String("echo=");
+        //pom = concat(pom,s1);
+        //pom = Concat(pom,s2);
+        //sendmessage(pom,cl.sockno,1);
         //sleep(1);
 
         if (strcmp(s,"exit")==0) {
@@ -102,31 +103,32 @@ void *recvmg(void *sock)
                 }
             } else
             if (strcmp(s1,"laptop")==0) {
-                //sendmessage("laptop=Wykonanie komendy...",cl.sockno,1);
                 if (strcmp(s2,"start")==0) {
-                    //wake_on_lan(LAPTOP_MAC_ADDRESS);
                     ss = String("wakeonlan ");
                     ss = concat(ss,LAPTOP_MAC_ADDRESS);
                     system(ss);
-                    sendmessage("laptop=started",cl.sockno,1);
+                    sendmessage("laptop=starting",cl.sockno,1);
                 } else
                 if (strcmp(s2,"restart")==0) {
                     for(i = 0; i < n; i++) {
                         if(tabs[i] == 3)
                         {
-                            sendmessage("restart",clients[i],1);
+                            ss = String("laptop=restart=");
+                            ss = concat(ss,IntToSys(cl.sockno,10));
+                            sendmessage(ss,clients[i],1);
                         }
                     }
-                    sendmessage("laptop=restarted",cl.sockno,1);
                 } else
                 if (strcmp(s2,"shutdown")==0) {
                     for(i = 0; i < n; i++) {
                         if(tabs[i] == 3)
                         {
-                            sendmessage("shutdown",clients[i],1);
+                            ss = String("laptop=shutdown=");
+                            ss = concat(ss,IntToSys(cl.sockno,10));
+                            sendmessage(ss,clients[i],1);
+                            shutdown_now[i] = cl.sockno;
                         }
                     }
-                    sendmessage("laptop=shutdowned",cl.sockno,1);
                 }
             }
         } else
@@ -178,6 +180,16 @@ void *recvmg(void *sock)
                 pthread_mutex_unlock(&mutex);
             }
         } else
+        if (tryb==3) {
+            if (strcmp(s2,"not_shutdown")==0) {
+                shutdown_now[id] = -1;
+            }
+            adresat = atoi(s3);
+            ss = String(s1);
+            ss = concat_str_char(ss,'=');
+            ss = concat(ss,s2);
+            sendtouser(ss,-1,adresat,1);
+        } else
         if (strcmp(s1,"pilot")==0) {
             if (strcmp(s2,"active")==0) {
                 pthread_mutex_lock(&mutex);
@@ -226,6 +238,11 @@ void *recvmg(void *sock)
         }
     }
     for(i = 0; i < n; i++) {
+        if(tabs[i] == 3 && shutdown_now[i] != -1)
+        {
+            // wysyłam informację o zamknięciu
+            sendtouser("laptop=shutdown_ok",-1,shutdown_now[i],0);
+        }
 	if(clients[i] == cl.sockno)
         {
 	    j = i;
@@ -236,6 +253,7 @@ void *recvmg(void *sock)
                 ports[j] = ports[j+1];
                 strcpy(keys[j],keys[j+1]);
                 tabs[j] = tabs[j+1];
+                shutdown_now[j] = shutdown_now[j+1];
 		j++;
 	    }
             break;

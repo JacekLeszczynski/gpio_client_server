@@ -335,6 +335,9 @@ begin
   end else
   if s1='laptop' then
   begin
+    if s2='shutdowning' then mess.ShowInformation('Zdalny host potwierdził rozpoczęcie procedury zamykania.') else
+    if s2='not_shutdown' then mess.ShowWarning('Zdalny host nie może się zamknąć!^Dalej działa!') else
+    if s2='shutdown_ok' then mess.ShowInformation('Zdalny host zamyka się poprawnie.') else
     mess.ShowInformation('Odebrano ramkę:^^s1 = "'+s1+'"^s2 = "'+s2+'"');
   end else
   if s1='echo' then

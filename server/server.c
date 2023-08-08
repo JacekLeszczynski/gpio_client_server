@@ -101,6 +101,7 @@ int main(int argc,char *argv[])
         ports[n] = PORT;
         strcpy(keys[n],"");
         tabs[n] = 0;
+        shutdown_now[n] = -1;
 	n++;
 	pthread_create(&recvt,NULL,recvmg,&cl);
 	pthread_mutex_unlock(&mutex);
