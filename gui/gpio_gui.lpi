@@ -13,9 +13,11 @@
         <DpiAware Value="True"/>
       </XPManifest>
       <Icon Value="0"/>
-      <Resources Count="2">
+      <Resources Count="4">
         <Resource_0 FileName="../grafika/led_off.ico" Type="ICON" ResourceName="LED_OFF"/>
         <Resource_1 FileName="../grafika/led_on.ico" Type="ICON" ResourceName="LED_ON"/>
+        <Resource_2 FileName="../grafika/led_off_lap.ico" Type="ICON" ResourceName="LED_OFF_LAP"/>
+        <Resource_3 FileName="../grafika/led_on_lap.ico" Type="ICON" ResourceName="LED_ON_LAP"/>
       </Resources>
     </General>
     <BuildModes Count="4">

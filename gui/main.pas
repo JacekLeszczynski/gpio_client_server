@@ -203,8 +203,10 @@ end;
 procedure TgPioGui.SetStatus(aValue: integer);
 begin
   case aValue of
-    1: TrayIcon1.Icon.LoadFromResourceName(Hinstance,'LED_ON');
-    else TrayIcon1.Icon.LoadFromResourceName(Hinstance,'LED_OFF');
+    00: TrayIcon1.Icon.LoadFromResourceName(Hinstance,'LED_OFF');
+    01: TrayIcon1.Icon.LoadFromResourceName(Hinstance,'LED_ON');
+    10: TrayIcon1.Icon.LoadFromResourceName(Hinstance,'LED_OFF_LAP');
+    11: TrayIcon1.Icon.LoadFromResourceName(Hinstance,'LED_ON_LAP');
   end;
 end;
 
@@ -302,6 +304,7 @@ procedure TgPioGui.netReceiveString(aMsg: string; aSocket: TLSocket;
   aBinSize: integer; var aReadBin: boolean);
 var
   s1,s2: string;
+  a: integer;
 begin
   //writeln('MSG: ',aMsg);
   s1:=GetLineToStr(aMsg,1,'=');
@@ -310,7 +313,9 @@ begin
   begin
     //writeln('s1=',s1,' s2=',s2);
     cStan.Active:=s2='1';
-    SetStatus(StrToInt(s2));
+    a:=StrToInt(s2);
+    if MenuItem3.Enabled then a:=a+10;
+    SetStatus(a);
     if cmem=-1 then
     begin
       if s2='1' then cmem:=1 else cmem:=0;
@@ -340,11 +345,13 @@ begin
     begin
       MenuItem2.Enabled:=false;
       MenuItem3.Enabled:=LAPTOP and true;
+      if cStan.Active then SetStatus(11) else SetStatus(10);
     end else
     if s2='logout' then
     begin
       MenuItem2.Enabled:=LAPTOP and true;
       MenuItem3.Enabled:=false;
+      if cStan.Active then SetStatus(1) else SetStatus(0);
     end else
     //if s2='starting' then mess.ShowInformation('Zdalny host otrzymał polecenie startu i procedura uruchomienia jest w trakcie.') else
     //if s2='shutdowning' then mess.ShowInformation('Zdalny host potwierdził rozpoczęcie procedury zamykania.') else
