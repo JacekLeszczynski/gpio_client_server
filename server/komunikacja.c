@@ -169,6 +169,28 @@ void *sending_keys_pilot(void *arg)
                 char *ss = "mpc volume +5";
                 system(ss);
             }
+        } else
+        if (strcmp(s,"key_right")==0)
+        {
+            if (gpio_adresat>-1)
+            {
+                msg = String("pilot=key_right");
+                sendtouser(msg,-1,gpio_adresat,1);
+            } else {
+                char *ss = "mpc next";
+                system(ss);
+            }
+        } else
+        if (strcmp(s,"key_left")==0)
+        {
+            if (gpio_adresat>-1)
+            {
+                msg = String("pilot=key_left");
+                sendtouser(msg,-1,gpio_adresat,1);
+            } else {
+                char *ss = "mpc prev";
+                system(ss);
+            }
         }
     } else {
         if (strcmp(trim(s),"")!=0)
