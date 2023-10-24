@@ -5,6 +5,8 @@ gui/gpio_gui
 gui/lib
 gui/backup
 gui/linux/usr
+laptop/backup
+laptop/lib
 *.xml
 *.res
 *.lps

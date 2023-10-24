@@ -1,0 +1,20 @@
+object DaemonMapper1: TDaemonMapper1
+  DaemonDefs = <  
+    item
+      DaemonClassName = 'TDaemon1'
+      Name = 'GPioMonitor'
+      Description = 'Laptop Gpio Monitor'
+      DisplayName = 'GPio Monitor'
+      Options = [doAllowStop, doAllowPause]
+      WinBindings.Dependencies = <>
+      WinBindings.StartType = stAuto
+      WinBindings.WaitHint = 0
+      WinBindings.IDTag = 0
+      WinBindings.ServiceType = stWin32
+      WinBindings.ErrorSeverity = esIgnore
+      WinBindings.AcceptedCodes = [wccNetBindChange, wccShutdown, wccPowerEvent]
+      LogStatusReport = False
+    end>
+  Left = 314
+  Top = 588
+end
