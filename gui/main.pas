@@ -70,11 +70,16 @@ type
     con_wyjscie,cmenu: boolean;
     cmem: integer;
     AUTO_TIMER,SERWIS_TV,LAPTOP: boolean;
+    LAPTOP_DZIALA: boolean;
+    EKRAN: string;
     procedure init;
     function test(aHost: string): boolean;
     procedure wczytaj_default;
     procedure auto_hide_go(aMiliSeconds: integer = 5000);
     procedure SetVolume(aSetVol: integer);
+    procedure wczytaj_ekran;
+    procedure wczytaj_ekran_informacje(Sender: TObject);
+    procedure zmien_ekran;
   public
     procedure SetStatus(aValue: integer);
   end;
@@ -200,6 +205,92 @@ begin
   end;
 end;
 
+procedure TgPioGui.wczytaj_ekran;
+var
+  a: TAsyncProcess;
+begin
+  a:=TAsyncProcess.Create(self);
+  try
+    a.Executable:='ddcutil';
+    a.Parameters.Add('--bus');
+    a.Parameters.Add('2');
+    a.Parameters.Add('getvcp');
+    a.Parameters.Add('0x60');
+    a.Options:=[poWaitOnExit,poUsePipes];
+    a.ShowWindow:=swoHIDE;
+    a.Execute;
+    wczytaj_ekran_informacje(a);
+  finally
+    a.Terminate(0);
+    a.Free;
+  end;
+end;
+
+procedure TgPioGui.wczytaj_ekran_informacje(Sender: TObject);
+var
+  a: TAsyncProcess;
+  ss: TStringList;
+  s,s1,s2,s3,s4,s5,s6: string;
+begin
+  a:=TAsyncProcess(Sender);
+  if a.NumBytesAvailable>0 then
+  begin
+    ss:=TStringList.Create;
+    try
+      ss.LoadFromStream(a.Output);
+      s:=ss.Text;
+    finally
+      ss.Free;
+    end;
+  end;
+  repeat s:=StringReplace(s,'  ',' ',[rfReplaceAll]) until pos('  ',s)=0;
+  s:=StringReplace(s,' )',')',[rfReplaceAll]);
+  //VCP code 0x60 (Input Source): HDMI-1 (sl=0x11)
+  s1:=trim(GetLineToStr(s,1,':'));
+  s2:=trim(GetLineToStr(s,2,':'));
+
+  s3:=GetLineToStr(s1,1,' ');
+  s4:=GetLineToStr(s1,2,' ');
+  s5:=GetLineToStr(s1,3,' ');
+  if (s3='VCP') and (s4='code') and (s5='0x60') then
+  begin
+    s3:=GetLineToStr(s2,1,' ');
+    s4:=GetLineToStr(s2,2,' ');
+    EKRAN:=s4;
+  end;
+end;
+
+procedure TgPioGui.zmien_ekran;
+var
+  a: TAsyncProcess;
+  s: string;
+begin
+  if not LAPTOP_DZIALA then exit;
+  if EKRAN='(sl=0x11)' then
+  begin
+    EKRAN:='(sl=0x1)';
+    s:='0x1';
+  end else begin
+    EKRAN:='(sl=0x11)';
+    s:='0x11';
+  end;
+  a:=TAsyncProcess.Create(self);
+  try
+    a.Executable:='ddcutil';
+    a.Parameters.Add('--bus');
+    a.Parameters.Add('2');
+    a.Parameters.Add('setvcp');
+    a.Parameters.Add('0x60');
+    a.Parameters.Add(s);
+    a.Options:=[poWaitOnExit];
+    a.ShowWindow:=swoHIDE;
+    a.Execute;
+  finally
+    a.Terminate(0);
+    a.Free;
+  end;
+end;
+
 procedure TgPioGui.SetStatus(aValue: integer);
 begin
   case aValue of
@@ -213,6 +304,7 @@ end;
 procedure TgPioGui.autorunTimer(Sender: TObject);
 begin
   autorun.Enabled:=false;
+  wczytaj_ekran;
   autoconnect.Enabled:=true;
 end;
 
@@ -337,6 +429,10 @@ begin
     if s2='key_power' then
     begin
       shutdown.execute;
+    end else
+    if s2='key_menu' then
+    begin
+      zmien_ekran;
     end;
   end else
   if s1='laptop' then
@@ -346,12 +442,14 @@ begin
       MenuItem2.Enabled:=false;
       MenuItem3.Enabled:=LAPTOP and true;
       if cStan.Active then SetStatus(11) else SetStatus(10);
+      LAPTOP_DZIALA:=true;
     end else
     if s2='logout' then
     begin
       MenuItem2.Enabled:=LAPTOP and true;
       MenuItem3.Enabled:=false;
       if cStan.Active then SetStatus(1) else SetStatus(0);
+      LAPTOP_DZIALA:=false;
     end else
     //if s2='starting' then mess.ShowInformation('Zdalny host otrzymał polecenie startu i procedura uruchomienia jest w trakcie.') else
     //if s2='shutdowning' then mess.ShowInformation('Zdalny host potwierdził rozpoczęcie procedury zamykania.') else

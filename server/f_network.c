@@ -195,6 +195,12 @@ void *recvmg(void *sock)
                 sendtouser(s,-1,cl.sockno,0);
                 sendtoall1("laptop=login",cl.sockno,0);
                 pthread_mutex_unlock(&mutex);
+            } else
+            if (strcmp(s2,"pilot_full_0")==0) {
+                pilot_full = 0;
+            } else
+            if (strcmp(s2,"pilot_full_1")==0) {
+                pilot_full = 1;
             }
         } else
 
@@ -250,6 +256,7 @@ void *recvmg(void *sock)
     if (pilot_adresat == cl.sockno)
     {
         pilot_adresat = -1;
+        pilot_full = 0;
         for(i = 0; i < n; i++) {
             if (tabs[i]==2 && clients[i]!=cl.sockno)
             {

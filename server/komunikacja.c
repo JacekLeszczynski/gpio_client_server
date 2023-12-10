@@ -170,6 +170,28 @@ void *sending_keys_pilot(void *arg)
                 system(ss);
             }
         } else
+        if (strcmp(s,"key_play_pause")==0)
+        {
+            if (gpio_adresat>-1)
+            {
+                msg = String("pilot=key_play_pause");
+                sendtouser(msg,-1,gpio_adresat,1);
+            } else {
+                char *ss = "mpc play";
+                system(ss);
+            }
+        } else
+        if (strcmp(s,"key_back")==0)
+        {
+            if (gpio_adresat>-1)
+            {
+                msg = String("pilot=key_back");
+                sendtouser(msg,-1,gpio_adresat,1);
+            } else {
+                char *ss = "mpc stop";
+                system(ss);
+            }
+        } else
         if (strcmp(s,"key_right")==0)
         {
             if (gpio_adresat>-1)
@@ -191,8 +213,17 @@ void *sending_keys_pilot(void *arg)
                 char *ss = "mpc prev";
                 system(ss);
             }
+        } else
+        {
+            s = concat("pilot=",s);
+            sendtouser(s,-1,gpio_adresat,1);
         }
     } else {
+        if (pilot_full == 0 && gpio_adresat!=-1 && strcmp(s,"key_menu")==0)
+        {
+            s = String("pilot=key_menu");
+            sendtouser(s,-1,gpio_adresat,1);
+        } else
         if (strcmp(trim(s),"")!=0)
         {
             s = concat("pilot=",s);

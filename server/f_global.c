@@ -21,6 +21,7 @@ int n = 0, mn = 0, ischat = 0;
 int error = 0;
 int pilot_adresat = -1;
 int gpio_adresat = -1;
+int pilot_full = 0;
 int timer_count = 0;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
