@@ -430,7 +430,7 @@ begin
     begin
       shutdown.execute;
     end else
-    if s2='key_menu' then
+    if s2='key2_down' then
     begin
       zmien_ekran;
     end;

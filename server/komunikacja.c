@@ -123,8 +123,8 @@ void *sending_keys_pilot(void *arg)
 63,
 29,42,31,
 */
-    s = StringReplace(s,"4263","key_down");
-    s = StringReplace(s,"29key_up","");
+    s = StringReplace(s,"4263","key2_down");
+    s = StringReplace(s,"29key2_up","");
     s = StringReplace(s,"5612525","");
     s = StringReplace(s,"63","");
     s = StringReplace(s,"294231","");
@@ -219,9 +219,9 @@ void *sending_keys_pilot(void *arg)
             sendtouser(s,-1,gpio_adresat,1);
         }
     } else {
-        if (pilot_full == 0 && gpio_adresat!=-1 && strcmp(s,"key_menu")==0)
+        if (pilot_full == 0 && gpio_adresat!=-1 && strcmp(s,"key2_down")==0)
         {
-            s = String("pilot=key_menu");
+            s = String("pilot=key2_down");
             sendtouser(s,-1,gpio_adresat,1);
         } else
         if (strcmp(trim(s),"")!=0)

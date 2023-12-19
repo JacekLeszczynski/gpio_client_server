@@ -20,26 +20,27 @@ void *procedure_w0(void *arg)
                 pthread_mutex_lock(&mutex2);
                 if (ev.code==48)
                 {
-                    klucz = String("key_up");
+                    klucz = String("key2_up");
                     pbufor = concat(pbufor,klucz);
                 } else
                 if (ev.code==104)
                 {
-                    klucz = String("key_left");
+                    klucz = String("key2_left");
                     pbufor = concat(pbufor,klucz);
                 } else
                 if (ev.code==109)
                 {
-                    klucz = String("key_right");
+                    klucz = String("key2_right");
                     pbufor = concat(pbufor,klucz);
                 } else
                 if (ev.code==1)
                 {
-                    klucz = String("key_down");
+                    klucz = String("key2_down");
                     pbufor = concat(pbufor,klucz);
                 } else
                 {
-                    klucz = itoa(ev.code,10);
+                    //klucz = itoa(ev.code,10);
+                    klucz = String("key2_down");
                     pbufor = concat(pbufor,klucz);
                 }
                 if (watek_dziala == 0)
