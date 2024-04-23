@@ -23,6 +23,7 @@ type
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
+    MenuItem8: TMenuItem;
     shutdown: TExtShutdown;
     Label1: TLabel;
     Label2: TLabel;
@@ -52,6 +53,7 @@ type
     procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem6Click(Sender: TObject);
+    procedure MenuItem8Click(Sender: TObject);
     procedure netConnect(aSocket: TLSocket);
     procedure netProcessMessage;
     procedure netReceiveString(aMsg: string; aSocket: TLSocket;
@@ -79,7 +81,6 @@ type
     procedure SetVolume(aSetVol: integer);
     procedure wczytaj_ekran;
     procedure wczytaj_ekran_informacje(Sender: TObject);
-    procedure zmien_ekran;
   public
     procedure SetStatus(aValue: integer);
   end;
@@ -103,8 +104,7 @@ end;
 
 procedure TgPioGui.init;
 begin
-  SpeedButton3.Visible:=cmenu;
-  if cmenu then Height:=148 else Height:=100;
+  MenuItem1.Visible:=cmenu;
 end;
 
 function TgPioGui.test(aHost: string): boolean;
@@ -172,6 +172,7 @@ begin
   MenuItem6.Enabled:=SERWIS_TV;
   //MenuItem2.Enabled:=LAPTOP;
   //MenuItem3.Enabled:=LAPTOP;
+  MenuItem2.Enabled:=LAPTOP;
 end;
 
 procedure TgPioGui.auto_hide_go(aMiliSeconds: integer);
@@ -212,8 +213,8 @@ begin
   a:=TAsyncProcess.Create(self);
   try
     a.Executable:='ddcutil';
-    a.Parameters.Add('--bus');
-    a.Parameters.Add('2');
+    a.Parameters.Add('-d');
+    a.Parameters.Add('1');
     a.Parameters.Add('getvcp');
     a.Parameters.Add('0x60');
     a.Options:=[poWaitOnExit,poUsePipes];
@@ -257,37 +258,6 @@ begin
     s3:=GetLineToStr(s2,1,' ');
     s4:=GetLineToStr(s2,2,' ');
     EKRAN:=s4;
-  end;
-end;
-
-procedure TgPioGui.zmien_ekran;
-var
-  a: TAsyncProcess;
-  s: string;
-begin
-  if not LAPTOP_DZIALA then exit;
-  if EKRAN='(sl=0x11)' then
-  begin
-    EKRAN:='(sl=0x1)';
-    s:='0x1';
-  end else begin
-    EKRAN:='(sl=0x11)';
-    s:='0x11';
-  end;
-  a:=TAsyncProcess.Create(self);
-  try
-    a.Executable:='ddcutil';
-    a.Parameters.Add('--bus');
-    a.Parameters.Add('2');
-    a.Parameters.Add('setvcp');
-    a.Parameters.Add('0x60');
-    a.Parameters.Add(s);
-    a.Options:=[poWaitOnExit];
-    a.ShowWindow:=swoHIDE;
-    a.Execute;
-  finally
-    a.Terminate(0);
-    a.Free;
   end;
 end;
 
@@ -355,9 +325,13 @@ begin
 end;
 
 procedure TgPioGui.MenuItem1Click(Sender: TObject);
+var
+  s1,s2: string;
 begin
-  con_wyjscie:=true;
-  close;
+  s1:='/home/tao/.config/budgie-app-launcher/Locale State.wzor';
+  s2:='/home/tao/.config/budgie-app-launcher/Locale State';
+  CopyFile(s1,s2);
+  auto_hide_go(200);
 end;
 
 procedure TgPioGui.MenuItem2Click(Sender: TObject);
@@ -378,6 +352,19 @@ end;
 procedure TgPioGui.MenuItem6Click(Sender: TObject);
 begin
   net.SendString('tv=off');
+end;
+
+procedure TgPioGui.MenuItem8Click(Sender: TObject);
+var
+  s1,s2: string;
+begin
+  if mess.ShowConfirmationYesNo('Czy faktycznie nadpisać konfiguracje menu nową zawartością?') then
+  begin
+    s1:='/home/tao/.config/budgie-app-launcher/Locale State';
+    s2:='/home/tao/.config/budgie-app-launcher/Locale State.wzor';
+    CopyFile(s1,s2);
+  end;
+  auto_hide_go(200);
 end;
 
 procedure TgPioGui.netConnect(aSocket: TLSocket);
@@ -429,10 +416,6 @@ begin
     if s2='key_power' then
     begin
       shutdown.execute;
-    end else
-    if s2='key2_down' then
-    begin
-      zmien_ekran;
     end;
   end else
   if s1='laptop' then
@@ -497,13 +480,9 @@ begin
 end;
 
 procedure TgPioGui.SpeedButton3Click(Sender: TObject);
-var
-  s1,s2: string;
 begin
-  s1:='/home/tao/.config/budgie-app-launcher/Locale State.wzor';
-  s2:='/home/tao/.config/budgie-app-launcher/Locale State';
-  CopyFile(s1,s2);
-  auto_hide_go(200);
+  con_wyjscie:=true;
+  close;
 end;
 
 procedure TgPioGui.auto_hideTimer(Sender: TObject);

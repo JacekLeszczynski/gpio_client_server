@@ -1,25 +1,26 @@
 object gPioGui: TgPioGui
   Left = 2293
-  Height = 100
+  Height = 148
   Top = 176
   Width = 139
   BorderStyle = bsSingle
   Caption = 'GPio-GUI'
-  ClientHeight = 100
+  ClientHeight = 148
   ClientWidth = 139
-  Constraints.MinHeight = 100
+  Constraints.MinHeight = 148
   Constraints.MinWidth = 139
   OnClose = FormClose
   OnCreate = FormCreate
   SessionProperties = 'Top;Left'
+  ShowInTaskBar = stNever
   LCLVersion = '2.0.12.0'
   object uETilePanel1: TuETilePanel
     Left = 0
-    Height = 100
+    Height = 148
     Top = 0
     Width = 139
     Align = alClient
-    ClientHeight = 100
+    ClientHeight = 148
     ClientWidth = 139
     TabOrder = 0
     Image.Data = {
@@ -16192,10 +16193,10 @@ object gPioGui: TgPioGui
       AnchorSideLeft.Control = cConnecting
       AnchorSideLeft.Side = asrCenter
       AnchorSideBottom.Control = cConnecting
-      Left = 43
-      Height = 16
-      Top = 16
-      Width = 19
+      Left = 42
+      Height = 14
+      Top = 18
+      Width = 20
       Anchors = [akLeft, akBottom]
       Caption = 'Sieć'
       Font.Color = clYellow
@@ -16252,8 +16253,8 @@ object gPioGui: TgPioGui
       AnchorSideLeft.Side = asrCenter
       AnchorSideBottom.Control = cStan
       Left = 81
-      Height = 16
-      Top = 16
+      Height = 14
+      Top = 18
       Width = 22
       Anchors = [akLeft, akBottom]
       Caption = 'Stan'
@@ -16275,12 +16276,11 @@ object gPioGui: TgPioGui
       Top = 96
       Width = 80
       Anchors = [akTop, akLeft, akRight]
-      Caption = 'Aktualizacja'#10'     Menu'
+      Caption = 'Wyjście'
       Flat = True
       Font.Height = -8
       Font.Name = 'Sans'
       Font.Style = [fsBold]
-      Visible = False
       OnClick = SpeedButton3Click
       ParentFont = False
     end
@@ -19894,13 +19894,17 @@ object gPioGui: TgPioGui
     object MenuItem7: TMenuItem
       Caption = '-'
     end
+    object MenuItem8: TMenuItem
+      Caption = 'Zapis konfiguracji menu'
+      OnClick = MenuItem8Click
+    end
     object MenuItem1: TMenuItem
-      Caption = 'Wyjście'
+      Caption = 'Aktualizacja menu'
       OnClick = MenuItem1Click
     end
   end
   object shutdown: TExtShutdown
-    Mode = smGnome
+    Mode = smShutdownP2
     Left = 512
     Top = 96
   end

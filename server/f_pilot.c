@@ -39,8 +39,8 @@ void *procedure_w0(void *arg)
                     pbufor = concat(pbufor,klucz);
                 } else
                 {
-                    //klucz = itoa(ev.code,10);
-                    klucz = String("key2_down");
+                    klucz = itoa(ev.code,10);
+                    //klucz = String("key2_down");
                     pbufor = concat(pbufor,klucz);
                 }
                 if (watek_dziala == 0)

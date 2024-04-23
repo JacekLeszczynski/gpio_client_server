@@ -13,7 +13,8 @@ int tabs[CONST_MAX_CLIENTS];  //tryb [0]=tryb (1-gpio, 2-pilot, 3-laptop)
 int shutdown_now[CONST_MAX_CLIENTS];  //do zamknięcia!
 char *pbufor;
 
-char *GPIO_NR,*PATH_KBD_0,*PATH_KBD_1;
+char *GPIO_NR_1,*GPIO_NR_2,*GPIO_NR_3,*GPIO_NR_4,*GPIO_NR_5,*GPIO_NR_6,*GPIO_NR_7,*GPIO_NR_8;
+char *PATH_KBD_0,*PATH_KBD_1;
 bool REVERSE,AUTO_ON_OFF_BY_LOGIN,AUTO_TIMER = 0;
 char *LAPTOP_MAC_ADDRESS;
 
@@ -22,12 +23,9 @@ int error = 0;
 int pilot_adresat = -1;
 int gpio_adresat = -1;
 int pilot_full = 0;
-int timer_count = 0;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex_t = PTHREAD_MUTEX_INITIALIZER;
 
 bool watek_dziala = 0;
 
-
-int GPIO_VALUE = 0;

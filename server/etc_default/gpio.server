@@ -3,7 +3,8 @@
 # PORT = 2122
 
 # Numer linii GPIO
-GPIO_NUMBER = 492
+GPIO_NUMBER_A = 492
+GPIO_NUMBER_B = 493
 
 # Jeśli masz potrzebę odwrócenia pracy stanów, bo twój sterownik włącza się przy
 # aktywnym zero, a wyłącza przy aktywnym 1 (domyślną wartością jest 0)

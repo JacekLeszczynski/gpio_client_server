@@ -30,9 +30,15 @@ int main(int argc,char *argv[])
 
     BUF = ConfToBufor("/etc/default/gpio.server");
     portno = atoi(GetConfValue(BUF,"PORT","2122"));
-    GPIO_NR = GetConfValue(BUF,"GPIO_NUMBER","492");
+    GPIO_NR_1 = GetConfValue(BUF,"GPIO_NUMBER_1","23");
+    GPIO_NR_2 = GetConfValue(BUF,"GPIO_NUMBER_2","24");
+    GPIO_NR_3 = GetConfValue(BUF,"GPIO_NUMBER_3","25");
+    GPIO_NR_4 = GetConfValue(BUF,"GPIO_NUMBER_4","26");
+    GPIO_NR_5 = GetConfValue(BUF,"GPIO_NUMBER_5","27");
+    GPIO_NR_6 = GetConfValue(BUF,"GPIO_NUMBER_6","17");
+    GPIO_NR_7 = GetConfValue(BUF,"GPIO_NUMBER_7","22");
+    GPIO_NR_8 = GetConfValue(BUF,"GPIO_NUMBER_8","16");
     REVERSE = atoi(GetConfValue(BUF,"REVERSE","0"));
-    if (REVERSE) { GPIO_VALUE = 1; } else {GPIO_VALUE = 0; }
     AUTO_ON_OFF_BY_LOGIN = atoi(GetConfValue(BUF,"AUTO_ON_OFF","0"));
     AUTO_TIMER = atoi(GetConfValue(BUF,"TIMER","0"));
     bool SCAN_KEYBOARD = atoi(GetConfValue(BUF,"SCAN_KEYBOARD","0"));

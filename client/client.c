@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
     if (argc != 2)
     {
-        fprintf(stderr,"usage: client ON|OFF|STATUS\n");
+        fprintf(stderr,"usage: client ON|OFF|STATUS|ON2-8|OFF2-8|STATUS2-8\n");
         exit(1);
     }
     komenda = argv[1];
@@ -88,11 +88,34 @@ int main(int argc, char *argv[])
     //}
     //usleep(500);
 
+    komenda = upcase(komenda);
+
     if (strcmp(komenda,"AUTO-ON")==0) komenda = String("gpio=on");
     else if (strcmp(komenda,"AUTO-OFF")==0) komenda = String("gpio=off");
     else if (strcmp(komenda,"STATUS")==0) komenda = String("gpio=status");
+    else if (strcmp(komenda,"STATUS2")==0) komenda = String("gpio2=status");
+    else if (strcmp(komenda,"STATUS3")==0) komenda = String("gpio3=status");
+    else if (strcmp(komenda,"STATUS4")==0) komenda = String("gpio4=status");
+    else if (strcmp(komenda,"STATUS5")==0) komenda = String("gpio5=status");
+    else if (strcmp(komenda,"STATUS6")==0) komenda = String("gpio6=status");
+    else if (strcmp(komenda,"STATUS7")==0) komenda = String("gpio7=status");
+    else if (strcmp(komenda,"STATUS8")==0) komenda = String("gpio8=status");
     else if (strcmp(komenda,"ON")==0) komenda = String("gpio=on");
     else if (strcmp(komenda,"OFF")==0) komenda = String("gpio=off");
+    else if (strcmp(komenda,"ON2")==0) komenda = String("gpio2=on");
+    else if (strcmp(komenda,"OFF2")==0) komenda = String("gpio2=off");
+    else if (strcmp(komenda,"ON3")==0) komenda = String("gpio3=on");
+    else if (strcmp(komenda,"OFF3")==0) komenda = String("gpio3=off");
+    else if (strcmp(komenda,"ON4")==0) komenda = String("gpio4=on");
+    else if (strcmp(komenda,"OFF4")==0) komenda = String("gpio4=off");
+    else if (strcmp(komenda,"ON5")==0) komenda = String("gpio5=on");
+    else if (strcmp(komenda,"OFF5")==0) komenda = String("gpio5=off");
+    else if (strcmp(komenda,"ON6")==0) komenda = String("gpio6=on");
+    else if (strcmp(komenda,"OFF6")==0) komenda = String("gpio6=off");
+    else if (strcmp(komenda,"ON7")==0) komenda = String("gpio7=on");
+    else if (strcmp(komenda,"OFF7")==0) komenda = String("gpio7=off");
+    else if (strcmp(komenda,"ON8")==0) komenda = String("gpio8=on");
+    else if (strcmp(komenda,"OFF8")==0) komenda = String("gpio8=off");
 
     //printf("Komenda do wysłania: %s\n",komenda);
 
@@ -102,7 +125,14 @@ int main(int argc, char *argv[])
         exit (1);
     }
 
-    if (strcmp(komenda,"gpio=status")==0)
+    if (strcmp(komenda,"gpio=status")==0
+     || strcmp(komenda,"gpio2=status")==0
+     || strcmp(komenda,"gpio3=status")==0
+     || strcmp(komenda,"gpio4=status")==0
+     || strcmp(komenda,"gpio5=status")==0
+     || strcmp(komenda,"gpio6=status")==0
+     || strcmp(komenda,"gpio7=status")==0
+     || strcmp(komenda,"gpio8=status")==0)
     {
         if ((numbytes=recv(sockfd, buf, MAXDATASIZE, 0)) == -1)
         {
