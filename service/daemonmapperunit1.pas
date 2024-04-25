@@ -8,6 +8,9 @@ uses
   Classes, SysUtils, DaemonApp;
 
 type
+
+  { TDaemonMapper1 }
+
   TDaemonMapper1 = class(TDaemonMapper)
   private
 
@@ -26,7 +29,6 @@ begin
 end;
 
 {$R *.lfm}
-
 
 initialization
   RegisterMapper;

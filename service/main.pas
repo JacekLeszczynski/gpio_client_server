@@ -193,9 +193,9 @@ end;
 
 procedure TFMain.FormCreate(Sender: TObject);
 begin
-  Application.ShowMainForm:=false;
-  WindowState:=wsMinimized;
-  hide;
+  //Application.ShowMainForm:=false;
+  //WindowState:=wsMinimized;
+  //hide;
   con_wyjscie:=false;
   wczytaj_default;
   autorun.Enabled:=true;
