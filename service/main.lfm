@@ -4,16 +4,42 @@ object FMain: TFMain
   Top = 129
   Width = 320
   Caption = 'FMain'
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   LCLVersion = '2.0.12.0'
-  object mon: TNetSocket
-    Mode = smServer
+  object net: TNetSocket
+    Mode = smClient
     Security = ssNone
+    Host = '127.0.0.1'
     Port = 0
-    ReuseAddress = False
+    ReuseAddress = True
     Timeout = 4
+    MaxBuffer = 100
     SSLMethod = msTLS
-    OnProcessMessage = monProcessMessage
+    OnProcessMessage = netProcessMessage
+    OnConnect = netConnect
+    OnReceiveString = netReceiveString
+    OnStatus = netStatus
     Left = 81
     Top = 42
+  end
+  object autorun: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = autorunTimer
+    Left = 144
+    Top = 42
+  end
+  object autoconnect: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = autoconnectTimer
+    Left = 224
+    Top = 42
+  end
+  object shutdown: TExtShutdown
+    Mode = smShutdownP2
+    Left = 81
+    Top = 107
   end
 end

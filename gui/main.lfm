@@ -1,12 +1,12 @@
 object gPioGui: TgPioGui
-  Left = 2293
-  Height = 148
-  Top = 176
-  Width = 139
+  Left = 2314
+  Height = 347
+  Top = 513
+  Width = 576
   BorderStyle = bsSingle
   Caption = 'GPio-GUI'
-  ClientHeight = 148
-  ClientWidth = 139
+  ClientHeight = 347
+  ClientWidth = 576
   Constraints.MinHeight = 148
   Constraints.MinWidth = 139
   OnClose = FormClose
@@ -16,12 +16,12 @@ object gPioGui: TgPioGui
   LCLVersion = '2.0.12.0'
   object uETilePanel1: TuETilePanel
     Left = 0
-    Height = 148
+    Height = 347
     Top = 0
-    Width = 139
+    Width = 576
     Align = alClient
-    ClientHeight = 148
-    ClientWidth = 139
+    ClientHeight = 347
+    ClientWidth = 576
     TabOrder = 0
     Image.Data = {
       52E20700424D52E20700000000003600000028000000FC010000530100000100
@@ -16298,8 +16298,8 @@ object gPioGui: TgPioGui
     OnConnect = netConnect
     OnReceiveString = netReceiveString
     OnStatus = netStatus
-    Left = 512
-    Top = 160
+    Left = 160
+    Top = 152
   end
   object ImageList1: TImageList
     Height = 32

@@ -5,7 +5,7 @@ object DaemonMapper1: TDaemonMapper1
       Name = 'GPioService'
       Description = 'GPio Service'
       DisplayName = 'GPio Service'
-      Options = [doAllowStop, doAllowPause]
+      Options = [doAllowStop]
       WinBindings.Dependencies = <>
       WinBindings.StartType = stBoot
       WinBindings.WaitHint = 0
@@ -15,6 +15,6 @@ object DaemonMapper1: TDaemonMapper1
       WinBindings.AcceptedCodes = [wccNetBindChange, wccPreShutdown, wccShutdown, wccPowerEvent]
       LogStatusReport = False
     end>
-  Left = 2329
+  Left = 1550
   Top = 614
 end
