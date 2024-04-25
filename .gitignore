@@ -2,6 +2,7 @@ ide_c
 client.gpio
 server.gpio
 monitor.gpio
+gpio-service
 gui/gpio_gui
 lib
 backup
