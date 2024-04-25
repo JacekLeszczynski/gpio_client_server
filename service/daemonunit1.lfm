@@ -1,0 +1,7 @@
+object Daemon1: TDaemon1
+  OldCreateOrder = False
+  Height = 150
+  HorizontalOffset = 2336
+  VerticalOffset = 216
+  Width = 280
+end
