@@ -20,6 +20,8 @@ if (tryb==4) {
             ss = String("wakeonlan ");
             ss = concat(ss,LAPTOP_MAC_ADDRESS);
             system(ss);
+            sleep(1);
+            system(ss);
         } else
         if (strcmp(s2,"restart")==0) {
             for(i = 0; i < n; i++) {
@@ -33,7 +35,11 @@ if (tryb==4) {
         } else
         if (strcmp(s2,"shutdown")==0) {
             for(i = 0; i < n; i++) {
-                if(tabs[i] == 3) sendmessage("laptop=shutdowning",cl.sockno,1);
+                if(tabs[i] == 3) {
+                    ss = String("laptop=shutdown=");
+                    ss = concat(ss,IntToSys(cl.sockno,10));
+                    sendmessage(ss,clients[i],1);
+                }
             }
         }
     } else
@@ -65,7 +71,7 @@ if (tryb==4) {
         if (strcmp(s2,"8")==0) {
             if (strcmp(s3,"1")==0) { set_GPIO(GPIO_NR_8,1); s="gpio8=1"; } else { set_GPIO(GPIO_NR_8,0); s="gpio8=0"; }
         }
-        send(cl.sockno,s,strlen(s),MSG_NOSIGNAL);
+        sendmessage(s,cl.sockno,0);
         sendmessage_status_gpio_all(cl.sockno,0);
         pthread_mutex_unlock(&mutex);
     }

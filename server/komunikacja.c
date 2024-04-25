@@ -3,7 +3,7 @@
 void sendmessage(char *msg, int sock_adresat, bool aMutex) //adresat to soket!
 {
     if (aMutex) pthread_mutex_lock(&mutex);
-    send(sock_adresat,msg,strlen(msg),MSG_NOSIGNAL);
+    send(sock_adresat,msg,strlen(msg)+1,MSG_NOSIGNAL);
     if (aMutex) pthread_mutex_unlock(&mutex);
 }
 
@@ -22,7 +22,7 @@ void sendtouser(char *msg, int sock_nadawca, int sock_adresat, bool aMutex) //na
             break;
 	}
     }
-    if (a>-1) send(sock_adresat,msg,strlen(msg),MSG_NOSIGNAL);
+    if (a>-1) send(sock_adresat,msg,strlen(msg)+1,MSG_NOSIGNAL);
     if (aMutex) pthread_mutex_unlock(&mutex);
 }
 
@@ -34,7 +34,7 @@ void sendtoall(char *msg, int sock_nadawca, bool force_all, bool aMutex) //nadaw
     if (aMutex) pthread_mutex_lock(&mutex);
     for(i = 0; i < n; i++)
     {
-        if (force_all || (clients[i] != sock_nadawca)) send(clients[i],msg,strlen(msg),MSG_NOSIGNAL);
+        if (force_all || (clients[i] != sock_nadawca)) send(clients[i],msg,strlen(msg)+1,MSG_NOSIGNAL);
     }
     if (aMutex) pthread_mutex_unlock(&mutex);
 }
@@ -47,7 +47,7 @@ void sendtoall1(char *msg, int sock_nadawca, bool aMutex) //nadawca to soket
     if (aMutex) pthread_mutex_lock(&mutex);
     for(i = 0; i < n; i++)
     {
-        if (clients[i] != sock_nadawca && tabs[i] == 1) send(clients[i],msg,strlen(msg),MSG_NOSIGNAL);
+        if (clients[i] != sock_nadawca && tabs[i] == 1) send(clients[i],msg,strlen(msg)+1,MSG_NOSIGNAL);
     }
     if (aMutex) pthread_mutex_unlock(&mutex);
 }
@@ -60,7 +60,7 @@ void sendtoall14(char *msg, int sock_nadawca, bool aMutex) //nadawca to soket
     if (aMutex) pthread_mutex_lock(&mutex);
     for(i = 0; i < n; i++)
     {
-        if (clients[i] != sock_nadawca && (tabs[i] == 1 || tabs[i] == 4)) send(clients[i],msg,strlen(msg),MSG_NOSIGNAL);
+        if (clients[i] != sock_nadawca && (tabs[i] == 1 || tabs[i] == 4)) send(clients[i],msg,strlen(msg)+1,MSG_NOSIGNAL);
     }
     if (aMutex) pthread_mutex_unlock(&mutex);
 }

@@ -129,6 +129,27 @@ char *downcase(char *s)
     return s;
 }
 
+void _trim(char *str)
+{
+    // Remove leading white space
+    char* start = str;
+    while (*start && isspace(*start)) {
+        start++;
+    }
+
+    // Remove trailing white space
+    char* end = start + strlen(start) - 1;
+    while (end > start && isspace(*end)) {
+        end--;
+    }
+    *(end+1) = '\0';
+
+    // Shift string to remove leading white space
+    if (start != str) {
+        memmove(str, start, strlen(start)+1);
+    }
+}
+
 char *trim(char *str)
 {
     char *end;
@@ -597,6 +618,99 @@ char *GetUuidCompress()
      return s1;
 }
 
+int fGetLineToStr(char *aStr, int l, char separator, char textseparator, char *wynik, char **wartosc, int *wartosc_len) {
+  int ll = l - 1,newlen;
+  char *start, *end;
+  bool in_quotes = false;
+
+  // Find start of specified element
+  start = aStr;
+  for (int i = 0; i < ll; i++) {
+    if (*start == textseparator) {
+      start++;
+      while (*start != textseparator) {
+        start++;
+      }
+    }
+    start = strchr(start, separator);
+    if (start == NULL) {
+      newlen = strlen(wynik);
+      if (*wartosc_len<newlen+1) {
+        if (*wartosc != NULL) free(*wartosc);
+        *wartosc = malloc(newlen+1);
+        *wartosc_len = newlen+1;
+      }
+      strcpy(*wartosc, wynik);
+      (*wartosc)[newlen] = '\0';
+      return strlen(*wartosc);
+    }
+    start++;
+  }
+
+  // Find end of element
+  end = start;
+  while (*end != '\0') {
+    if (*end == textseparator) {
+      in_quotes = !in_quotes;
+    }
+    if (!in_quotes && *end == separator) {
+      break;
+    }
+    end++;
+  }
+
+  // Declare result for element string
+  int r_len = end - start;
+  if (*wartosc_len<r_len+1) {
+    if (*wartosc != NULL) free(*wartosc);
+    *wartosc = malloc(r_len+1);
+    *wartosc_len = r_len+1;
+  }
+
+  // Copy element string to result and add null terminator
+  if (start[0] == textseparator) {
+    memcpy(*wartosc, start + 1, r_len - 2);
+    (*wartosc)[r_len - 2] = '\0';
+  } else {
+    memcpy(*wartosc, start, r_len);
+    (*wartosc)[r_len] = '\0';
+  }
+
+  // Return element string or wynik if element is empty
+  if ((*wartosc)[0] == '\0') {
+      newlen = strlen(wynik);
+      if (*wartosc_len<newlen+1) {
+        if (*wartosc != NULL) free(*wartosc);
+        *wartosc = malloc(newlen+1);
+        *wartosc_len = newlen+1;
+      }
+      strcpy(*wartosc,wynik);
+      (*wartosc)[newlen] = '\0';
+  }
+  return strlen(*wartosc);
+}
+
+int fGetLineCount(char *aStr, char separator, char textseparator) {
+  int element_count = 1;
+  char *start, *end;
+  bool in_quotes = false;
+
+  start = aStr;
+  end = start;
+
+  while (*end != '\0') {
+    if (*end == textseparator) in_quotes = !in_quotes;
+    if (!in_quotes && *end == separator) element_count++;
+    end++;
+  }
+
+  if (*aStr == '\0') {
+    return 0;
+  } else {
+    return element_count;
+  }
+}
+
 char *GetLineToStr(char *aStr, int l, char separator, char *wynik)
 {
   int i, ll = 1, dl = strlen(aStr);
@@ -630,6 +744,10 @@ char *GetLineToStr(char *aStr, int l, char separator, char *wynik)
   if (s[strlen(s)-1]==separator) s[strlen(s)-1]='\0';
   // jeśli puste zwracam wynik, w innym razie zwracam co wyszło
   if (*s=='\0') return wynik; else return s;
+}
+
+int GetLineCount(char *aStr, char separator) {
+    return fGetLineCount(aStr,separator,'"');
 }
 
 char *GetConfValue(char *bufor, char *zmienna, char *wartosc_domyslna)
@@ -766,5 +884,17 @@ char *AliasInt(char *aStr, char *aAlias, int aValue)
     char bufor[50];
     sprintf(bufor,"%ld",aValue);
     return StringReplace(aStr,aAlias,bufor);
+}
+
+void _display(char *tekst, char *s, int len)
+{
+  int i,a;
+  fprintf(stderr,"%s",tekst);
+  for (i=0; i<len; i++)
+  {
+    a = s[i];
+    fprintf(stderr,"%hhx ",s[i]);
+  }
+  fprintf(stderr,"\n");
 }
 

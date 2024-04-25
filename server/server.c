@@ -7,6 +7,23 @@
 #include "f_network.c"
 #include "f_daemon.c"
 
+#define CONST_TEST 0
+
+void test()
+{
+  char *s,*s1;
+  int i,ii,len;
+
+  s = String("Ala,Bela,Celina");
+
+  ii = GetLineCount(s,',');
+  printf("Zaczynam czytanie danych '%s' o ilości elementów = %i:\n",s1,ii);
+  for (i=1;i<=ii;i++) {
+      s1 = GetLineToStr(s,i,',',"");
+      printf("%i: %s\n",i,s1);
+  }
+}
+
 /* GŁÓWNA FUNKCJA STARTOWA */
 int main(int argc,char *argv[])
 {
@@ -21,6 +38,11 @@ int main(int argc,char *argv[])
     struct client_info cl;
     char ip[INET_ADDRSTRLEN],IP[INET_ADDRSTRLEN];
     int PORT;
+
+    if (CONST_TEST) {
+        test();
+        return 0;
+    }
 
     if(argc > 2)
     {
