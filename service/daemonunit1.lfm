@@ -1,7 +1,12 @@
 object Daemon1: TDaemon1
   OldCreateOrder = False
+  OnStart = DataModuleStart
+  OnStop = DataModuleStop
+  OnPause = DataModulePause
+  OnContinue = DataModuleContinue
+  OnShutDown = DataModuleShutDown
   Height = 150
-  HorizontalOffset = 2336
-  VerticalOffset = 216
+  HorizontalOffset = 2342
+  VerticalOffset = 417
   Width = 280
 end

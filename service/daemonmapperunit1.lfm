@@ -15,6 +15,6 @@ object DaemonMapper1: TDaemonMapper1
       WinBindings.AcceptedCodes = [wccNetBindChange, wccPreShutdown, wccShutdown, wccPowerEvent]
       LogStatusReport = False
     end>
-  Left = 2319
-  Top = 406
+  Left = 2329
+  Top = 614
 end
