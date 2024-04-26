@@ -8,7 +8,7 @@ object Daemon1: TDaemon1
   AfterInstall = DataModuleAfterInstall
   BeforeUnInstall = DataModuleBeforeUnInstall
   Height = 150
-  HorizontalOffset = 2358
-  VerticalOffset = 420
+  HorizontalOffset = 2387
+  VerticalOffset = 163
   Width = 280
 end

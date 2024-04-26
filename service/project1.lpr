@@ -1,10 +1,10 @@
 Program project1;
 
 Uses
-{$IFDEF UNIX}{$IFDEF UseCThreads}
+{$IFDEF UNIX}
   CThreads,
-{$ENDIF}{$ENDIF}
-  DaemonApp, lazdaemonapp, DaemonMapperUnit1, DaemonUnit1, Interfaces, Main;
+{$ENDIF}
+  DaemonApp, lazdaemonapp, DaemonMapperUnit1, DaemonUnit1, Interfaces;
 
 begin
   Application.Title:='Daemon application';

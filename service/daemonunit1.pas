@@ -31,7 +31,7 @@ var
 implementation
 
 uses
-  ecode, Process, AsyncProcess;
+  ecode_wewn, Unix;
 
 const
   SERVICE_FILENAME = '/usr/lib/systemd/system/gpio-service.service';
@@ -120,24 +120,9 @@ begin
 end;
 
 procedure TDaemon1.reload_systemd;
-var
-  a: TAsyncProcess;
-  b: integer;
-  s: string;
 begin
-  a:=TAsyncProcess.Create(self);
-  try
-    a.Executable:='systemctl';
-    a.Parameters.Add('daemon-reload');
-    a.Options:=[poWaitOnExit];
-    a.ShowWindow:=swoHIDE;
-    a.Execute;
-  finally
-    a.Terminate(0);
-    a.Free;
-  end;
+  fpsystem('systemctl daemon-reload');
 end;
-
 
 initialization
   RegisterDaemon;
