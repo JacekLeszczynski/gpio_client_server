@@ -11,6 +11,7 @@ void signal_handler(int sig)
             //shutdown(my_sock,2);
             //close(my_sock);
             //log_message(LOG_FILE,"terminate signal catched");
+            BEXIT = 1;
             exit(0);
             break;
     }

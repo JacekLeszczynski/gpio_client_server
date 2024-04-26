@@ -13,6 +13,10 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <linux/input.h>
+#include <errno.h>
+#include <netdb.h>
+#include <alsa/asoundlib.h>
+//#include <cmixer.h>
 //#include <gpiod.h>
 //#include <iostream>
 //#include <ncurses.h>
