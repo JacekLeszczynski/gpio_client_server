@@ -1,0 +1,44 @@
+object dm: Tdm
+  OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
+  OldCreateOrder = False
+  Height = 202
+  HorizontalOffset = 2355
+  VerticalOffset = 217
+  Width = 347
+  object net: TNetSocket
+    Mode = smClient
+    Security = ssNone
+    Host = '127.0.0.1'
+    Port = 0
+    ReuseAddress = True
+    Timeout = 4
+    MaxBuffer = 100
+    SSLMethod = msTLS
+    OnProcessMessage = netProcessMessage
+    OnConnect = netConnect
+    OnReceiveString = netReceiveString
+    OnStatus = netStatus
+    Left = 80
+    Top = 16
+  end
+  object autorun: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = autorunTimer
+    Left = 136
+    Top = 16
+  end
+  object autoconnect: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = autoconnectTimer
+    Left = 208
+    Top = 16
+  end
+  object shutdown: TExtShutdown
+    Mode = smShutdownP2
+    Left = 80
+    Top = 88
+  end
+end
