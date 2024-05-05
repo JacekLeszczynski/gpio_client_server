@@ -6,6 +6,19 @@ if (tryb==4) {
     if (strcmp(s1,"status")==0) {
         sendmessage_status_gpio(cl.sockno,1);
     } else
+    if (strcmp(s1,"getworkday")==0) {
+        int zmienna = DzienRoboczy();
+        if (zmienna==1)
+        {
+            sendmessage("workday=1",cl.sockno,1);
+        } else {
+            if (zmienna==0) {
+                sendmessage("workday=0",cl.sockno,1);
+            } else {
+                sendmessage("workday=-1",cl.sockno,1);
+            }
+        }
+    } else
 
     if (strcmp(s1,"laptop")==0) {
         if (strcmp(s2,"status")==0) {

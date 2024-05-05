@@ -11,17 +11,8 @@
 
 void test()
 {
-  char *s,*s1;
-  int i,ii,len;
-
-  s = String("Ala,Bela,Celina");
-
-  ii = GetLineCount(s,',');
-  printf("Zaczynam czytanie danych '%s' o ilości elementów = %i:\n",s1,ii);
-  for (i=1;i<=ii;i++) {
-      s1 = GetLineToStr(s,i,',',"");
-      printf("%i: %s\n",i,s1);
-  }
+  int a = DzienRoboczy();
+  printf("Wartość a = %i\n",a);
 }
 
 /* GŁÓWNA FUNKCJA STARTOWA */

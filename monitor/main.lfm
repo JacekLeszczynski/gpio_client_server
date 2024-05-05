@@ -1,24 +1,24 @@
 object cMain: TcMain
   Left = 2315
-  Height = 289
+  Height = 304
   Top = 254
-  Width = 623
+  Width = 624
   BorderStyle = bsSingle
   Caption = 'Monitor GPio'
-  ClientHeight = 289
-  ClientWidth = 623
+  ClientHeight = 304
+  ClientWidth = 624
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   SessionProperties = 'Top;Left;cSrcName1.Text;cSrcName2.Text;cSrcName3.Text;cSrcName4.Text;cSrcName5.Text;cSrcName6.Text;cSrcName7.Text;cSrcName8.Text'
   LCLVersion = '2.0.12.0'
   object uETilePanel1: TuETilePanel
     Left = 0
-    Height = 289
+    Height = 304
     Top = 0
-    Width = 623
+    Width = 624
     Align = alClient
-    ClientHeight = 289
-    ClientWidth = 623
+    ClientHeight = 304
+    ClientWidth = 624
     TabOrder = 0
     Image.Data = {
       36000300424D3600030000000000360000002800000000010000000100000100
@@ -6174,9 +6174,9 @@ object cMain: TcMain
       AnchorSideRight.Control = uETilePanel1
       AnchorSideRight.Side = asrBottom
       Left = 9
-      Height = 179
+      Height = 186
       Top = 9
-      Width = 605
+      Width = 606
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 8
@@ -6191,7 +6191,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 53
       Height = 30
-      Top = 53
+      Top = 57
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6205,7 +6205,7 @@ object cMain: TcMain
       AnchorSideLeft.Control = Bevel2
       AnchorSideTop.Control = Bevel2
       Left = 19
-      Height = 26
+      Height = 30
       Top = 19
       Width = 128
       Alignment = taCenter
@@ -6222,7 +6222,7 @@ object cMain: TcMain
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = cSrcName1
       Left = 171
-      Height = 26
+      Height = 30
       Top = 19
       Width = 128
       Alignment = taCenter
@@ -6241,7 +6241,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 205
       Height = 30
-      Top = 53
+      Top = 57
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6256,7 +6256,7 @@ object cMain: TcMain
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = cSrcName1
       Left = 323
-      Height = 26
+      Height = 30
       Top = 19
       Width = 128
       Alignment = taCenter
@@ -6275,7 +6275,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 357
       Height = 30
-      Top = 53
+      Top = 57
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6290,7 +6290,7 @@ object cMain: TcMain
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = cSrcName1
       Left = 475
-      Height = 26
+      Height = 30
       Top = 19
       Width = 128
       Alignment = taCenter
@@ -6309,7 +6309,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 509
       Height = 30
-      Top = 53
+      Top = 57
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6324,8 +6324,8 @@ object cMain: TcMain
       AnchorSideTop.Control = OnOffSwitch1
       AnchorSideTop.Side = asrBottom
       Left = 19
-      Height = 26
-      Top = 113
+      Height = 30
+      Top = 117
       Width = 128
       Alignment = taCenter
       BorderSpacing.Top = 30
@@ -6343,7 +6343,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 53
       Height = 30
-      Top = 147
+      Top = 155
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6357,8 +6357,8 @@ object cMain: TcMain
       AnchorSideLeft.Control = cSrcName2
       AnchorSideTop.Control = cSrcName5
       Left = 171
-      Height = 26
-      Top = 113
+      Height = 30
+      Top = 117
       Width = 128
       Alignment = taCenter
       Font.Height = -13
@@ -6375,7 +6375,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 205
       Height = 30
-      Top = 147
+      Top = 155
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6389,8 +6389,8 @@ object cMain: TcMain
       AnchorSideLeft.Control = cSrcName3
       AnchorSideTop.Control = cSrcName5
       Left = 323
-      Height = 26
-      Top = 113
+      Height = 30
+      Top = 117
       Width = 128
       Alignment = taCenter
       Font.Height = -13
@@ -6407,7 +6407,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 357
       Height = 30
-      Top = 147
+      Top = 155
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6421,8 +6421,8 @@ object cMain: TcMain
       AnchorSideLeft.Control = cSrcName4
       AnchorSideTop.Control = cSrcName5
       Left = 475
-      Height = 26
-      Top = 113
+      Height = 30
+      Top = 117
       Width = 128
       Alignment = taCenter
       Font.Height = -13
@@ -6439,7 +6439,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 509
       Height = 30
-      Top = 147
+      Top = 155
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6456,9 +6456,9 @@ object cMain: TcMain
       AnchorSideRight.Control = Bevel2
       AnchorSideRight.Side = asrBottom
       Left = 9
-      Height = 84
-      Top = 196
-      Width = 605
+      Height = 92
+      Top = 203
+      Width = 606
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
       Style = bsRaised
@@ -6468,10 +6468,10 @@ object cMain: TcMain
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = Bevel2
       AnchorSideTop.Side = asrBottom
-      Left = 45
-      Height = 28
-      Top = 203
-      Width = 76
+      Left = 50
+      Height = 36
+      Top = 210
+      Width = 67
       Alignment = taCenter
       BorderSpacing.Top = 15
       Caption = 'Sterowanie'#10'laptopem'
@@ -6488,7 +6488,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 53
       Height = 30
-      Top = 239
+      Top = 254
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'

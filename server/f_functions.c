@@ -5,6 +5,32 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+int DzienRoboczy() {
+    MYSQL *db;
+    MYSQL_RES *res;
+    MYSQL_ROW row;
+    int a = 0;
+
+    db = mysql_init(NULL);
+    if (!mysql_real_connect(db,DB_HOST,DB_USER,DB_PASS,DB_DATABASE,0,NULL,0)) return -1;
+    if (mysql_query(db,"select IsWorkDayNow()")) {
+        mysql_close(db);
+        return -1;
+    }
+    res = mysql_store_result(db);
+    if ((row = mysql_fetch_row(res)) != NULL) {
+        const int wynik = atoi(row[0]);
+        a = wynik;
+    } else {
+        mysql_free_result(res);
+        mysql_close(db);
+        return -1;
+    }
+    mysql_free_result(res);
+    mysql_close(db);
+    return a;
+}
+
 void wake_on_lan(const char *mac_addr) {
   int sockfd;
   char buf[64];

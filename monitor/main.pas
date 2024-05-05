@@ -6,8 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  XMLPropStorage, ExtCtrls, Buttons, NetSocket, uETilePanel, ueled, switches,
-  lNet;
+  XMLPropStorage, ExtCtrls, Buttons, NetSocket, uETilePanel, switches, lNet;
 
 type
 
@@ -45,11 +44,13 @@ type
       aBinSize: integer; var aReadBin: boolean);
     procedure _ZMIANA_PINU(Sender: TObject);
   private
+    vData: TDate;
     vBlokowanie: boolean;
     vHost: string;
     vPort: word;
     procedure wczytaj_default;
     procedure SetConfig(aStr: string);
+    procedure SetDzien(aCode: integer);
   public
   end;
 
@@ -71,6 +72,7 @@ begin
   SetConfDir('PiStudio');
   propstorage.FileName:=MyConfDir('GpioMonitor.xml');
   propstorage.Active:=true;
+  vData:=0;
   mon.Host:=vHost;
   mon.Port:=vPort;
   mon.Connect;
@@ -102,7 +104,15 @@ begin
   s2:=GetLineToStr(s,2,'=');
   s3:=GetLineToStr(s,3,'=');
   if s='monitor_gpio=active' then mon.SendString('status') else
-  if s1='gpio_status' then SetConfig(s2) else
+  if s1='gpio_status' then
+  begin
+    SetConfig(s2);
+    if vData=0 then
+    begin
+      vData:=date;
+      mon.SendString('getworkday');
+    end;
+  end else
   if s1='gpio' then
   begin
     vBlokowanie:=true;
@@ -174,7 +184,8 @@ begin
       OnOffSwitch9.ColorON:=clRed;
       OnOffSwitch9.ColorOFF:=clRed;
     end;
-  end;
+  end else
+  if s1='workday' then SetDzien(StrToInt(s2));
 end;
 
 procedure TcMain._ZMIANA_PINU(Sender: TObject);
@@ -247,6 +258,17 @@ begin
     OnOffSwitch9.ColorOFF:=clMaroon;
   end;
   vBlokowanie:=false;
+end;
+
+procedure TcMain.SetDzien(aCode: integer);
+begin
+  case aCode of
+    0: Caption:='Monitor GPio (data: '+FormatDateTime('yyyy-mm-dd',date)+' - dzień wolny)';
+    1: Caption:='Monitor GPio (data: '+FormatDateTime('yyyy-mm-dd',date)+' - dzień roboczy)';
+    else Caption:='Monitor GPio (data: '+FormatDateTime('yyyy-mm-dd',date)+')';;
+  end;
+  //Label1.Enabled:=(aCode<>0);
+  //OnOffSwitch9.Enabled:=(aCode<>0);
 end;
 
 end.

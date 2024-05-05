@@ -28,4 +28,3 @@ pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex_t = PTHREAD_MUTEX_INITIALIZER;
 
 bool watek_dziala = 0;
-

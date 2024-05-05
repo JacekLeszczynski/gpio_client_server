@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <linux/input.h>
+#include <mysql/mysql.h>
 //#include <gpiod.h>
 //#include <iostream>
 //#include <ncurses.h>

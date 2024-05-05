@@ -48,6 +48,7 @@ type
     con_wyjscie: boolean;
     AUTO_TIMER: boolean;
     EKRAN: string;
+    vvAmixerIsExist: integer;
     function test(aHost: string): boolean;
     procedure wczytaj_default;
     procedure auto_hide_go(aMiliSeconds: integer = 5000);
@@ -144,22 +145,43 @@ var
   a: TAsyncProcess;
   b: integer;
   s: string;
+  ss: TStringList;
 begin
   if aSetVol<0 then s:='-' else s:='+';
   b:=abs(aSetVol);
+  //writeln('vol = '+IntToStr(aSetVol),' b = '+IntToStr(b));
+  //exit;
   a:=TAsyncProcess.Create(self);
+  ss:=TStringList.Create;
   try
-    a.Executable:='amixer';
-    a.Parameters.Add('sset');
-    a.Parameters.Add('Master');
-    a.Parameters.Add('playback');
-    a.Parameters.Add(IntToStr(b)+'%'+s);
-    a.Options:=[poWaitOnExit];
-    a.ShowWindow:=swoHIDE;
-    a.Execute;
+    if vvAmixerIsExist=-1 then
+    begin
+      //sprawdzam czy program do uruchomienia istnieje
+      a.Executable:='which';
+      a.Parameters.Add('amixer');
+      a.Options:=[poWaitOnExit,poUsePipes];
+      a.ShowWindow:=swoHIDE;
+      a.Execute;
+      if a.Output.NumBytesAvailable>0 then ss.LoadFromStream(a.Output);
+      vvAmixerIsExist:=ss.Count;
+    end;
+    if vvAmixerIsExist>0 then
+    begin
+      //wykonuję program
+      a.Parameters.Clear;
+      a.Executable:='amixer';
+      a.Parameters.Add('sset');
+      a.Parameters.Add('Master');
+      a.Parameters.Add('playback');
+      a.Parameters.Add(IntToStr(b)+'%'+s);
+      a.Options:=[poWaitOnExit];
+      a.ShowWindow:=swoHIDE;
+      a.Execute;
+    end;
   finally
     a.Terminate(0);
     a.Free;
+    ss.Free;
   end;
 end;
 
@@ -211,6 +233,7 @@ end;
 
 procedure TgPioGui.FormCreate(Sender: TObject);
 begin
+  vvAmixerIsExist:=-1;
   AUTO_TIMER:=false;
   Application.ShowMainForm:=false;
   WindowState:=wsMinimized;
@@ -247,14 +270,14 @@ var
   s1,s2: string;
   a: integer;
 begin
-  //writeln('MSG: ',aMsg);
   s1:=GetLineToStr(aMsg,1,'=');
   s2:=GetLineToStr(aMsg,2,'=');
+  //writeln('MSG: "',aMsg,'" s1="'+s1+'" s2="'+s2+'"');
+  //exit;
   if s1='gpio' then
   begin
     a:=StrToInt(s2);
     SetStatus(a);
-    //net.SendString('laptop=status');
   end else
   if s1='pilot' then
   begin
