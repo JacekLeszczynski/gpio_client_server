@@ -5,16 +5,28 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+MYSQL *db;
+
+bool DbConnect() {
+    db = mysql_init(NULL);
+    if (CONST_TEST) {
+        if (!mysql_real_connect(db,DB_HOST_TEST,DB_USER_TEST,DB_PASS_TEST,DB_DATABASE,0,NULL,0)) return 0; else return 1;
+    } else {
+        db = mysql_init(NULL);
+        if (!mysql_real_connect(db,DB_HOST,DB_USER,DB_PASS,DB_DATABASE,0,NULL,0)) return 0; else return 1;
+    }
+}
+
+void DbDisconnect() {
+    mysql_close(db);
+}
+
 int DzienRoboczy() {
-    MYSQL *db;
     MYSQL_RES *res;
     MYSQL_ROW row;
     int a = 0;
 
-    db = mysql_init(NULL);
-    if (!mysql_real_connect(db,DB_HOST,DB_USER,DB_PASS,DB_DATABASE,0,NULL,0)) return -1;
     if (mysql_query(db,"select IsWorkDayNow()")) {
-        mysql_close(db);
         return -1;
     }
     res = mysql_store_result(db);
@@ -23,12 +35,32 @@ int DzienRoboczy() {
         a = wynik;
     } else {
         mysql_free_result(res);
-        mysql_close(db);
         return -1;
     }
     mysql_free_result(res);
-    mysql_close(db);
     return a;
+}
+
+char *GetHoursSunDay(double longitude, double latitude) {
+    MYSQL_RES *res;
+    MYSQL_ROW row;
+    char s[40];
+
+    if (mysql_query(db,"call CalculateSunriseSunset(longitude,latitude,CURDATE(),@time1,@time2); select @time1,@time2;")) {
+    //if (mysql_query(db,"call CalculateSunriseSunset(longitude,latitude,CURRENT_DATE(),@time1,@time2); select @time1,@time2;")) {
+        return "err";
+    }
+    res = mysql_store_result(db);
+    if ((row = mysql_fetch_row(res)) != NULL) {
+        const char *wynik = row[0];
+        strcpy(s,wynik);
+        //s = wynik;
+    } else {
+        mysql_free_result(res);
+        return "";
+    }
+    mysql_free_result(res);
+    return strdup(s);
 }
 
 void wake_on_lan(const char *mac_addr) {

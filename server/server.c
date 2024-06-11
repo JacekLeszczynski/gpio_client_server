@@ -1,3 +1,5 @@
+#define CONST_TEST 0
+
 #include "f_includes.c"
 #include "f_defines.c"
 #include "f_global.c"
@@ -7,12 +9,15 @@
 #include "f_network.c"
 #include "f_daemon.c"
 
-#define CONST_TEST 0
-
 void test()
 {
+  char *s;
+  DbConnect();
   int a = DzienRoboczy();
+  s = GetHoursSunDay(21.017532,52.237049);
+  DbDisconnect();
   printf("Wartość a = %i\n",a);
+  printf("Sun s = %s\n",s);
 }
 
 /* GŁÓWNA FUNKCJA STARTOWA */

@@ -6,15 +6,18 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  XMLPropStorage, ExtCtrls, Buttons, NetSocket, uETilePanel, switches, lNet;
+  XMLPropStorage, ExtCtrls, Buttons, Process, AsyncProcess, NetSocket, uETilePanel,
+  switches, lNet;
 
 type
 
   { TcMain }
 
   TcMain = class(TForm)
+    AsyncProcess1: TAsyncProcess;
     Bevel1: TBevel;
     Bevel2: TBevel;
+    BitBtn1: TBitBtn;
     cSrcName1: TEdit;
     cSrcName2: TEdit;
     cSrcName3: TEdit;
@@ -34,16 +37,21 @@ type
     OnOffSwitch7: TOnOffSwitch;
     OnOffSwitch8: TOnOffSwitch;
     OnOffSwitch9: TOnOffSwitch;
+    SpeedButton1: TSpeedButton;
     uETilePanel1: TuETilePanel;
     propstorage: TXMLPropStorage;
+    procedure BitBtn1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure monConnect(aSocket: TLSocket);
     procedure monProcessMessage;
     procedure monReceiveString(aMsg: string; aSocket: TLSocket;
       aBinSize: integer; var aReadBin: boolean);
+    procedure SpeedButton1Click(Sender: TObject);
     procedure _ZMIANA_PINU(Sender: TObject);
   private
+    FDragging: Boolean;
+    FMouseStartPoint: TPoint;
     vData: TDate;
     vBlokowanie: boolean;
     vHost: string;
@@ -51,6 +59,7 @@ type
     procedure wczytaj_default;
     procedure SetConfig(aStr: string);
     procedure SetDzien(aCode: integer);
+    procedure WykonajSkrypt(aScript: string; aParametry: string = ''; aResult: TStrings = nil);
   public
   end;
 
@@ -76,6 +85,11 @@ begin
   mon.Host:=vHost;
   mon.Port:=vPort;
   mon.Connect;
+end;
+
+procedure TcMain.BitBtn1Click(Sender: TObject);
+begin
+  close;
 end;
 
 procedure TcMain.FormDestroy(Sender: TObject);
@@ -188,6 +202,23 @@ begin
   if s1='workday' then SetDzien(StrToInt(s2));
 end;
 
+procedure TcMain.SpeedButton1Click(Sender: TObject);
+var
+  ss: TStrings;
+  b: boolean;
+begin
+  (* sprawdzam stan *)
+  ss:=TStringList.Create;
+  try
+    WykonajSkrypt('ddcutil','getvcp D6',ss);
+    b:=pos('DPM: On',ss.Text)>0;
+  finally
+    ss.Free;
+  end;
+  (* zmieniam stan na przeciwny *)
+  if b then WykonajSkrypt('ddcutil','setvcp D6 04') else WykonajSkrypt('ddcutil','setvcp D6 01');
+end;
+
 procedure TcMain._ZMIANA_PINU(Sender: TObject);
 var
   a: TOnOffSwitch;
@@ -269,6 +300,39 @@ begin
   end;
   //Label1.Enabled:=(aCode<>0);
   //OnOffSwitch9.Enabled:=(aCode<>0);
+end;
+
+procedure TcMain.WykonajSkrypt(aScript: string; aParametry: string; aResult: TStrings);
+var
+  a: TAsyncProcess;
+  i,ii: integer;
+  ss: TStringList;
+begin
+  a:=TAsyncProcess.Create(self);
+  try
+    a.Executable:=aScript;
+    if aParametry<>'' then
+    begin
+      ii:=GetLineCount(aParametry,' ');
+      for i:=1 to ii do a.Parameters.Add(GetLineToStr(aParametry,i,' '));
+    end;
+    a.ShowWindow:=swoHIDE;
+    if aResult=nil then a.Options:=[poWaitOnExit] else a.Options:=[poWaitOnExit,poUsePipes];
+    a.Execute;
+    if aResult<>nil then
+    begin
+      ss:=TStringList.Create;
+      try
+        ss.LoadFromStream(a.Output);
+        aResult.Assign(ss);
+      finally
+        ss.Free;
+      end;
+    end;
+  finally
+    a.Terminate(0);
+    a.Free;
+  end;
 end;
 
 end.

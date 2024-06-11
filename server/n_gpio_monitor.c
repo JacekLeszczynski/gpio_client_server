@@ -1,13 +1,18 @@
 /* GPIO MONITOR */
 
 if (tryb==4) {
+    int zmienna = -1;
 
     //przeczytanie wszystkich stanów GPIO
     if (strcmp(s1,"status")==0) {
         sendmessage_status_gpio(cl.sockno,1);
     } else
     if (strcmp(s1,"getworkday")==0) {
-        int zmienna = DzienRoboczy();
+        bool db_connected = DbConnect();
+        if (db_connected) {
+            zmienna = DzienRoboczy();
+            DbDisconnect();
+        } else { zmienna = -1; }
         if (zmienna==1)
         {
             sendmessage("workday=1",cl.sockno,1);

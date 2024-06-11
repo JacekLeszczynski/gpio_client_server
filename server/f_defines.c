@@ -11,3 +11,7 @@
 #define DB_USER         "kalendarzuser"
 #define DB_PASS         "NjgKaeklfe2flvPxwS0k"
 
+#define DB_HOST_TEST    "192.168.10.2"
+#define DB_USER_TEST    "tao"
+#define DB_PASS_TEST    "nahalia"
+

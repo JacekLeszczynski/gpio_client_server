@@ -1,11 +1,13 @@
 object cMain: TcMain
   Left = 2315
-  Height = 304
+  Height = 334
   Top = 254
   Width = 624
+  AutoSize = True
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Monitor GPio'
-  ClientHeight = 304
+  ClientHeight = 334
   ClientWidth = 624
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -13,11 +15,11 @@ object cMain: TcMain
   LCLVersion = '2.0.12.0'
   object uETilePanel1: TuETilePanel
     Left = 0
-    Height = 304
+    Height = 334
     Top = 0
     Width = 624
     Align = alClient
-    ClientHeight = 304
+    ClientHeight = 334
     ClientWidth = 624
     TabOrder = 0
     Image.Data = {
@@ -6170,16 +6172,18 @@ object cMain: TcMain
     }
     object Bevel2: TBevel
       AnchorSideLeft.Control = uETilePanel1
-      AnchorSideTop.Control = uETilePanel1
+      AnchorSideTop.Control = BitBtn1
+      AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = uETilePanel1
       AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Bevel1
       Left = 9
       Height = 186
-      Top = 9
+      Top = 39
       Width = 606
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 8
-      BorderSpacing.Top = 8
+      BorderSpacing.Top = 4
       BorderSpacing.Right = 8
       Style = bsRaised
     end
@@ -6191,7 +6195,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 53
       Height = 30
-      Top = 57
+      Top = 87
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6206,7 +6210,7 @@ object cMain: TcMain
       AnchorSideTop.Control = Bevel2
       Left = 19
       Height = 30
-      Top = 19
+      Top = 49
       Width = 128
       Alignment = taCenter
       BorderSpacing.Left = 10
@@ -6223,7 +6227,7 @@ object cMain: TcMain
       AnchorSideTop.Control = cSrcName1
       Left = 171
       Height = 30
-      Top = 19
+      Top = 49
       Width = 128
       Alignment = taCenter
       BorderSpacing.Left = 24
@@ -6241,7 +6245,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 205
       Height = 30
-      Top = 57
+      Top = 87
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6257,7 +6261,7 @@ object cMain: TcMain
       AnchorSideTop.Control = cSrcName1
       Left = 323
       Height = 30
-      Top = 19
+      Top = 49
       Width = 128
       Alignment = taCenter
       BorderSpacing.Left = 24
@@ -6275,7 +6279,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 357
       Height = 30
-      Top = 57
+      Top = 87
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6291,10 +6295,11 @@ object cMain: TcMain
       AnchorSideTop.Control = cSrcName1
       Left = 475
       Height = 30
-      Top = 19
+      Top = 49
       Width = 128
       Alignment = taCenter
       BorderSpacing.Left = 24
+      BorderSpacing.Right = 16
       Font.Height = -13
       Font.Name = 'Special Elite'
       ParentFont = False
@@ -6309,7 +6314,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 509
       Height = 30
-      Top = 57
+      Top = 87
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6325,7 +6330,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 19
       Height = 30
-      Top = 117
+      Top = 147
       Width = 128
       Alignment = taCenter
       BorderSpacing.Top = 30
@@ -6343,7 +6348,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 53
       Height = 30
-      Top = 155
+      Top = 185
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6358,7 +6363,7 @@ object cMain: TcMain
       AnchorSideTop.Control = cSrcName5
       Left = 171
       Height = 30
-      Top = 117
+      Top = 147
       Width = 128
       Alignment = taCenter
       Font.Height = -13
@@ -6375,7 +6380,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 205
       Height = 30
-      Top = 155
+      Top = 185
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6390,7 +6395,7 @@ object cMain: TcMain
       AnchorSideTop.Control = cSrcName5
       Left = 323
       Height = 30
-      Top = 117
+      Top = 147
       Width = 128
       Alignment = taCenter
       Font.Height = -13
@@ -6407,7 +6412,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 357
       Height = 30
-      Top = 155
+      Top = 185
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6422,7 +6427,7 @@ object cMain: TcMain
       AnchorSideTop.Control = cSrcName5
       Left = 475
       Height = 30
-      Top = 117
+      Top = 147
       Width = 128
       Alignment = taCenter
       Font.Height = -13
@@ -6439,7 +6444,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 509
       Height = 30
-      Top = 155
+      Top = 185
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6457,23 +6462,23 @@ object cMain: TcMain
       AnchorSideRight.Side = asrBottom
       Left = 9
       Height = 92
-      Top = 203
+      Top = 233
       Width = 606
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
+      BorderSpacing.Bottom = 8
       Style = bsRaised
     end
     object Label1: TLabel
       AnchorSideLeft.Control = cSrcName1
       AnchorSideLeft.Side = asrCenter
-      AnchorSideTop.Control = Bevel2
-      AnchorSideTop.Side = asrBottom
+      AnchorSideTop.Control = Bevel1
       Left = 50
       Height = 36
-      Top = 210
+      Top = 241
       Width = 67
       Alignment = taCenter
-      BorderSpacing.Top = 15
+      BorderSpacing.Top = 8
       Caption = 'Sterowanie'#10'laptopem'
       Font.Height = -13
       Font.Name = 'Special Elite'
@@ -6488,7 +6493,7 @@ object cMain: TcMain
       AnchorSideTop.Side = asrBottom
       Left = 53
       Height = 30
-      Top = 254
+      Top = 285
       Width = 60
       CaptionOFF = 'OFF'
       CaptionON = 'ON'
@@ -6497,6 +6502,39 @@ object cMain: TcMain
       BorderSpacing.Top = 8
       DoubleBuffered = False
       TabOrder = 16
+    end
+    object BitBtn1: TBitBtn
+      AnchorSideLeft.Control = uETilePanel1
+      AnchorSideTop.Control = uETilePanel1
+      AnchorSideRight.Control = uETilePanel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Side = asrBottom
+      Left = 9
+      Height = 30
+      Top = 5
+      Width = 606
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 4
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 4
+      Caption = 'Wyjście'
+      OnClick = BitBtn1Click
+      TabOrder = 17
+    end
+    object SpeedButton1: TSpeedButton
+      AnchorSideTop.Control = Bevel1
+      AnchorSideRight.Control = Bevel1
+      AnchorSideRight.Side = asrBottom
+      Left = 507
+      Height = 75
+      Top = 241
+      Width = 100
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      Caption = 'Monitor'
+      OnClick = SpeedButton1Click
     end
   end
   object propstorage: TXMLPropStorage
@@ -6519,5 +6557,21 @@ object cMain: TcMain
     OnReceiveString = monReceiveString
     Left = 136
     Top = 48
+  end
+  object AsyncProcess1: TAsyncProcess
+    Active = False
+    Options = []
+    Priority = ppNormal
+    StartupOptions = []
+    ShowWindow = swoNone
+    WindowColumns = 0
+    WindowHeight = 0
+    WindowLeft = 0
+    WindowRows = 0
+    WindowTop = 0
+    WindowWidth = 0
+    FillAttribute = 0
+    Left = 206
+    Top = 274
   end
 end
