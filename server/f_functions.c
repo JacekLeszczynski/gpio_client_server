@@ -41,14 +41,95 @@ int DzienRoboczy() {
     return a;
 }
 
+char *GetImieninyNow() {
+    MYSQL_RES *res;
+    MYSQL_ROW row;
+    char a[255];
+
+    if (mysql_query(db,"select GetImieniny(now())")) {
+        return "";
+    }
+    res = mysql_store_result(db);
+    if ((row = mysql_fetch_row(res)) != NULL) {
+        const char *wynik = row[0];
+        strcpy(a,wynik);
+    } else {
+        mysql_free_result(res);
+        return "";
+    }
+    mysql_free_result(res);
+    return strdup(a);
+}
+
+char DzienRoboczyToChar() {
+    int r = DzienRoboczy();
+    if (r==0) {
+        return '0';
+    } else {
+        if (r==1) {
+            return '1';
+        } else {
+            return '-';
+        }
+    }
+}
+
+char *DzienRoboczyToStr() {
+    int r = DzienRoboczy();
+    if (r==0) {
+        return "0";
+    } else {
+        if (r==1) {
+            return "1";
+        } else {
+            return "-";
+        }
+    }
+}
+
+void extract_date_and_time(const char *datetime, char *date, char *time) {
+    // Sprawdzenie czy input ma odpowiednią długość
+    if (strlen(datetime) < 19) {
+        fprintf(stderr, "Invalid input format\n");
+        return;
+    }
+
+    // Skopiowanie części "yyyy-mm-dd" do zmiennej wyjściowej 'date'
+    strncpy(date, datetime, 10);
+    date[10] = '\0';  // Null-terminate the string
+
+    // Skopiowanie części "hh:mm" do zmiennej wyjściowej 'time'
+    strncpy(time, datetime + 11, 5);
+    time[5] = '\0';  // Null-terminate the string
+}
+
+void split_times(const char *input, char *t1, char *t2) {
+    // Znalezienie pozycji separatora '-'
+    const char *separator = strchr(input, '-');
+    if (separator == NULL) {
+        fprintf(stderr, "Invalid input format\n");
+        return;
+    }
+
+    // Skopiowanie pierwszej części (przed '-')
+    size_t length1 = separator - input;
+    strncpy(t1, input, length1);
+    t1[length1] = '\0';  // Null-terminate the first string
+
+    // Skopiowanie drugiej części (po '-')
+    const char *second_part = separator + 1;
+    strncpy(t2, second_part, strlen(second_part));
+    t2[strlen(second_part)] = '\0';  // Null-terminate the second string
+}
+
 char *GetHoursSunDay(double longitude, double latitude) {
     MYSQL_RES *res;
     MYSQL_ROW row;
-    char s[40];
+    char s[40],query[256];
 
-    if (mysql_query(db,"call CalculateSunriseSunset(longitude,latitude,CURDATE(),@time1,@time2); select @time1,@time2;")) {
-    //if (mysql_query(db,"call CalculateSunriseSunset(longitude,latitude,CURRENT_DATE(),@time1,@time2); select @time1,@time2;")) {
-        return "err";
+    snprintf(query, sizeof(query), "select sun_times(%f,%f,now())",longitude,latitude);
+    if (mysql_query(db,query)) {
+        return strdup(mysql_error(db));
     }
     res = mysql_store_result(db);
     if ((row = mysql_fetch_row(res)) != NULL) {
@@ -61,6 +142,38 @@ char *GetHoursSunDay(double longitude, double latitude) {
     }
     mysql_free_result(res);
     return strdup(s);
+}
+
+char *GetCalendarAll() {
+  char *s,dzien_roboczy,dzien,*tmp,t1[6],t2[6],date[11],time[6],*imieniny;
+
+  dzien_roboczy = DzienRoboczyToChar();
+  tmp = GetHoursSunDay(50.0614300,19.9365800);
+
+  split_times(tmp,t1,t2);
+  extract_date_and_time(LocalTime(),date,time);
+  if (strcmp(t1,time)<=0 && strcmp(time,t2)<=0) {
+    dzien = '1';
+  } else {
+    dzien = '0';
+  }
+
+  imieniny = GetImieninyNow();
+
+  s = String(date);
+  s = concat_str_char(s,';');
+  s = concat(s,time);
+  s = concat_str_char(s,';');
+  s = concat(s,t1);
+  s = concat_str_char(s,';');
+  s = concat(s,t2);
+  s = concat_str_char(s,';');
+  s = concat_str_char(s,dzien_roboczy);
+  s = concat_str_char(s,';');
+  s = concat_str_char(s,dzien);
+  s = concat_str_char(s,';');
+  s = concat(s,imieniny);
+  return s;
 }
 
 void wake_on_lan(const char *mac_addr) {

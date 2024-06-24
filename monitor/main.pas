@@ -26,7 +26,24 @@ type
     cSrcName6: TEdit;
     cSrcName7: TEdit;
     cSrcName8: TEdit;
+    Image1: TImage;
     Label1: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
     mon: TNetSocket;
     OnOffSwitch1: TOnOffSwitch;
     OnOffSwitch2: TOnOffSwitch;
@@ -37,6 +54,7 @@ type
     OnOffSwitch7: TOnOffSwitch;
     OnOffSwitch8: TOnOffSwitch;
     OnOffSwitch9: TOnOffSwitch;
+    Panel1: TPanel;
     SpeedButton1: TSpeedButton;
     uETilePanel1: TuETilePanel;
     propstorage: TXMLPropStorage;
@@ -59,8 +77,10 @@ type
     procedure wczytaj_default;
     procedure SetConfig(aStr: string);
     procedure SetDzien(aCode: integer);
+    procedure SetDzien(aCode: string);
     procedure WykonajSkrypt(aScript: string; aParametry: string = ''; aResult: TStrings = nil);
   public
+    procedure MemMessage(Sender: TObject; AMessage: string);
   end;
 
 var
@@ -69,9 +89,111 @@ var
 implementation
 
 uses
-  ecode;
+  ecode, LazUTF8, Dateutils;
 
 {$R *.lfm}
+
+function GetMiesiac(aMiesiac: integer): string;
+begin
+  case aMiesiac of
+    1: result:='Styczeń';
+    2: result:='Luty';
+    3: result:='Marzec';
+    4: result:='Kwiecień';
+    5: result:='Maj';
+    6: result:='Czerwiec';
+    7: result:='Lipiec';
+    8: result:='Sierpień';
+    9: result:='Wrzesień';
+    10: result:='Październik';
+    11: result:='Listopad';
+    12: result:='Grudzień';
+  end;
+end;
+
+function DzienTygodnia(aCode: integer): string;
+begin
+  case aCode of
+    0: result:='Sobota';
+    1: result:='Niedziela';
+    2: result:='Poniedziałek';
+    3: result:='Wtorek';
+    4: result:='Środa';
+    5: result:='Czwartek';
+    6: result:='Piątek';
+    7: result:='Sobota';
+  end;
+end;
+
+function DataToZnakZodiaku(aData: TDate): string;
+var
+  i: integer;
+  r,m,d: word;
+  z: array [0..12] of record
+    d1,d2: TDate;
+    s: string;
+  end;
+begin
+  DecodeDate(aData,r,m,d);
+  (* init *)
+  z[0].d1:=EncodeDate(r,1,1);
+  z[0].d2:=EncodeDate(r,1,19);
+  z[0].s:='Koziorożec';
+  z[1].d1:=EncodeDate(r,1,20);
+  z[1].d2:=EncodeDate(r,2,18);
+  z[1].s:='Wodnik';
+  z[2].d1:=EncodeDate(r,2,19);
+  z[2].d2:=EncodeDate(r,3,20);
+  z[2].s:='Ryby';
+  z[3].d1:=EncodeDate(r,3,21);
+  z[3].d2:=EncodeDate(r,4,19);
+  z[3].s:='Baran';
+  z[4].d1:=EncodeDate(r,4,20);
+  z[4].d2:=EncodeDate(r,5,20);
+  z[4].s:='Byk';
+  z[5].d1:=EncodeDate(r,5,21);
+  z[5].d2:=EncodeDate(r,6,20);
+  z[5].s:='Bliźnięta';
+  z[6].d1:=EncodeDate(r,6,21);
+  z[6].d2:=EncodeDate(r,7,22);
+  z[6].s:='Rak';
+  z[7].d1:=EncodeDate(r,7,23);
+  z[7].d2:=EncodeDate(r,8,22);
+  z[7].s:='Lew';
+  z[8].d1:=EncodeDate(r,8,23);
+  z[8].d2:=EncodeDate(r,9,22);
+  z[8].s:='Panna';
+  z[9].d1:=EncodeDate(r,9,23);
+  z[9].d2:=EncodeDate(r,10,22);
+  z[9].s:='Waga';
+  z[10].d1:=EncodeDate(r,10,23);
+  z[10].d2:=EncodeDate(r,11,21);
+  z[10].s:='Skorpion';
+  z[11].d1:=EncodeDate(r,11,22);
+  z[11].d2:=EncodeDate(r,12,21);
+  z[11].s:='Strzelec';
+  z[12].d1:=EncodeDate(r,12,22);
+  z[12].d2:=EncodeDate(r,12,31);
+  z[12].s:='Koziorożec';
+  (* reszta *)
+  result:='?';
+  for i:=0 to 12 do
+  begin
+    if (aData>=z[i].d1) and (aData<=z[i].d2) then
+    begin
+      result:=z[i].s;
+      break;
+    end;
+  end;
+end;
+
+procedure GetDayAndWeekOfYear(const ADate: TDateTime; out DayOfYear, WeekOfYear: Integer);
+begin
+  // Oblicz dzień w roku
+  DayOfYear := DayOfTheYear(ADate);
+  // Oblicz tydzień w roku
+  WeekOfYear := WeekOfTheYear(ADate);
+end;
 
 { TcMain }
 
@@ -124,7 +246,7 @@ begin
     if vData=0 then
     begin
       vData:=date;
-      mon.SendString('getworkday');
+      mon.SendString('getcalendar');
     end;
   end else
   if s1='gpio' then
@@ -199,7 +321,8 @@ begin
       OnOffSwitch9.ColorOFF:=clRed;
     end;
   end else
-  if s1='workday' then SetDzien(StrToInt(s2));
+  if s1='workday' then SetDzien(StrToInt(s2)) else
+  if s1='calendar' then SetDzien(s2);
 end;
 
 procedure TcMain.SpeedButton1Click(Sender: TObject);
@@ -296,10 +419,52 @@ begin
   case aCode of
     0: Caption:='Monitor GPio (data: '+FormatDateTime('yyyy-mm-dd',date)+' - dzień wolny)';
     1: Caption:='Monitor GPio (data: '+FormatDateTime('yyyy-mm-dd',date)+' - dzień roboczy)';
-    else Caption:='Monitor GPio (data: '+FormatDateTime('yyyy-mm-dd',date)+')';;
+    else Caption:='Monitor GPio (data: '+FormatDateTime('yyyy-mm-dd',date)+')';
   end;
-  //Label1.Enabled:=(aCode<>0);
-  //OnOffSwitch9.Enabled:=(aCode<>0);
+end;
+
+procedure TcMain.SetDzien(aCode: string);
+var
+  data: TDate;
+  data_dzien,data_miesiac,data_rok: word;
+  dr: string[1];
+  kolor: TColor;
+  fs: TFormatSettings;
+  st1,st2,znak: string;
+  res: TResourceStream;
+  i1,i2: integer;
+begin
+  fs.ShortDateFormat:='y/m/d';
+  fs.DateSeparator:='-';
+  data:=StrToDate(GetLineToStr(aCode,1,';'),fs);
+  DecodeDate(data,data_rok,data_miesiac,data_dzien);
+  Label4.Caption:=Utf8UpperCase(GetMiesiac(data_miesiac));
+  Label6.Caption:=IntToStr(data_rok);
+  Label15.Caption:=IntToStr(data_dzien);
+  Label16.Caption:=Utf8UpperCase(DzienTygodnia(DayOfWeek(data)));
+  dr:=GetLineToStr(aCode,5,';');
+  if dr='1' then kolor:=clBlack else kolor:=clRed;
+  Label15.Font.Color:=kolor;
+  Label16.Font.Color:=kolor;
+  if dr='0' then Caption:='Monitor GPio (data: '+FormatDateTime('yyyy-mm-dd',date)+' - dzień wolny)' else
+  if dr='1' then Caption:='Monitor GPio (data: '+FormatDateTime('yyyy-mm-dd',date)+' - dzień roboczy)' else
+  Caption:='Monitor GPio (data: '+FormatDateTime('yyyy-mm-dd',date)+')';
+  st1:=GetLineToStr(aCode,3,';');
+  st2:=GetLineToStr(aCode,4,';');
+  Label9.Caption:=st1;
+  Label10.Caption:=st2;
+  Label14.Caption:=DataToZnakZodiaku(data);
+  znak:=Utf8UpperCase(Label14.Caption);
+  try
+    res:=TResourceStream.Create(hInstance,znak,RT_RCDATA);
+    Image1.Picture.LoadFromStream(res);
+  finally
+    res.Free;
+  end;
+  Label17.Caption:=trim(GetLineToStr(aCode,7,';'));
+  GetDayAndWeekOfYear(data,i1,i2);
+  Label3.Caption:=IntToStr(i1);
+  Label7.Caption:=IntToStr(i2);
 end;
 
 procedure TcMain.WykonajSkrypt(aScript: string; aParametry: string; aResult: TStrings);
@@ -333,6 +498,11 @@ begin
     a.Terminate(0);
     a.Free;
   end;
+end;
+
+procedure TcMain.MemMessage(Sender: TObject; AMessage: string);
+begin
+  if AMessage='HALT' then close;
 end;
 
 end.

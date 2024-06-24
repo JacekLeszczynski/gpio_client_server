@@ -13,20 +13,6 @@
         <DpiAware Value="True"/>
       </XPManifest>
       <Icon Value="0"/>
-      <Resources Count="12">
-        <Resource_0 FileName="../grafika/baran.png" Type="RCDATA" ResourceName="BARAN"/>
-        <Resource_1 FileName="../grafika/bliźnięta.png" Type="RCDATA" ResourceName="BLIŹNIĘTA"/>
-        <Resource_2 FileName="../grafika/byk.png" Type="RCDATA" ResourceName="BYK"/>
-        <Resource_3 FileName="../grafika/koziorożec.png" Type="RCDATA" ResourceName="KOZIOROŻEC"/>
-        <Resource_4 FileName="../grafika/lew.png" Type="RCDATA" ResourceName="LEW"/>
-        <Resource_5 FileName="../grafika/panna.png" Type="RCDATA" ResourceName="PANNA"/>
-        <Resource_6 FileName="../grafika/rak.png" Type="RCDATA" ResourceName="RAK"/>
-        <Resource_7 FileName="../grafika/ryby.png" Type="RCDATA" ResourceName="RYBY"/>
-        <Resource_8 FileName="../grafika/skorpion.png" Type="RCDATA" ResourceName="SKORPION"/>
-        <Resource_9 FileName="../grafika/strzelec.png" Type="RCDATA" ResourceName="STRZELEC"/>
-        <Resource_10 FileName="../grafika/waga.png" Type="RCDATA" ResourceName="WAGA"/>
-        <Resource_11 FileName="../grafika/wodnik.png" Type="RCDATA" ResourceName="WODNIK"/>
-      </Resources>
     </General>
     <BuildModes Count="3">
       <Item1 Name="Default" Default="True"/>
@@ -34,11 +20,11 @@
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
-            <Filename Value="monitor.gpio"/>
+            <Filename Value="kalendarz"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="../../../lib"/>
+            <OtherUnitFiles Value="../../lib"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -74,11 +60,11 @@
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
-            <Filename Value="monitor.gpio"/>
+            <Filename Value="kalendarz"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="../../../lib"/>
+            <OtherUnitFiles Value="../../lib"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -103,27 +89,32 @@
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
+      <DestinationDirectory Value="/home/tao/Projekty/apps/PUBLIC"/>
+      <CompressFinally Value="False"/>
       <UseFileFilters Value="True"/>
     </PublishOptions>
     <RunParams>
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
-    <RequiredPackages Count="4">
+    <RequiredPackages Count="5">
       <Item1>
-        <PackageName Value="ExtLazarus"/>
+        <PackageName Value="DateTimeCtrls"/>
       </Item1>
       <Item2>
-        <PackageName Value="industrial"/>
+        <PackageName Value="FCL"/>
       </Item2>
       <Item3>
-        <PackageName Value="uEControls"/>
+        <PackageName Value="zcomponent"/>
       </Item3>
       <Item4>
-        <PackageName Value="LCL"/>
+        <PackageName Value="ExtLazarus"/>
       </Item4>
+      <Item5>
+        <PackageName Value="LCL"/>
+      </Item5>
     </RequiredPackages>
-    <Units Count="2">
+    <Units Count="3">
       <Unit0>
         <Filename Value="project1.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -131,16 +122,23 @@
       <Unit1>
         <Filename Value="main.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="cMain"/>
+        <ComponentName Value="FMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit1>
+      <Unit2>
+        <Filename Value="urlop.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FUrlop"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit2>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="monitor.gpio"/>
+      <Filename Value="kalendarz"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
@@ -155,17 +153,4 @@
       </Options>
     </Linking>
   </CompilerOptions>
-  <Debugging>
-    <Exceptions Count="3">
-      <Item1>
-        <Name Value="EAbort"/>
-      </Item1>
-      <Item2>
-        <Name Value="ECodetoolError"/>
-      </Item2>
-      <Item3>
-        <Name Value="EFOpenError"/>
-      </Item3>
-    </Exceptions>
-  </Debugging>
 </CONFIG>

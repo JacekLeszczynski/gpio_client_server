@@ -2,13 +2,13 @@ object cMain: TcMain
   Left = 2315
   Height = 334
   Top = 254
-  Width = 624
+  Width = 894
   AutoSize = True
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Monitor GPio'
   ClientHeight = 334
-  ClientWidth = 624
+  ClientWidth = 894
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   SessionProperties = 'Top;Left;cSrcName1.Text;cSrcName2.Text;cSrcName3.Text;cSrcName4.Text;cSrcName5.Text;cSrcName6.Text;cSrcName7.Text;cSrcName8.Text'
@@ -17,10 +17,10 @@ object cMain: TcMain
     Left = 0
     Height = 334
     Top = 0
-    Width = 624
+    Width = 894
     Align = alClient
     ClientHeight = 334
-    ClientWidth = 624
+    ClientWidth = 894
     TabOrder = 0
     Image.Data = {
       36000300424D3600030000000000360000002800000000010000000100000100
@@ -6180,8 +6180,7 @@ object cMain: TcMain
       Left = 9
       Height = 186
       Top = 39
-      Width = 606
-      Anchors = [akTop, akLeft, akRight]
+      Width = 607
       BorderSpacing.Left = 8
       BorderSpacing.Top = 4
       BorderSpacing.Right = 8
@@ -6463,7 +6462,7 @@ object cMain: TcMain
       Left = 9
       Height = 92
       Top = 233
-      Width = 606
+      Width = 607
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
       BorderSpacing.Bottom = 8
@@ -6512,7 +6511,7 @@ object cMain: TcMain
       Left = 9
       Height = 30
       Top = 5
-      Width = 606
+      Width = 876
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 4
@@ -6526,7 +6525,7 @@ object cMain: TcMain
       AnchorSideTop.Control = Bevel1
       AnchorSideRight.Control = Bevel1
       AnchorSideRight.Side = asrBottom
-      Left = 507
+      Left = 508
       Height = 75
       Top = 241
       Width = 100
@@ -6536,13 +6535,292 @@ object cMain: TcMain
       Caption = 'Monitor'
       OnClick = SpeedButton1Click
     end
+    object Panel1: TPanel
+      AnchorSideLeft.Control = Bevel2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Bevel2
+      AnchorSideRight.Control = BitBtn1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Bevel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 624
+      Height = 286
+      Top = 39
+      Width = 261
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      ClientHeight = 286
+      ClientWidth = 261
+      Color = clWhite
+      Constraints.MaxWidth = 261
+      Constraints.MinWidth = 261
+      ParentColor = False
+      TabOrder = 18
+      object Label2: TLabel
+        AnchorSideLeft.Control = Panel1
+        AnchorSideTop.Control = Panel1
+        Left = 9
+        Height = 17
+        Top = 5
+        Width = 36
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 4
+        Caption = 'DZIEŃ'
+        Font.Height = -12
+        Font.Name = 'Sans'
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label3: TLabel
+        AnchorSideLeft.Control = Label2
+        AnchorSideTop.Control = Label2
+        AnchorSideTop.Side = asrBottom
+        Left = 9
+        Height = 17
+        Top = 22
+        Width = 14
+        Caption = '86'
+        Font.Height = -12
+        Font.Name = 'Sans'
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label4: TLabel
+        AnchorSideLeft.Control = Panel1
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = Label2
+        Left = 104
+        Height = 18
+        Top = 5
+        Width = 53
+        Caption = 'MARZEC'
+        Font.Height = -13
+        Font.Name = 'Sans'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label5: TLabel
+        AnchorSideTop.Control = Label2
+        AnchorSideRight.Control = Panel1
+        AnchorSideRight.Side = asrBottom
+        Left = 202
+        Height = 17
+        Top = 5
+        Width = 50
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 8
+        Caption = 'TYDZIEŃ'
+        Font.Height = -12
+        Font.Name = 'Sans'
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label6: TLabel
+        AnchorSideLeft.Control = Label4
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = Label4
+        AnchorSideTop.Side = asrBottom
+        Left = 114
+        Height = 19
+        Top = 23
+        Width = 32
+        Caption = '2022'
+        ParentColor = False
+      end
+      object Label7: TLabel
+        AnchorSideTop.Control = Label2
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Label5
+        AnchorSideRight.Side = asrBottom
+        Left = 238
+        Height = 17
+        Top = 22
+        Width = 14
+        Anchors = [akTop, akRight]
+        Caption = '12'
+        Font.Height = -12
+        Font.Name = 'Sans'
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label8: TLabel
+        AnchorSideLeft.Control = Panel1
+        AnchorSideTop.Control = Label6
+        AnchorSideTop.Side = asrBottom
+        Left = 9
+        Height = 19
+        Top = 46
+        Width = 12
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 4
+        Caption = '☼'
+        ParentColor = False
+      end
+      object Label9: TLabel
+        AnchorSideLeft.Control = Label8
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Label8
+        Left = 29
+        Height = 16
+        Top = 46
+        Width = 21
+        BorderSpacing.Left = 8
+        Caption = '6:22'
+        Font.Height = -11
+        Font.Name = 'Sans'
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label10: TLabel
+        AnchorSideLeft.Control = Label9
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Label8
+        Left = 58
+        Height = 16
+        Top = 46
+        Width = 27
+        BorderSpacing.Left = 8
+        Caption = '18:59'
+        Font.Height = -11
+        Font.Name = 'Sans'
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label11: TLabel
+        AnchorSideLeft.Control = Panel1
+        AnchorSideTop.Control = Label8
+        AnchorSideTop.Side = asrBottom
+        Left = 9
+        Height = 19
+        Top = 65
+        Width = 12
+        BorderSpacing.Left = 8
+        Caption = '☾'
+        ParentColor = False
+        Visible = False
+      end
+      object Label12: TLabel
+        AnchorSideLeft.Control = Label11
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Label11
+        Left = 29
+        Height = 16
+        Top = 65
+        Width = 21
+        BorderSpacing.Left = 8
+        Caption = '4:02'
+        Font.Height = -11
+        Font.Name = 'Sans'
+        ParentColor = False
+        ParentFont = False
+        Visible = False
+      end
+      object Label13: TLabel
+        AnchorSideLeft.Control = Label12
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Label11
+        Left = 58
+        Height = 16
+        Top = 65
+        Width = 27
+        BorderSpacing.Left = 8
+        Caption = '11:36'
+        Font.Height = -11
+        Font.Name = 'Sans'
+        ParentColor = False
+        ParentFont = False
+        Visible = False
+      end
+      object Label14: TLabel
+        AnchorSideLeft.Control = Image1
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = Image1
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel1
+        AnchorSideRight.Side = asrBottom
+        Left = 212
+        Height = 16
+        Top = 96
+        Width = 30
+        BorderSpacing.Right = 8
+        Caption = 'Baran'
+        Font.Height = -11
+        Font.Name = 'Sans'
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label15: TLabel
+        AnchorSideLeft.Control = Panel1
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = Label11
+        AnchorSideTop.Side = asrBottom
+        Left = 75
+        Height = 132
+        Top = 96
+        Width = 110
+        BorderSpacing.Top = 12
+        Caption = '27'
+        Font.Color = clRed
+        Font.Height = -96
+        Font.Name = 'Sans'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label16: TLabel
+        AnchorSideLeft.Control = Label15
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = Label15
+        AnchorSideTop.Side = asrBottom
+        Left = 88
+        Height = 23
+        Top = 228
+        Width = 84
+        Caption = 'NIEDZIELA'
+        Font.Color = clRed
+        Font.Height = -16
+        Font.Name = 'Sans'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label17: TLabel
+        AnchorSideLeft.Control = Panel1
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = Label16
+        AnchorSideTop.Side = asrBottom
+        Left = 91
+        Height = 19
+        Top = 259
+        Width = 78
+        Alignment = taCenter
+        BorderSpacing.Top = 8
+        Caption = 'Lidii, Ernesta'
+        ParentColor = False
+      end
+      object Image1: TImage
+        AnchorSideTop.Control = Label10
+        AnchorSideRight.Control = Panel1
+        AnchorSideRight.Side = asrBottom
+        Left = 202
+        Height = 50
+        Top = 46
+        Width = 50
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 8
+        Center = True
+        Proportional = True
+        Stretch = True
+        Transparent = True
+      end
+    end
   end
   object propstorage: TXMLPropStorage
     StoredValues = <>
     RootNodePath = 'root'
     Active = False
-    Left = 440
-    Top = 48
+    Left = 448
+    Top = 88
   end
   object mon: TNetSocket
     Mode = smClient
@@ -6555,8 +6833,8 @@ object cMain: TcMain
     OnProcessMessage = monProcessMessage
     OnConnect = monConnect
     OnReceiveString = monReceiveString
-    Left = 136
-    Top = 48
+    Left = 144
+    Top = 88
   end
   object AsyncProcess1: TAsyncProcess
     Active = False
@@ -6571,7 +6849,7 @@ object cMain: TcMain
     WindowTop = 0
     WindowWidth = 0
     FillAttribute = 0
-    Left = 206
-    Top = 274
+    Left = 448
+    Top = 176
   end
 end

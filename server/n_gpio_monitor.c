@@ -24,6 +24,15 @@ if (tryb==4) {
             }
         }
     } else
+    if (strcmp(s1,"getcalendar")==0) {
+        bool db_connected = DbConnect();
+        if (db_connected) {
+            ss = GetCalendarAll();
+            DbDisconnect();
+        } else { ss = String("E"); }
+        ss = concat("calendar=",ss);
+        sendmessage(ss,cl.sockno,1);
+    } else
 
     if (strcmp(s1,"laptop")==0) {
         if (strcmp(s2,"status")==0) {

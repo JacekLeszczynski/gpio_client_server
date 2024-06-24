@@ -11,13 +11,44 @@
 
 void test()
 {
-  char *s;
+  char *s,dzien_roboczy,dzien,*tmp,t1[6],t2[6],date[11],time[6];
+  char *s2;
+
   DbConnect();
-  int a = DzienRoboczy();
-  s = GetHoursSunDay(21.017532,52.237049);
+  dzien_roboczy = DzienRoboczyToChar();
+  //50.0614300,19.9365800
+  tmp = GetHoursSunDay(50.0614300,19.9365800);
+  s2 = GetCalendarAll();
   DbDisconnect();
-  printf("Wartość a = %i\n",a);
-  printf("Sun s = %s\n",s);
+
+  split_times(tmp,t1,t2);
+  extract_date_and_time(LocalTime(),date,time);
+  printf("Dziś jest = %s\n",date);
+  printf("Jest godzina = %s\n",time);
+  printf("Wschód słońca = %s\n",t1);
+  printf("Zachód słońca = %s\n",t2);
+  printf("Dzień roboczy = %c\n",dzien_roboczy);
+  if (strcmp(t1,time)<=0 && strcmp(time,t2)<=0) {
+    dzien = '1';
+    printf("Jest dzień.\n");
+  } else {
+    dzien = '0';
+    printf("Jest noc.\n");
+  }
+
+  s = String(date);
+  s = concat_str_char(s,',');
+  s = concat(s,time);
+  s = concat_str_char(s,',');
+  s = concat(s,t1);
+  s = concat_str_char(s,',');
+  s = concat(s,t2);
+  s = concat_str_char(s,',');
+  s = concat_str_char(s,dzien_roboczy);
+  s = concat_str_char(s,',');
+  s = concat_str_char(s,dzien);
+  printf("s1 = %s\n",s);
+  printf("s2 = %s\n",s2);
 }
 
 /* GŁÓWNA FUNKCJA STARTOWA */
