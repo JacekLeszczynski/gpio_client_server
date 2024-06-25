@@ -6,9 +6,9 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, Spin,
-  StdCtrls, Buttons, DBGrids, XMLPropStorage, DBDateTimePicker, ZConnection,
-  ZDataset, ZStoredProcedure, ZSqlUpdate, YearCalendar, ZTransaction, DSMaster,
-  ExtMessage, DB;
+  StdCtrls, Buttons, DBGrids, XMLPropStorage, Menus, DBDateTimePicker,
+  ZConnection, ZDataset, ZStoredProcedure, ZSqlUpdate, YearCalendar,
+  ZTransaction, DSMaster, ExtMessage, DB;
 
 type
 

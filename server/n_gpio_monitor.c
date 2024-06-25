@@ -24,6 +24,35 @@ if (tryb==4) {
             }
         }
     } else
+    if (strcmp(s1,"statusday")==0) {
+        bool db_connected = DbConnect();
+        if (db_connected) {
+            zmienna = StatusDayNow();
+            DbDisconnect();
+        } else { zmienna = -1; }
+        if (zmienna==1) {
+            //sobota
+            sendmessage("statusday=1",cl.sockno,1);
+        } else {
+            if (zmienna==2) {
+                //niedziela lub święto
+                sendmessage("statusday=2",cl.sockno,1);
+            } else {
+                if (zmienna==3) {
+                    //urlop
+                    sendmessage("statusday=3",cl.sockno,1);
+                } else {
+                    if (zmienna==0) {
+                        //dzień roboczy
+                        sendmessage("statusday=0",cl.sockno,1);
+                    } else {
+                        //coś nie wyszło
+                        sendmessage("statusday=-1",cl.sockno,1);
+                    }
+                }
+            }
+        }
+    } else
     if (strcmp(s1,"getcalendar")==0) {
         bool db_connected = DbConnect();
         if (db_connected) {

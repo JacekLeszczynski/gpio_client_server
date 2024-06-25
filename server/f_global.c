@@ -17,6 +17,7 @@ char *GPIO_NR_1,*GPIO_NR_2,*GPIO_NR_3,*GPIO_NR_4,*GPIO_NR_5,*GPIO_NR_6,*GPIO_NR_
 char *PATH_KBD_0,*PATH_KBD_1;
 bool REVERSE,AUTO_ON_OFF_BY_LOGIN,AUTO_TIMER = 0;
 char *LAPTOP_MAC_ADDRESS;
+double LATITUDE,LONGITUDE;
 
 int n = 0, mn = 0, ischat = 0;
 int error = 0;

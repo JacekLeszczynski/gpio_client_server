@@ -100,6 +100,8 @@ int main(int argc,char *argv[])
         if (strcmp(PATH_KBD_1,"")==0) SCAN_KEYBOARD_1 = 0;
     }
     LAPTOP_MAC_ADDRESS = GetConfValue(BUF,"LAPTOP_MAC_ADDRESS","");
+    LATITUDE = atof(GetConfValue(BUF,"LATITUDE","0.0"));
+    LONGITUDE = atof(GetConfValue(BUF,"LONGITUDE","0.0"));
     daemonize();
     Randomize();
 

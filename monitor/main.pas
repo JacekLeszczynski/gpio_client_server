@@ -27,6 +27,7 @@ type
     cSrcName7: TEdit;
     cSrcName8: TEdit;
     Image1: TImage;
+    Image2: TImage;
     Label1: TLabel;
     Label10: TLabel;
     Label11: TLabel;
@@ -443,7 +444,8 @@ begin
   Label15.Caption:=IntToStr(data_dzien);
   Label16.Caption:=Utf8UpperCase(DzienTygodnia(DayOfWeek(data)));
   dr:=GetLineToStr(aCode,5,';');
-  if dr='1' then kolor:=clBlack else kolor:=clRed;
+  if (dr='0') or (dr='1') or (dr='3') then kolor:=clBlack else kolor:=clRed;
+  Image2.Visible:=dr='3';
   Label15.Font.Color:=kolor;
   Label16.Font.Color:=kolor;
   if dr='0' then Caption:='Monitor GPio (data: '+FormatDateTime('yyyy-mm-dd',date)+' - dzień wolny)' else

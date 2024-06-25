@@ -41,6 +41,26 @@ int DzienRoboczy() {
     return a;
 }
 
+int StatusDayNow() {
+    MYSQL_RES *res;
+    MYSQL_ROW row;
+    int a = 0;
+
+    if (mysql_query(db,"select StatusDayNow()")) {
+        return -1;
+    }
+    res = mysql_store_result(db);
+    if ((row = mysql_fetch_row(res)) != NULL) {
+        const int wynik = atoi(row[0]);
+        a = wynik;
+    } else {
+        mysql_free_result(res);
+        return -1;
+    }
+    mysql_free_result(res);
+    return a;
+}
+
 char *GetImieninyNow() {
     MYSQL_RES *res;
     MYSQL_ROW row;
@@ -147,8 +167,27 @@ char *GetHoursSunDay(double longitude, double latitude) {
 char *GetCalendarAll() {
   char *s,dzien_roboczy,dzien,*tmp,t1[6],t2[6],date[11],time[6],*imieniny;
 
-  dzien_roboczy = DzienRoboczyToChar();
-  tmp = GetHoursSunDay(50.0614300,19.9365800);
+  int a = StatusDayNow();
+  if (a==-1) {
+    dzien_roboczy = '-';
+  } else {
+    if (a==0) {
+      dzien_roboczy = '0';
+    } else {
+      if (a==1) {
+        dzien_roboczy = '1';
+      } else {
+        if (a==2) {
+          dzien_roboczy = '2';
+        } else {
+          dzien_roboczy = '3';
+        }
+      }
+    }
+  }
+
+  //tmp = GetHoursSunDay(50.0614300,19.9365800);
+  tmp = GetHoursSunDay(LATITUDE,LONGITUDE);
 
   split_times(tmp,t1,t2);
   extract_date_and_time(LocalTime(),date,time);

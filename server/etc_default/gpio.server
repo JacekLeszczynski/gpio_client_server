@@ -36,3 +36,8 @@ GPIO_NUMBER_B = 493
 
 # MAC ADDRESS Laptopa - wymagane do wybudzenia laptopa w razie wymagania tej obsługi
 #LAPTOP_MAC_ADDRESS = [tu wpisz MAC ADDRESS laptopa]
+
+# Szerokość i długość geograficzna potrzebna do obliczeń wschodu i zachodu słońca
+LATITUDE = 50.0614300
+LONGITUDE = 19.9365800
+
